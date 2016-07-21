@@ -63,16 +63,22 @@ def queryExtentThreshold(graph): #Selects Extent Threshold cluster size values
 	queryResult = graph.query(query)
 	return(queryResult)
 
-def generateMainHTML():
+def generateMainHTML(): #Generates the main HTML page
 
 	mainPage = markup.page()
 	mainPage.init(title = "FSL Viewer", css = "viewerStyles.css")
 	mainPage.h1("Sample FSL Viewer")
 	
-def generateStatsHTML():
+def generateStatsHTML(): #Generates the Stats HTML section
 
 	statsPage = markup.page()
 	statsPage.init(title = "FSL Viewer")
+	statsPage.h2("Stats")
+	statsPage.hr()
+	
+	statsFile = open("stats.html", "w")
+	print(statsPage, file = statsFile)
+	statsFile.close()
 	
 
 	
@@ -90,7 +96,9 @@ page.h1("Sample FSL Viewer")
 for i in y:
 	page.p("%s %s" % i)
 
-fh = open("testhtml.html", "w")
-print(page)	
-print(page, file = fh)
-fh.close()
+#fh = open("testhtml.html", "w")
+#print(page)	
+#print(page, file = fh)
+#fh.close()
+
+generateStatsHTML()
