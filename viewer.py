@@ -62,6 +62,19 @@ def queryExtentThreshold(graph): #Selects Extent Threshold cluster size values
 			   
 	queryResult = graph.query(query)
 	return(queryResult)
+
+def generateMainHTML():
+
+	mainPage = markup.page()
+	mainPage.init(title = "FSL Viewer", css = "viewerStyles.css")
+	mainPage.h1("Sample FSL Viewer")
+	
+def generateStatsHTML():
+
+	statsPage = markup.page()
+	statsPage.init(title = "FSL Viewer")
+	
+
 	
 g = rdflib.Graph()
 g.parse("pain_01.nidm.ttl", format = rdflib.util.guess_format("pain_01.nidm.ttl"))
