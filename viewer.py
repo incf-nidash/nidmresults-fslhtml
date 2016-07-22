@@ -89,7 +89,10 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	statsPage.init(title = "FSL Viewer")
 	statsPage.h2("Stats")
 	statsPage.hr()
+	statsPage.h3("Analysis methods")
+	if softwareLabelNumList[0] == "SPM":
 	
+		statsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
 	statsFile = open("stats.html", "w")
 	print(statsPage, file = statsFile)
 	statsFile.close()
