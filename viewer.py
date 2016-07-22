@@ -119,22 +119,18 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	
 g = rdflib.Graph()
 g.parse("pain_01.nidm.ttl", format = rdflib.util.guess_format("pain_01.nidm.ttl"))
-x = queryNidmVersionNum(g)
-y = queryVersionNum(g)
-z = queryExtentThreshold(g)
+x = queryFslFeatVersion(g)
 printQuery(x)
-printQuery(y)
-printQuery(z)
 page = markup.page()
 page.init(title = "Analysis Test", css = "viewerStyles.css")
 page.h1("Sample FSL Viewer")
-for i in y:
+"""for i in y:
 	page.p("%s %s" % i)
 
 #fh = open("testhtml.html", "w")
 #print(page)	
 #print(page, file = fh)
-#fh.close()
+#fh.close()"""
 
 
 generateStatsHTML(g)
