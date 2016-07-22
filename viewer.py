@@ -79,8 +79,9 @@ def generateMainHTML(): #Generates the main HTML page
 	mainPage.h1("Sample FSL Viewer")
 	
 def generateStatsHTML(graph): #Generates the Stats HTML section
+
 	softwareLabelNum = queryVersionNum(graph)
-	
+	softwareLabelNumList = addQueryToList(softwareLabelNum)
 	statsPage = markup.page()
 	statsPage.init(title = "FSL Viewer")
 	statsPage.h2("Stats")
@@ -111,4 +112,4 @@ for i in y:
 #print(page, file = fh)
 #fh.close()
 
-generateStatsHTML()
+generateStatsHTML(g)
