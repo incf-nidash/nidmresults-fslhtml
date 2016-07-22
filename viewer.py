@@ -31,7 +31,9 @@ def addQueryToList(query): #Adds the query results to a list
 	queryList = []
 	for i in query:
 		
-		queryList.append(i)
+		for j in i:
+		
+			queryList.append("%s" % j)
 		
 	return(queryList)
 	
@@ -82,6 +84,7 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
+	print(softwareLabelNumList)
 	statsPage = markup.page()
 	statsPage.init(title = "FSL Viewer")
 	statsPage.h2("Stats")
