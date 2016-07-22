@@ -62,6 +62,16 @@ def queryNidmVersionNum(graph): #Selects NIDM exporter version number and name
 	queryResult = graph.query(query)
 	return(queryResult)
 
+def queryFslFeatVersion(graph):
+
+	query = """prefix fsl_featVersion: <http://purl.org/nidash/fsl#FSL_0000005>
+               prefix src_FSL: <http://scicrunch.org/resolver/SCR_002823>
+
+               SELECT ?featVersion WHERE {?x a src_FSL: . ?x fsl_featVersion: ?featVersion .}"""
+			   
+	queryResult = graph.query(query)
+	return(addQueryToList(queryResult))
+	
 def queryExtentThreshold(graph): #Selects Extent Threshold cluster size values
 
 	query = """prefix nidm: <http://purl.org/nidash/nidm#>
