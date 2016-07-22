@@ -96,7 +96,11 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	
 		statsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
 	
-
+	elif softwareLabelNumList[0] == "FSL":
+		
+		statsPage.p("FMRI data processing was carried out using...")
+		
+	
 	statsFile = open("stats.html", "w")
 	print(statsPage, file = statsFile)
 	statsFile.close()
