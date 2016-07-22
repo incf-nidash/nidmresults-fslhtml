@@ -62,7 +62,7 @@ def queryNidmVersionNum(graph): #Selects NIDM exporter version number and name
 	queryResult = graph.query(query)
 	return(queryResult)
 
-def queryFslFeatVersion(graph):
+def queryFslFeatVersion(graph): #Selects FSL FEAT Version Number
 
 	query = """prefix fsl_featVersion: <http://purl.org/nidash/fsl#FSL_0000005>
                prefix src_FSL: <http://scicrunch.org/resolver/SCR_002823>
@@ -102,11 +102,11 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	statsPage.hr()
 
 	statsPage.h3("Analysis methods")
-	if softwareLabelNumList[0] == "SPM":
+	if softwareLabelNumList[0] == "SPM": #Checks if SPM was used
 	
 		statsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
 	
-	elif softwareLabelNumList[0] == "FSL":
+	elif softwareLabelNumList[0] == "FSL": #Checks if FSL was used
 		
 		fslFeatVersion = queryFslFeatVersion(graph)
 		statsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % fslFeatVersion[0])
