@@ -108,7 +108,8 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	
 	elif softwareLabelNumList[0] == "FSL":
 		
-		statsPage.p("FMRI data processing was carried out using...")
+		fslFeatVersion = queryFslFeatVersion(graph)
+		statsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % fslFeatVersion[0])
 		
 	
 	statsFile = open("stats.html", "w")
@@ -121,7 +122,7 @@ g = rdflib.Graph()
 filepath = input("Please enter NIDM file name")
 g.parse(filepath, format = rdflib.util.guess_format(filepath))
 x = queryFslFeatVersion(g)
-printQuery(x)
+print(x)
 page = markup.page()
 page.init(title = "Analysis Test", css = "viewerStyles.css")
 page.h1("Sample FSL Viewer")
