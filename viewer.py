@@ -118,7 +118,8 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 
 	
 g = rdflib.Graph()
-g.parse("pain_01.nidm.ttl", format = rdflib.util.guess_format("pain_01.nidm.ttl"))
+filepath = input("Please enter NIDM file name")
+g.parse(filepath, format = rdflib.util.guess_format(filepath))
 x = queryFslFeatVersion(g)
 printQuery(x)
 page = markup.page()
