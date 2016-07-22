@@ -80,7 +80,11 @@ def generateMainHTML(): #Generates the main HTML page
 	mainPage.init(title = "FSL Viewer", css = "viewerStyles.css")
 	mainPage.h1("Sample FSL Viewer")
 	
+<<<<<<< HEAD
 def generateStatsHTML(graph): #Generates the Stats HTML section
+=======
+def generateStatsHTML(): #Generates the Stats HTML section
+>>>>>>> ce4a283224426b81304fd971bfd4b8352116a68b
 
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
@@ -89,10 +93,14 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	statsPage.init(title = "FSL Viewer")
 	statsPage.h2("Stats")
 	statsPage.hr()
+<<<<<<< HEAD
 	statsPage.h3("Analysis methods")
 	if softwareLabelNumList[0] == "SPM":
 	
 		statsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
+=======
+	
+>>>>>>> ce4a283224426b81304fd971bfd4b8352116a68b
 	statsFile = open("stats.html", "w")
 	print(statsPage, file = statsFile)
 	statsFile.close()
@@ -118,4 +126,8 @@ for i in y:
 #print(page, file = fh)
 #fh.close()
 
+<<<<<<< HEAD
 generateStatsHTML(g)
+=======
+generateStatsHTML()
+>>>>>>> ce4a283224426b81304fd971bfd4b8352116a68b
