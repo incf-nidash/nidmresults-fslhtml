@@ -111,7 +111,8 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 		fslFeatVersion = queryFslFeatVersion(graph)
 		statsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % fslFeatVersion[0])
 		
-	
+	statsPage.hr()
+	statsPage.h3("Design Matrix")
 	statsFile = open("stats.html", "w")
 	print(statsPage, file = statsFile)
 	statsFile.close()
