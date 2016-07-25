@@ -89,10 +89,13 @@ def queryDesignMatrixLocation(graph): #Selects location of design matrix
 	query = """prefix nidm_DesignMatrix:<http://purl.org/nidash/nidm#NIDM_0000019>
                prefix dc: <http://purl.org/dc/elements/1.1/>
                prefix prov: <http://www.w3.org/ns/prov#>
+			   prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-               SELECT ?location WHERE {?x a nidm_DesignMatrix: . ?x dc:Description ?y . ?y prov:atLocation ?location}"""
+               SELECT ?location WHERE {?x a nidm_DesignMatrix: . ?x dc:description ?y . ?y prov:atLocation ?location .}"""
 			   
 	queryResult = graph.query(query)
+	for i in queryResult:
+		print(i)
 	return(addQueryToList(queryResult))
 	
 def generateMainHTML(): #Generates the main HTML page
@@ -124,6 +127,9 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 		
 	statsPage.hr()
 	statsPage.h3("Design Matrix")
+	designMatrixLocation = queryDesignMatrixLocation(g)
+	print(designMatrixLocation)
+	
 	statsFile = open("stats.html", "w")
 	print(statsPage, file = statsFile)
 	statsFile.close()
