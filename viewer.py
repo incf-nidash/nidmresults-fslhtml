@@ -84,6 +84,17 @@ def queryExtentThreshold(graph): #Selects Extent Threshold cluster size values
 	queryResult = graph.query(query)
 	return(queryResult)
 
+def queryDesignMatrixLocation(graph): #Selects location of design matrix
+
+	query = """prefix nidm_DesignMatrix:<http://purl.org/nidash/nidm#NIDM_0000019>
+               prefix dc: <http://purl.org/dc/elements/1.1/>
+               prefix prov: <http://www.w3.org/ns/prov#>
+
+               SELECT ?location WHERE {?x a nidm_DesignMatrix: . ?x dc:Description ?y . ?y prov:atLocation ?location}"""
+			   
+	queryResult = graph.query(query)
+	return(addQueryToList(queryResult))
+	
 def generateMainHTML(): #Generates the main HTML page
 
 	mainPage = markup.page()
