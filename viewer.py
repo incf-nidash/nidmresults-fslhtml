@@ -129,7 +129,7 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	statsPage.h3("Design Matrix")
 	designMatrixLocation = queryDesignMatrixLocation(g)
 	print(designMatrixLocation)
-	
+	statsPage.img(src = designMatrixLocation[0], border = 0)
 	statsFile = open("stats.html", "w")
 	print(statsPage, file = statsFile)
 	statsFile.close()
