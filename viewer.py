@@ -1,6 +1,6 @@
 import rdflib
 import markup
-
+from markup import oneliner as e
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
 	for row in query: 
@@ -91,7 +91,7 @@ def queryDesignMatrixLocation(graph): #Selects location of design matrix
                prefix prov: <http://www.w3.org/ns/prov#>
 			   prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-               SELECT ?location WHERE {?x a nidm_DesignMatrix: . ?x dc:description ?y . ?y prov:atLocation ?location .}"""
+               SELECT ?csv ?location WHERE {?x a nidm_DesignMatrix: . ?x dc:description ?y . ?y prov:atLocation ?location . ?x prov:atLocation ?csv .}"""
 			   
 	queryResult = graph.query(query)
 	for i in queryResult:
@@ -129,7 +129,7 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	statsPage.h3("Design Matrix")
 	designMatrixLocation = queryDesignMatrixLocation(g)
 	print(designMatrixLocation)
-	statsPage.img(src = designMatrixLocation[0], border = 0)
+	statsPage.a(e.img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0])
 	statsFile = open("stats.html", "w")
 	print(statsPage, file = statsFile)
 	statsFile.close()
