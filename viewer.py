@@ -138,12 +138,15 @@ def queryDesignMatrixLocation(graph): #Selects location of design matrix
 		print(i)
 	return(addQueryToList(queryResult))
 	
-def generateMainHTML(): #Generates the main HTML page
+def generateMainHTML(graph): #Generates the main HTML page
 
 	mainPage = markup.page()
 	mainPage.init(title = "FSL Viewer", css = "viewerStyles.css")
 	mainPage.h1("Sample FSL Viewer")
-	
+	mainPage.a("Stats", class_ = 'main', href = "stats.html")
+	mainFile = open("Main.html", "w")
+	print(mainPage, file = mainFile)
+	mainFile.close()
 
 def generateStatsHTML(graph): #Generates the Stats HTML section
 
@@ -194,4 +197,4 @@ page.h1("Sample FSL Viewer")
 
 
 generateStatsHTML(g)
-
+generateMainHTML(g)
