@@ -175,7 +175,7 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	elif askFsl(graph) == True: #Checks if FSL was used
 		
 		fslFeatVersion = queryFslFeatVersion(graph)
-		statsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % fslFeatVersion[0])
+		statsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % (fslFeatVersion[0], softwareLabelNumList[1]))
 		
 	statsPage.hr()
 	statsPage.h3("Design Matrix")
@@ -194,6 +194,15 @@ def generatePostStatsHTML(graph):
 	postStatsPage.h2("Post-stats")
 	postStatsPage.hr()
 	postStatsPage.h2("Analysis Methods")
+	
+	if askSpm(graph) == True:
+	
+		postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
+	
+	elif askFsl(graph) == True:
+		fslFeatVersion = queryFslFeatVersion(graph)
+		postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." %fslFeatVersion[0])
+		
 	postStatsFile = open("postStats.html", "w")
 	print(postStatsPage, file = postStatsFile)
 	postStatsFile.close()
