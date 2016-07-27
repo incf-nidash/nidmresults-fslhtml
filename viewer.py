@@ -143,7 +143,8 @@ def generateMainHTML(graph): #Generates the main HTML page
 	mainPage = markup.page()
 	mainPage.init(title = "FSL Viewer", css = "viewerStyles.css")
 	mainPage.h1("Sample FSL Viewer")
-	mainPage.a("Stats", class_ = 'main', href = "stats.html")
+	mainPage.a("Stats", href = "stats.html")
+
 	mainFile = open("Main.html", "w")
 	print(mainPage, file = mainFile)
 	mainFile.close()
