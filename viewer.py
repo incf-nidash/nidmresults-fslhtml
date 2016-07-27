@@ -137,7 +137,11 @@ def queryDesignMatrixLocation(graph): #Selects location of design matrix
 	for i in queryResult:
 		print(i)
 	return(addQueryToList(queryResult))
-	
+
+def checkVoxelOrClusterThreshold(graph):
+
+	print("Test")
+
 def generateMainHTML(graph): #Generates the main HTML page
 
 	mainPage = markup.page()
