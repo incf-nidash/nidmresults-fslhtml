@@ -37,6 +37,25 @@ def addQueryToList(query): #Adds the query results to a list
 		
 	return(queryList)
 	
+def askSpm(graph):
+
+	querySpm = graph.query("""prefix nidm_NeuroimagingAnalysisSoftware: <http://purl.org/nidash/nidm#NIDM_0000164>
+                              prefix prov: <http://www.w3.org/ns/prov#>
+                              prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                              prefix src_SPM: <http://scicrunch.org/resolver/SCR_007037>
+
+                              ASK {?a a src_SPM:}""")
+				  
+	for row in querySpm:
+		querySpmResult = row
+	
+	if querySpmResult == True:
+		
+		return(True)
+	
+	else:
+		
+		return(False)
 def queryVersionNum(graph): #Selects Neuroimaging software version number and name
 
 	query = """prefix nidm: <http://purl.org/nidash/nidm#>
@@ -116,7 +135,7 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	statsPage.hr()
 
 	statsPage.h3("Analysis methods")
-	if softwareLabelNumList[0] == "SPM": #Checks if SPM was used
+	if askSpm(graph) == True: #Checks if SPM was used
 	
 		statsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
 	
@@ -154,5 +173,4 @@ page.h1("Sample FSL Viewer")
 
 
 generateStatsHTML(g)
-
 
