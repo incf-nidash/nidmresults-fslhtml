@@ -138,6 +138,24 @@ def queryDesignMatrixLocation(graph): #Selects location of design matrix
 		print(i)
 	return(addQueryToList(queryResult))
 
+def queryStatisticType(graph): #Checks Statistic Map Type
+
+	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix nidm_statisticType: <http://purl.org/nidash/nidm#NIDM_0000123>
+			   prefix nidm_statisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
+               prefix prov: <http://www.w3.org/ns/prov#>
+               prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+               prefix obo_tstatistic: <http://purl.obolibrary.org/obo/STATO_0000176>
+               prefix obo_Fstatistic: <http://purl.obolibrary.org/obo/STATO_0000282>
+               prefix obo_Zstatistic: <http://purl.obolibrary.org/obo/STATO_0000376>
+
+               SELECT ?statType WHERE {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}"""
+			   
+	queryResult = graph.query(query)
+	for i in queryResult:
+		print(i)
+	return(addQueryToList(queryResult))
+	
 def checkVoxelOrClusterThreshold(graph):
 
 	print("Test")
@@ -186,14 +204,17 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	print(statsPage, file = statsFile)
 	statsFile.close()
 	
-def generatePostStatsHTML(graph):
+def generatePostStatsHTML(graph): #Generates Post-Stats page
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
+	statisticType = queryStatisticType(graph)
+	print("Stat type")
+	print(statisticType)
 	postStatsPage = markup.page()
 	postStatsPage.init(title = "FSL Viewer")
-	postStatsPage.h2("Post-stats")
+	postStatsPage.h3("Post-stats")
 	postStatsPage.hr()
-	postStatsPage.h2("Analysis Methods")
+	postStatsPage.h3("Analysis Methods")
 	
 	if askSpm(graph) == True:
 	
@@ -201,8 +222,10 @@ def generatePostStatsHTML(graph):
 	
 	elif askFsl(graph) == True:
 		fslFeatVersion = queryFslFeatVersion(graph)
-		postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." %fslFeatVersion[0])
-		
+		postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." %(fslFeatVersion[0], softwareLabelNumList[1]))
+	
+	postStatsPage.hr()
+	postStatsPage.h3("Threshold Activation Images")
 	postStatsFile = open("postStats.html", "w")
 	print(postStatsPage, file = postStatsFile)
 	postStatsFile.close()
