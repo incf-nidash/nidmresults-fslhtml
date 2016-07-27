@@ -147,8 +147,12 @@ def generateMainHTML(graph): #Generates the main HTML page
 	mainPage = markup.page()
 	mainPage.init(title = "FSL Viewer", css = "viewerStyles.css")
 	mainPage.h1("Sample FSL Viewer")
-	mainPage.div(e.a("Stats", href = "stats.html"))
-	mainPage.div(e.a("Post Stats", href = "postStats.html"))
+	#mainPage.div(e.a("Stats", href = "stats.html"))
+	#mainPage.div(e.a("Post Stats", href = "postStats.html"))
+	mainPage.ul()
+	mainPage.li(e.a("Stats", href = "stats.html"))
+	mainPage.li(e.a("Post Stats", href = "postStats.html"))
+	mainPage.ul.close()
 	mainFile = open("Main.html", "w")
 	print(mainPage, file = mainFile)
 	mainFile.close()
@@ -182,7 +186,17 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	print(statsPage, file = statsFile)
 	statsFile.close()
 	
-
+def generatePostStatsHTML(graph):
+	softwareLabelNum = queryVersionNum(graph)
+	softwareLabelNumList = addQueryToList(softwareLabelNum)
+	postStatsPage = markup.page()
+	postStatsPage.init(title = "FSL Viewer")
+	postStatsPage.h2("Post-stats")
+	postStatsPage.hr()
+	postStatsPage.h2("Analysis Methods")
+	postStatsFile = open("postStats.html", "w")
+	print(postStatsPage, file = postStatsFile)
+	postStatsFile.close()
 	
 g = rdflib.Graph()
 filepath = input("Please enter NIDM file name")
@@ -202,4 +216,5 @@ page.h1("Sample FSL Viewer")
 
 
 generateStatsHTML(g)
+generatePostStatsHTML(g)
 generateMainHTML(g)
