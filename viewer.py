@@ -37,7 +37,7 @@ def addQueryToList(query): #Adds the query results to a list
 		
 	return(queryList)
 	
-def askSpm(graph):
+def askSpm(graph): #Checks if SPM was used
 
 	querySpm = graph.query("""prefix nidm_NeuroimagingAnalysisSoftware: <http://purl.org/nidash/nidm#NIDM_0000164>
                               prefix prov: <http://www.w3.org/ns/prov#>
@@ -56,6 +56,27 @@ def askSpm(graph):
 	else:
 		
 		return(False)
+		
+def askFsl(graph): #Checks is FSL was used
+
+	queryFsl = graph.query("""prefix nidm_NeuroimagingAnalysisSoftware: <http://purl.org/nidash/nidm#NIDM_0000164>
+                              prefix prov: <http://www.w3.org/ns/prov#>
+                              prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                              prefix src_FSL: <http://scicrunch.org/resolver/SCR_002823>
+
+                              ASK {?a a src_FSL:}""")
+				  
+	for row in queryFsl:
+		queryFslResult = row
+	
+	if queryFslResult == True:
+		
+		return(True)
+	
+	else:
+		
+		return(False)	
+	
 def queryVersionNum(graph): #Selects Neuroimaging software version number and name
 
 	query = """prefix nidm: <http://purl.org/nidash/nidm#>
@@ -139,7 +160,7 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	
 		statsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
 	
-	elif softwareLabelNumList[0] == "FSL": #Checks if FSL was used
+	elif askFsl(graph) == True: #Checks if FSL was used
 		
 		fslFeatVersion = queryFslFeatVersion(graph)
 		statsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % fslFeatVersion[0])
