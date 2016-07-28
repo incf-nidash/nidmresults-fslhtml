@@ -213,6 +213,7 @@ def generateMainHTML(graph): #Generates the main HTML page
 	#mainPage.div(e.a("Post Stats", href = "postStats.html"))
 	mainPage.ul()
 	mainPage.li(e.a("Stats", href = "stats.html"))
+	mainPage.li("-")
 	mainPage.li(e.a("Post Stats", href = "postStats.html"))
 	mainPage.ul.close()
 	mainFile = open("Main.html", "w")
@@ -247,6 +248,7 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	statsFile.close()
 	
 def generatePostStatsHTML(graph): #Generates Post-Stats page
+	voxelWise = False
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
 	statisticType = queryStatisticType(graph)
@@ -258,13 +260,19 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	postStatsPage.hr()
 	postStatsPage.h3("Analysis Methods")
 	
-	if askSpm(graph) == True:
+	if voxelWise == True:
 	
-		postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
+		if askSpm(graph) == True:
 	
-	elif askFsl(graph) == True:
-		fslFeatVersion = queryFslFeatVersion(graph)
-		postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." %(fslFeatVersion[0], softwareLabelNumList[1]))
+			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
+	
+		elif askFsl(graph) == True:
+			fslFeatVersion = queryFslFeatVersion(graph)
+			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." %(fslFeatVersion[0], softwareLabelNumList[1]))
+	
+	else:
+	
+		print("Not ready yet")
 	
 	postStatsPage.hr()
 	postStatsPage.h3("Threshold Activation Images")
