@@ -164,7 +164,7 @@ def checkHeightThreshold(graph):
                prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
                prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
 
-               ASK {nidm_Inference: prov:used ?x . {?x a nidm_HeightThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_HeightThreshold: . ?x a obo_FWERadjustedpvalue: .}}"""
+               ASK {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_HeightThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_HeightThreshold: . ?x a obo_FWERadjustedpvalue: .}}"""
 			   
 	queryResult = graph.query(query)
 	for row in queryResult:
@@ -181,7 +181,7 @@ def checkExtentThreshold(graph):
                prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
                prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
 
-               ASK {nidm_Inference: prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .}}"""
+               ASK {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .}}"""
 			   
 	queryResult = graph.query(query)
 	for row in queryResult:
