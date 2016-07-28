@@ -187,7 +187,18 @@ def checkExtentThreshold(graph):
 		answer = row
 		
 	return(answer)
+def selectExtentThreshValue(graph):
+
+	query = """prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
+               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
+               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
+
+               SELECT ?thresholdValue WHERE {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .} ?x prov:value ?thresholdValue .}"""
 	
+	queryResult = graph.query(query)
+	return(addQueryToList(queryResult))
 def checkVoxelOrClusterThreshold(graph):
 
 	print("Test")
@@ -283,3 +294,4 @@ print("Testing checkHeightThreshold")
 print(checkHeightThreshold(g))
 print("Testing checkExtentThreshold")
 print(checkExtentThreshold(g))
+
