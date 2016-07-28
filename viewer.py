@@ -154,7 +154,7 @@ def queryStatisticType(graph): #Checks Statistic Map Type
 		print(i)
 	return(addQueryToList(queryResult))
 
-def statisticImage(stat):
+def statisticImage(stat): #Returns type of statistic image
 
 	if stat == "http://purl.obolibrary.org/obo/STATO_0000176":
 	
@@ -308,7 +308,8 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 		
 		if askSpm(graph) == True:
 	
-			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at " % (softwareLabelNumList[1], statisticType))
+			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by " 
+			% (softwareLabelNumList[1], statisticType))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
