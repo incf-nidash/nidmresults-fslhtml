@@ -154,6 +154,23 @@ def queryStatisticType(graph): #Checks Statistic Map Type
 		print(i)
 	return(addQueryToList(queryResult))
 
+def statisticImage(stat):
+
+	if stat == "http://purl.obolibrary.org/obo/STATO_0000176":
+	
+		return("Z")
+	
+	elif stat == "http://purl.obolibrary.org/obo/STATO_0000282":
+	
+		return("F")
+		
+	elif stat == "http://purl.obolibrary.org/obo/STATO_0000376":
+	
+		return("T")
+		
+	else:
+		
+		return(None)
 def checkHeightThreshold(graph): #checks for corrected height threshold
 
 	query = """prefix prov: <http://www.w3.org/ns/prov#>
@@ -225,7 +242,13 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
 	statsPage = markup.page()
-	statsPage.init(title = "FSL Viewer")
+	statsPage.init(title = "FSL Viewer", css = "viewerStyles.css")
+	statsPage.h1("Sample FSL Viewer")
+	statsPage.ul()
+	statsPage.li(e.a("Stats", href = "stats.html"))
+	statsPage.li("-")
+	statsPage.li(e.a("Post Stats", href = "postStats.html"))
+	statsPage.ul.close()
 	statsPage.h2("Stats")
 	statsPage.hr()
 
@@ -248,15 +271,25 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	statsFile.close()
 	
 def generatePostStatsHTML(graph): #Generates Post-Stats page
-	voxelWise = False
+	voxelWise = checkHeightThreshold(graph)
+	clusterWise = checkExtentThreshold(graph)
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
 	statisticType = queryStatisticType(graph)
+	statisticType = statisticImage(statisticType[0])
 	print("Stat type")
 	print(statisticType)
 	postStatsPage = markup.page()
-	postStatsPage.init(title = "FSL Viewer")
-	postStatsPage.h3("Post-stats")
+	postStatsPage.init(title = "FSL Viewer", css = "viewerStyles.css")
+	postStatsPage.h1("Sample FSL Viewer")
+	#mainPage.div(e.a("Stats", href = "stats.html"))
+	#mainPage.div(e.a("Post Stats", href = "postStats.html"))
+	postStatsPage.ul()
+	postStatsPage.li(e.a("Stats", href = "stats.html"))
+	postStatsPage.li("-")
+	postStatsPage.li(e.a("Post Stats", href = "postStats.html"))
+	postStatsPage.ul.close()
+	postStatsPage.h2("Post-stats")
 	postStatsPage.hr()
 	postStatsPage.h3("Analysis Methods")
 	
@@ -268,7 +301,21 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
-			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." %(fslFeatVersion[0], softwareLabelNumList[1]))
+			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded at" 
+			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType))
+	
+	elif clusterWise == True:
+		
+		if askSpm(graph) == True:
+	
+			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at " % (softwareLabelNumList[1], statisticType))
+	
+		elif askFsl(graph) == True:
+			fslFeatVersion = queryFslFeatVersion(graph)
+			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded "
+			"using clusters determined by" 
+			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType))
+		
 	
 	else:
 	
