@@ -154,7 +154,7 @@ def queryStatisticType(graph): #Checks Statistic Map Type
 		print(i)
 	return(addQueryToList(queryResult))
 
-def checkHeightThreshold(graph):
+def checkHeightThreshold(graph): #checks for corrected height threshold
 
 	query = """prefix prov: <http://www.w3.org/ns/prov#>
                prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
@@ -171,7 +171,7 @@ def checkHeightThreshold(graph):
 		
 	return(answer)
 
-def checkExtentThreshold(graph):
+def checkExtentThreshold(graph): #checks for corrected extent threshold
 
 	query = """prefix prov: <http://www.w3.org/ns/prov#>
                prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
@@ -187,7 +187,8 @@ def checkExtentThreshold(graph):
 		answer = row
 		
 	return(answer)
-def selectExtentThreshValue(graph):
+	
+def selectExtentThreshValue(graph): #selects the value of the extent threshold used by nidm_Inference
 
 	query = """prefix prov: <http://www.w3.org/ns/prov#>
                prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
