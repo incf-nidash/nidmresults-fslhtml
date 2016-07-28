@@ -155,6 +155,40 @@ def queryStatisticType(graph): #Checks Statistic Map Type
 	for i in queryResult:
 		print(i)
 	return(addQueryToList(queryResult))
+
+def checkHeightThreshold(graph):
+
+	query = """prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
+               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
+               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
+
+               ASK {nidm_Inference: prov:used ?x . {?x a nidm_HeightThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_HeightThreshold: . ?x a obo_FWERadjustedpvalue: .}}"""
+			   
+	queryResult = graph.query(query)
+	for row in queryResult:
+		
+		answer = row
+		
+	return(answer)
+
+def checkExtentThreshold(graph):
+
+	query = """prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
+               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
+               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
+
+               ASK {nidm_Inference: prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .}}"""
+			   
+	queryResult = graph.query(query)
+	for row in queryResult:
+		
+		answer = row
+		
+	return(answer)
 	
 def checkVoxelOrClusterThreshold(graph):
 
@@ -250,3 +284,7 @@ page.h1("Sample FSL Viewer")
 generateStatsHTML(g)
 generatePostStatsHTML(g)
 generateMainHTML(g)
+print("Testing checkHeightThreshold")
+print(checkHeightThreshold(g))
+print("Testing checkExtentThreshold")
+print(checkExtentThreshold(g))
