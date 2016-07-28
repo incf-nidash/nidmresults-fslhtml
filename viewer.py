@@ -134,8 +134,6 @@ def queryDesignMatrixLocation(graph): #Selects location of design matrix
                SELECT ?csv ?location WHERE {?x a nidm_DesignMatrix: . ?x dc:description ?y . ?y prov:atLocation ?location . ?x prov:atLocation ?csv .}"""
 			   
 	queryResult = graph.query(query)
-	for i in queryResult:
-		print(i)
 	return(addQueryToList(queryResult))
 
 def queryStatisticType(graph): #Checks Statistic Map Type
@@ -213,7 +211,6 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
-	print(softwareLabelNumList)
 	statsPage = markup.page()
 	statsPage.init(title = "FSL Viewer")
 	statsPage.h2("Stats")
@@ -232,7 +229,6 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	statsPage.hr()
 	statsPage.h3("Design Matrix")
 	designMatrixLocation = queryDesignMatrixLocation(g)
-	print(designMatrixLocation)
 	statsPage.a(e.img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0])
 	statsFile = open("stats.html", "w")
 	print(statsPage, file = statsFile)
@@ -268,7 +264,6 @@ g = rdflib.Graph()
 filepath = input("Please enter NIDM file name")
 g.parse(filepath, format = rdflib.util.guess_format(filepath))
 x = queryFslFeatVersion(g)
-print(x)
 page = markup.page()
 page.init(title = "Analysis Test", css = "viewerStyles.css")
 page.h1("Sample FSL Viewer")
