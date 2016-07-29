@@ -218,7 +218,7 @@ def selectExtentThreshValue(graph): #selects the value of the extent threshold u
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
 
-def checkFirstLevel(graph):
+def checkFirstLevel(graph): #Checks if first-level analysis
 	answer = True
 	query = """prefix nidm_DesignMatrix: <http://purl.org/nidash/nidm#NIDM_0000019>
                prefix nidm_regressorNames: <http://purl.org/nidash/nidm#NIDM_0000021>
@@ -254,7 +254,9 @@ def generateMainHTML(graph): #Generates the main HTML page
 	mainFile.close()
 
 def generateStatsHTML(graph): #Generates the Stats HTML section
-
+	firstLevel = checkFirstLevel(graph)
+	print("First level True/False")
+	print(firstLevel)
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
 	statsPage = markup.page()
