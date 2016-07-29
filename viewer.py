@@ -331,6 +331,7 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
 	statisticType = queryStatisticType(graph)
 	statisticType = statisticImage(statisticType[0])
+	contrastName = queryContrastName(graph)
 	print("Stat type")
 	print(statisticType)
 	postStatsPage = markup.page()
@@ -382,6 +383,13 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	
 	postStatsPage.hr()
 	postStatsPage.h3("Threshold Activation Images")
+	i = 0
+	print(contrastName)
+	while i < len(contrastName):
+	
+		postStatsPage.p("%s" % contrastName[i])
+		i = i + 1
+		
 	postStatsFile = open("postStats.html", "w")
 	print(postStatsPage, file = postStatsFile)
 	postStatsFile.close()
