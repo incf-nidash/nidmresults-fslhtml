@@ -335,18 +335,19 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	postStatsPage.hr()
 	postStatsPage.h3("Analysis Methods")
 	
-	if voxelWise == True:
-	
+	if voxelWise == True: #If main threshold is Height Threshold
+		mainThreshValue = queryHeightThresholdValue(graph)
 		if askSpm(graph) == True:
 	
-			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at" % (softwareLabelNumList[1], statisticType))
+			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (corrected)" % (softwareLabelNumList[1], statisticType, mainThreshValue[0]))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
-			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded at" 
-			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType))
+			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
+			"%s statistic images were thresholded at P = %s (corrected)" 
+			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType, mainThreshValue[0]))
 	
-	elif clusterWise == True:
+	elif clusterWise == True: #If main threshold is extent threshold
 		print("Cluster thresh Value")
 		mainThreshValue = queryClusterThresholdValue(graph)
 		print(mainThreshValue)
