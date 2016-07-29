@@ -217,6 +217,22 @@ def selectExtentThreshValue(graph): #selects the value of the extent threshold u
 	
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
+
+def checkFirstLevel(graph):
+	answer = True
+	query = """prefix nidm_DesignMatrix: <http://purl.org/nidash/nidm#NIDM_0000019>
+               prefix nidm_regressorNames: <http://purl.org/nidash/nidm#NIDM_0000021>
+               prefix nidm_hasDriftModel: <http://purl.org/nidash/nidm#NIDM_0000088>
+
+               ASK {?x a nidm_DesignMatrix: . {?x nidm_regressorNames: ?y .} UNION {?x nidm_hasDriftModel: ?y .} }"""
+			   
+	queryResult = graph.query(query)
+	for row in queryResult:
+	
+		answer = row
+
+	return(answer)
+	
 def checkVoxelOrClusterThreshold(graph):
 
 	print("Test")
