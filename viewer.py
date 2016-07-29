@@ -245,6 +245,19 @@ def queryClusterThresholdValue(graph): #Selects the value of the main threshold 
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
+
+def queryHeightThresholdValue(graph):
+
+	query = """prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
+               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
+               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
+
+               SELECT ?value WHERE {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_HeightThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_HeightThreshold: . ?x a obo_FWERadjustedpvalue: .} ?x prov:value ?value .}"""
+			   
+	queryResult = graph.query(query)
+	return(addQueryToList(queryResult))
 	
 def checkVoxelOrClusterThreshold(graph):
 
