@@ -233,7 +233,7 @@ def checkFirstLevel(graph): #Checks if first-level analysis
 
 	return(answer)
 
-def queryClusterThresholdValue(graph): #Selects the value of ...
+def queryClusterThresholdValue(graph): #Selects the value of the main threshold if cluster-wise
 
 	query = """prefix prov: <http://www.w3.org/ns/prov#>
                prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
@@ -335,18 +335,19 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	
 	elif clusterWise == True:
 		print("Cluster thresh Value")
-		print(queryClusterThresholdValue(graph))
+		mainThreshValue = queryClusterThresholdValue(graph)
+		print(mainThreshValue)
 		if askSpm(graph) == True:
 	
 			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by ... and a (corrected) "
-			"cluster significance of ... " 
-			% (softwareLabelNumList[1], statisticType))
+			"cluster significance of P = %s " 
+			% (softwareLabelNumList[1], statisticType, mainThreshValue[0]))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded "
-			"using clusters determined by ... and a (corrected) cluster significance of ..." 
-			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType))
+			"using clusters determined by ... and a (corrected) cluster significance of P = %s" 
+			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType, mainThreshValue[0]))
 		
 	
 	else:
