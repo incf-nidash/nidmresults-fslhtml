@@ -233,7 +233,7 @@ def checkFirstLevel(graph): #Checks if first-level analysis
 
 	return(answer)
 
-def queryClusterThresholdType(graph):
+def queryClusterThresholdValue(graph): #Selects the value of ...
 
 	query = """prefix prov: <http://www.w3.org/ns/prov#>
                prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
@@ -241,7 +241,7 @@ def queryClusterThresholdType(graph):
                prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
                prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
 
-               SELECT ?clusterFormingThreshType WHERE {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_ExtentThreshold: . ?x a ?clusterFormingThreshType .}"""
+              SELECT ?thresholdValue WHERE {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .} ?x prov:value ?thresholdValue .}"""
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
@@ -334,17 +334,18 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType))
 	
 	elif clusterWise == True:
-		print("Cluster thresh type")
-		print(queryClusterThresholdType(graph))
+		print("Cluster thresh Value")
+		print(queryClusterThresholdValue(graph))
 		if askSpm(graph) == True:
 	
-			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by " 
+			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by ... and a (corrected) "
+			"cluster significance of ... " 
 			% (softwareLabelNumList[1], statisticType))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded "
-			"using clusters determined by" 
+			"using clusters determined by ... and a (corrected) cluster significance of ..." 
 			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType))
 		
 	
