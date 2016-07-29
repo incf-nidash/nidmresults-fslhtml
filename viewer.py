@@ -232,6 +232,19 @@ def checkFirstLevel(graph): #Checks if first-level analysis
 		answer = row
 
 	return(answer)
+
+def queryClusterThresholdType(graph):
+
+	query = """prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
+               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
+               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
+
+               SELECT ?clusterFormingThreshType WHERE {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_ExtentThreshold: . ?x a ?clusterFormingThreshType .}"""
+			   
+	queryResult = graph.query(query)
+	return(addQueryToList(queryResult))
 	
 def checkVoxelOrClusterThreshold(graph):
 
@@ -255,8 +268,6 @@ def generateMainHTML(graph): #Generates the main HTML page
 
 def generateStatsHTML(graph): #Generates the Stats HTML section
 	firstLevel = checkFirstLevel(graph)
-	print("First level True/False")
-	print(firstLevel)
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
 	statsPage = markup.page()
@@ -323,7 +334,8 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType))
 	
 	elif clusterWise == True:
-		
+		print("Cluster thresh type")
+		print(queryClusterThresholdType(graph))
 		if askSpm(graph) == True:
 	
 			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by " 
