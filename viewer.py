@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+import os
 import sys
 import rdflib
 import markup
@@ -419,4 +421,4 @@ print("Testing checkHeightThreshold")
 print(checkHeightThreshold(g))
 print("Testing checkExtentThreshold")
 print(checkExtentThreshold(g))
-
+os.startfile("Main.html")
