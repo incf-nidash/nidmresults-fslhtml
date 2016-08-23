@@ -1,3 +1,4 @@
+import sys
 import rdflib
 import markup
 from markup import oneliner as e
@@ -395,7 +396,8 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	postStatsFile.close()
 	
 g = rdflib.Graph()
-filepath = input("Please enter NIDM file name")
+#filepath = input("Please enter NIDM file name")
+filepath = sys.argv[1]
 g.parse(filepath, format = rdflib.util.guess_format(filepath))
 x = queryFslFeatVersion(g)
 page = markup.page()
