@@ -159,7 +159,7 @@ def queryStatisticType(graph): #Checks Statistic Map Type
 
 def statisticImage(stat): #Returns type of statistic image
 
-	if stat == "http://purl.obolibrary.org/obo/STATO_0000176":
+	if stat == "http://purl.obolibrary.org/obo/STATO_0000376":
 	
 		return("Z")
 	
@@ -167,7 +167,7 @@ def statisticImage(stat): #Returns type of statistic image
 	
 		return("F")
 		
-	elif stat == "http://purl.obolibrary.org/obo/STATO_0000376":
+	elif stat == "http://purl.obolibrary.org/obo/STATO_0000176":
 	
 		return("T")
 		
