@@ -380,7 +380,7 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType, mainThreshValue[0]))
 		
 	
-	else:
+	else: #If there is no corrected threshold - assume voxel wise
 		if askSpm(graph) == True:
 		
 			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticType, "N/A"))
@@ -390,7 +390,7 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
 			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticType, "N/A"))
 			
-		print("Not ready yet")
+		print("Not ready yet") 
 	
 	postStatsPage.hr()
 	postStatsPage.h3("Thresholded Activation Images")
@@ -407,6 +407,7 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	
 g = rdflib.Graph()
 filepath = sys.argv[1]
+ 
 g.parse(filepath, format = rdflib.util.guess_format(filepath))
 x = queryFslFeatVersion(g)
 page = markup.page()
@@ -429,3 +430,4 @@ print(checkHeightThreshold(g))
 print("Testing checkExtentThreshold")
 print(checkExtentThreshold(g))
 os.startfile("Main.html")
+
