@@ -349,7 +349,7 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	postStatsPage.ul.close()
 	postStatsPage.h2("Post-stats")
 	postStatsPage.hr()
-	postStatsPage.h3("Analysis Methods")
+	postStatsPage.h3("Analysis Methods") 
 	
 	if voxelWise == True: #If main threshold is Height Threshold
 		mainThreshValue = queryHeightThresholdValue(graph)
@@ -385,7 +385,7 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 		print("Not ready yet")
 	
 	postStatsPage.hr()
-	postStatsPage.h3("Threshold Activation Images")
+	postStatsPage.h3("Thresholded Activation Images")
 	i = 0
 	print(contrastName)
 	while i < len(contrastName):
