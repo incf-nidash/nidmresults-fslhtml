@@ -404,30 +404,33 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	postStatsFile = open("postStats.html", "w")
 	print(postStatsPage, file = postStatsFile)
 	postStatsFile.close()
+
+def main():
 	
-g = rdflib.Graph()
-filepath = sys.argv[1]
+	g = rdflib.Graph()
+	filepath = sys.argv[1]
  
-g.parse(filepath, format = rdflib.util.guess_format(filepath))
-x = queryFslFeatVersion(g)
-page = markup.page()
-page.init(title = "Analysis Test", css = "viewerStyles.css")
-page.h1("Sample FSL Viewer")
-"""for i in y:
-	page.p("%s %s" % i)
+	g.parse(filepath, format = rdflib.util.guess_format(filepath))
+	x = queryFslFeatVersion(g)
+	page = markup.page()
+	page.init(title = "Analysis Test", css = "viewerStyles.css")
+	page.h1("Sample FSL Viewer")
+	"""for i in y:
+		page.p("%s %s" % i)
 
-#fh = open("testhtml.html", "w")
-#print(page)	
-#print(page, file = fh)
-#fh.close()"""
+	#fh = open("testhtml.html", "w")
+	#print(page)	
+	#print(page, file = fh)
+	#fh.close()"""
 
 
-generateStatsHTML(g)
-generatePostStatsHTML(g)
-generateMainHTML(g)
-print("Testing checkHeightThreshold")
-print(checkHeightThreshold(g))
-print("Testing checkExtentThreshold")
-print(checkExtentThreshold(g))
-os.startfile("Main.html")
+	generateStatsHTML(g)
+	generatePostStatsHTML(g)
+	generateMainHTML(g)
+	print("Testing checkHeightThreshold")
+	print(checkHeightThreshold(g))
+	print("Testing checkExtentThreshold")
+	print(checkExtentThreshold(g))
+	os.startfile("Main.html")
 
+main()
