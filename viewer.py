@@ -408,6 +408,11 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 def main(): #Main program
 	
 	g = rdflib.Graph()
+	
+	if len(sys.argv) == 1:
+		
+		print("You did not enter an input NIDM file, run the program again")
+		exit()
 	filepath = sys.argv[1]
  
 	g.parse(filepath, format = rdflib.util.guess_format(filepath))
