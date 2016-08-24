@@ -383,12 +383,12 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	else:
 		if askSpm(graph) == True:
 		
-			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], "N/A", "N/A"))
+			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticType, "N/A"))
 			
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
-			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], "N/A", "N/A"))
+			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticType, "N/A"))
 			
 		print("Not ready yet")
 	
