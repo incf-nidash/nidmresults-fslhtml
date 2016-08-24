@@ -405,7 +405,7 @@ def generatePostStatsHTML(graph): #Generates Post-Stats page
 	print(postStatsPage, file = postStatsFile)
 	postStatsFile.close()
 
-def main():
+def main(): #Main program
 	
 	g = rdflib.Graph()
 	filepath = sys.argv[1]
