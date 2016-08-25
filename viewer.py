@@ -509,7 +509,7 @@ def main(): #Main program
 		
 	else:
 	
-		print("Error - Please ensure you run the program as follows.\n viewer.py nidmFileName mainHtmlFileName statsHtmlFileName postStatsHtmlFileName")
+		print("Error - Please ensure you run the program as follows.\nviewer.py nidmFileName mainHtmlFileName statsHtmlFileName postStatsHtmlFileName")
 		exit()
 	
 main()
