@@ -471,41 +471,31 @@ def main(): #Main program
 		#print(page, file = fh)
 		#fh.close()"""
 
-		try:
-		
-			firstFile = open(sys.argv[2],"x")
-			
-		except FileExistsError:
+		if os.path.isfile(sys.argv[2]):
 		
 			print("Error - The file %s already exists" % sys.argv[2])
 			exit()
-		
-		try:
-		
-			secondFile = open(sys.argv[3],"x")
 			
-		except FileExistsError:
+		elif os.path.isfile(sys.argv[3]):
 		
 			print("Error - The file %s already exists" % sys.argv[3])
 			exit()
 			
-		try:
-		
-			thirdFile = open(sys.argv[4],"x")
-			
-		except FileExistsError:
+		elif os.path.isfile(sys.argv[4]):
 		
 			print("Error - The file %s already exists" % sys.argv[4])
 			exit()
+			
+		else:
 		
-		generateStatsHTML(g,sys.argv[3],sys.argv[4])
-		generatePostStatsHTML(g,sys.argv[3],sys.argv[4])
-		generateMainHTML(g,sys.argv[2],sys.argv[3],sys.argv[4])
-		print("Testing checkHeightThreshold")
-		print(checkHeightThreshold(g))
-		print("Testing checkExtentThreshold")
-		print(checkExtentThreshold(g))
-		os.startfile(firstFile)
+			generateStatsHTML(g,sys.argv[3],sys.argv[4])
+			generatePostStatsHTML(g,sys.argv[3],sys.argv[4])
+			generateMainHTML(g,sys.argv[2],sys.argv[3],sys.argv[4])
+			print("Testing checkHeightThreshold")
+			print(checkHeightThreshold(g))
+			print("Testing checkExtentThreshold")
+			print(checkExtentThreshold(g))
+			os.startfile(sys.argv[2])
 		
 	else:
 	
