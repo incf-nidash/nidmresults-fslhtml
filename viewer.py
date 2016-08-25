@@ -294,7 +294,7 @@ def generateMainHTML(graph): #Generates the main HTML page
 	print(mainPage, file = mainFile)
 	mainFile.close()
 
-def generateStatsHTML(graph): #Generates the Stats HTML section
+def generateStatsHTML(graph,statsFilePath = "stats.html"): #Generates the Stats HTML section
 	firstLevel = checkFirstLevel(graph)
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
@@ -327,7 +327,7 @@ def generateStatsHTML(graph): #Generates the Stats HTML section
 	print(statsPage, file = statsFile)
 	statsFile.close()
 	
-def generatePostStatsHTML(graph): #Generates Post-Stats page
+def generatePostStatsHTML(graph,postStatsFilePath = "postStats.html"): #Generates Post-Stats page
 	voxelWise = checkHeightThreshold(graph)
 	clusterWise = checkExtentThreshold(graph)
 	softwareLabelNum = queryVersionNum(graph)
