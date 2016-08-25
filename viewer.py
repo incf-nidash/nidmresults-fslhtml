@@ -291,16 +291,13 @@ def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.ht
 	mainPage.li(e.a("Post Stats", href = postStatsFilePath))
 	mainPage.ul.close()
 	
-	try:
 	
-		mainFile = open(mainFilePath, "x")
-		print(mainPage, file = mainFile)
-		mainFile.close()
+	
+	mainFile = open(mainFilePath, "w")
+	print(mainPage, file = mainFile)
+	mainFile.close()
 		
-	except FileExistsError:
 	
-		print("Error - The file %s already exists" % mainFilePath)
-		exit()
 def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "postStats.html"): #Generates the Stats HTML section
 	firstLevel = checkFirstLevel(graph)
 	softwareLabelNum = queryVersionNum(graph)
@@ -331,16 +328,14 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	designMatrixLocation = queryDesignMatrixLocation(graph)
 	statsPage.a(e.img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0])
 	
-	try:
-		statsFile = open(statsFilePath, "x")
-		print(statsPage, file = statsFile)
-		statsFile.close()
-		
-	except FileExistsError:
 	
-		print("Error - The file %s already exists" % statsFilePath)
+	statsFile = open(statsFilePath, "w")
+	print(statsPage, file = statsFile)
+	statsFile.close()
 		
-			
+	
+		
+	
 def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "postStats.html"): #Generates Post-Stats page
 	voxelWise = checkHeightThreshold(graph)
 	clusterWise = checkExtentThreshold(graph)
@@ -415,16 +410,13 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		postStatsPage.p("%s" % contrastName[i])
 		i = i + 1
 	
-	try:
 	
-		postStatsFile = open(postStatsFilePath, "x")
-		print(postStatsPage, file = postStatsFile)
-		postStatsFile.close()
+	
+	postStatsFile = open(postStatsFilePath, "w")
+	print(postStatsPage, file = postStatsFile)
+	postStatsFile.close()
 		
-	except FileExistsError:
 	
-		print("Error - The file %s already exists" % postStatsFilePath)
-		exit()
 
 def main(): #Main program
 	
@@ -487,7 +479,25 @@ def main(): #Main program
 		
 			print("Error - The file %s already exists" % sys.argv[2])
 			exit()
+		
+		try:
+		
+			secondFile = open(sys.argv[3],"x")
 			
+		except FileExistsError:
+		
+			print("Error - The file %s already exists" % sys.argv[3])
+			exit()
+			
+		try:
+		
+			thirdFile = open(sys.argv[4],"x")
+			
+		except FileExistsError:
+		
+			print("Error - The file %s already exists" % sys.argv[4])
+			exit()
+		
 		generateStatsHTML(g,sys.argv[3],sys.argv[4])
 		generatePostStatsHTML(g,sys.argv[3],sys.argv[4])
 		generateMainHTML(g,sys.argv[2],sys.argv[3],sys.argv[4])
@@ -495,6 +505,11 @@ def main(): #Main program
 		print(checkHeightThreshold(g))
 		print("Testing checkExtentThreshold")
 		print(checkExtentThreshold(g))
-		os.startfile("Main.html")
+		os.startfile(firstFile)
+		
+	else:
+	
+		print("Error - Please ensure you run the program as follows.\n viewer.py nidmFileName mainHtmlFileName statsHtmlFileName postStatsHtmlFileName")
+		exit()
 	
 main()
