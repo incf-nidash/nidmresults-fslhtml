@@ -278,7 +278,7 @@ def checkVoxelOrClusterThreshold(graph):
 
 	print("Test")
 
-def generateMainHTML(graph): #Generates the main HTML page
+def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
 
 	mainPage = markup.page()
 	mainPage.init(title = "FSL Viewer", css = "viewerStyles.css")
@@ -286,15 +286,22 @@ def generateMainHTML(graph): #Generates the main HTML page
 	#mainPage.div(e.a("Stats", href = "stats.html"))
 	#mainPage.div(e.a("Post Stats", href = "postStats.html"))
 	mainPage.ul()
-	mainPage.li(e.a("Stats", href = "stats.html"))
+	mainPage.li(e.a("Stats", href = statsFilePath))
 	mainPage.li("-")
-	mainPage.li(e.a("Post Stats", href = "postStats.html"))
+	mainPage.li(e.a("Post Stats", href = postStatsFilePath))
 	mainPage.ul.close()
-	mainFile = open("Main.html", "w")
-	print(mainPage, file = mainFile)
-	mainFile.close()
-
-def generateStatsHTML(graph,statsFilePath = "stats.html"): #Generates the Stats HTML section
+	
+	try:
+	
+		mainFile = open(mainFilePath, "x")
+		print(mainPage, file = mainFile)
+		mainFile.close()
+		
+	except FileExistsError:
+	
+		print("Error - The file %s already exists" % mainFilePath)
+		exit()
+def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "postStats.html"): #Generates the Stats HTML section
 	firstLevel = checkFirstLevel(graph)
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
@@ -302,9 +309,9 @@ def generateStatsHTML(graph,statsFilePath = "stats.html"): #Generates the Stats 
 	statsPage.init(title = "FSL Viewer", css = "viewerStyles.css")
 	statsPage.h1("Sample FSL Viewer")
 	statsPage.ul()
-	statsPage.li(e.a("Stats", href = "stats.html"))
+	statsPage.li(e.a("Stats", href = statsFilePath))
 	statsPage.li("-")
-	statsPage.li(e.a("Post Stats", href = "postStats.html"))
+	statsPage.li(e.a("Post Stats", href = postStatsFilePath))
 	statsPage.ul.close()
 	statsPage.h2("Stats")
 	statsPage.hr()
@@ -323,11 +330,18 @@ def generateStatsHTML(graph,statsFilePath = "stats.html"): #Generates the Stats 
 	statsPage.h3("Design Matrix")
 	designMatrixLocation = queryDesignMatrixLocation(graph)
 	statsPage.a(e.img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0])
-	statsFile = open("stats.html", "w")
-	print(statsPage, file = statsFile)
-	statsFile.close()
 	
-def generatePostStatsHTML(graph,postStatsFilePath = "postStats.html"): #Generates Post-Stats page
+	try:
+		statsFile = open(statsFilePath, "x")
+		print(statsPage, file = statsFile)
+		statsFile.close()
+		
+	except FileExistsError:
+	
+		print("Error - The file %s already exists" % statsFilePath)
+		
+			
+def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "postStats.html"): #Generates Post-Stats page
 	voxelWise = checkHeightThreshold(graph)
 	clusterWise = checkExtentThreshold(graph)
 	softwareLabelNum = queryVersionNum(graph)
@@ -343,9 +357,9 @@ def generatePostStatsHTML(graph,postStatsFilePath = "postStats.html"): #Generate
 	#mainPage.div(e.a("Stats", href = "stats.html"))
 	#mainPage.div(e.a("Post Stats", href = "postStats.html"))
 	postStatsPage.ul()
-	postStatsPage.li(e.a("Stats", href = "stats.html"))
+	postStatsPage.li(e.a("Stats", href = statsFilePath))
 	postStatsPage.li("-")
-	postStatsPage.li(e.a("Post Stats", href = "postStats.html"))
+	postStatsPage.li(e.a("Post Stats", href = postStatsFilePath))
 	postStatsPage.ul.close()
 	postStatsPage.h2("Post-stats")
 	postStatsPage.hr()
@@ -400,10 +414,17 @@ def generatePostStatsHTML(graph,postStatsFilePath = "postStats.html"): #Generate
 	
 		postStatsPage.p("%s" % contrastName[i])
 		i = i + 1
+	
+	try:
+	
+		postStatsFile = open(postStatsFilePath, "x")
+		print(postStatsPage, file = postStatsFile)
+		postStatsFile.close()
 		
-	postStatsFile = open("postStats.html", "w")
-	print(postStatsPage, file = postStatsFile)
-	postStatsFile.close()
+	except FileExistsError:
+	
+		print("Error - The file %s already exists" % postStatsFilePath)
+		exit()
 
 def main(): #Main program
 	
@@ -440,5 +461,32 @@ def main(): #Main program
 		print("Testing checkExtentThreshold")
 		print(checkExtentThreshold(g))
 		os.startfile("Main.html")
+	
+	elif len(sys.argv) >= 5:
+	
+		filepath = sys.argv[1]
+ 
+		g.parse(filepath, format = rdflib.util.guess_format(filepath))
+		x = queryFslFeatVersion(g)
+		page = markup.page()
+		page.init(title = "Analysis Test", css = "viewerStyles.css")
+		page.h1("Sample FSL Viewer")
+		"""for i in y:
+			page.p("%s %s" % i)
 
+		#fh = open("testhtml.html", "w")
+		#print(page)	
+		#print(page, file = fh)
+		#fh.close()"""
+
+
+		generateStatsHTML(g,sys.argv[3],sys.argv[4])
+		generatePostStatsHTML(g,sys.argv[3],sys.argv[4])
+		generateMainHTML(g,sys.argv[2],sys.argv[3],sys.argv[4])
+		print("Testing checkHeightThreshold")
+		print(checkHeightThreshold(g))
+		print("Testing checkExtentThreshold")
+		print(checkExtentThreshold(g))
+		os.startfile("Main.html")
+	
 main()
