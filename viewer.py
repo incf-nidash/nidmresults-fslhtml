@@ -413,29 +413,32 @@ def main(): #Main program
 		
 		print("You did not enter an input NIDM file, run the program again")
 		exit()
-	filepath = sys.argv[1]
+	
+	elif len(sys.argv) == 2:
+	
+		filepath = sys.argv[1]
  
-	g.parse(filepath, format = rdflib.util.guess_format(filepath))
-	x = queryFslFeatVersion(g)
-	page = markup.page()
-	page.init(title = "Analysis Test", css = "viewerStyles.css")
-	page.h1("Sample FSL Viewer")
-	"""for i in y:
-		page.p("%s %s" % i)
+		g.parse(filepath, format = rdflib.util.guess_format(filepath))
+		x = queryFslFeatVersion(g)
+		page = markup.page()
+		page.init(title = "Analysis Test", css = "viewerStyles.css")
+		page.h1("Sample FSL Viewer")
+		"""for i in y:
+			page.p("%s %s" % i)
 
-	#fh = open("testhtml.html", "w")
-	#print(page)	
-	#print(page, file = fh)
-	#fh.close()"""
+		#fh = open("testhtml.html", "w")
+		#print(page)	
+		#print(page, file = fh)
+		#fh.close()"""
 
 
-	generateStatsHTML(g)
-	generatePostStatsHTML(g)
-	generateMainHTML(g)
-	print("Testing checkHeightThreshold")
-	print(checkHeightThreshold(g))
-	print("Testing checkExtentThreshold")
-	print(checkExtentThreshold(g))
-	os.startfile("Main.html")
+		generateStatsHTML(g)
+		generatePostStatsHTML(g)
+		generateMainHTML(g)
+		print("Testing checkHeightThreshold")
+		print(checkHeightThreshold(g))
+		print("Testing checkExtentThreshold")
+		print(checkExtentThreshold(g))
+		os.startfile("Main.html")
 
 main()
