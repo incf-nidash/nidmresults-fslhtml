@@ -479,7 +479,15 @@ def main(): #Main program
 		#print(page, file = fh)
 		#fh.close()"""
 
-
+		try:
+		
+			firstFile = open(sys.argv[2],"x")
+			
+		except FileExistsError:
+		
+			print("Error - The file %s already exists" % sys.argv[2])
+			exit()
+			
 		generateStatsHTML(g,sys.argv[3],sys.argv[4])
 		generatePostStatsHTML(g,sys.argv[3],sys.argv[4])
 		generateMainHTML(g,sys.argv[2],sys.argv[3],sys.argv[4])
