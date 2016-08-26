@@ -465,11 +465,20 @@ def main(): #Main program
 		else:
 		
 			filepath = sys.argv[1]
+			g.parse(filepath, format = rdflib.util.guess_format(filepath))
 			outputFolder = sys.argv[2]
 			os.makedirs(outputFolder)
 			currentDir = os.getcwd()
-			location = os.path.join(currentDir, outputFolder)
-			print(location)
+			dirLocation = os.path.join(currentDir, outputFolder)
+			mainFileName = os.path.join(dirLocation, "main.html")
+			statsFileName = os.path.join(dirLocation, "stats.html")
+			postStatsFileName = os.path.join(dirLocation, "postStats.html")
+			print(dirLocation)
+			print(mainFileName)
+			print(statsFileName)
+			generateStatsHTML(g,statsFileName,postStatsFileName)
+			generatePostStatsHTML(g,statsFileName,postStatsFileName)
+			generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
 			
 		
 	
