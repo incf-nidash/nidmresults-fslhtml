@@ -3,6 +3,7 @@ import os
 import sys
 import rdflib
 import markup
+import errno
 from markup import oneliner as e
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
@@ -444,7 +445,7 @@ def main(): #Main program
 		#print(page, file = fh)
 		#fh.close()"""
 
-
+		
 		generateStatsHTML(g)
 		generatePostStatsHTML(g)
 		generateMainHTML(g)
@@ -453,6 +454,24 @@ def main(): #Main program
 		print("Testing checkExtentThreshold")
 		print(checkExtentThreshold(g))
 		os.startfile("Main.html")
+	
+	elif len(sys.argv) == 3:
+		
+		if os.path.exists(sys.argv[2]) == True:
+		
+			print("Error - Folder %s already exists" % sys.argv[2])
+			exit()
+			
+		else:
+		
+			filepath = sys.argv[1]
+			outputFolder = sys.argv[2]
+			os.makedirs(outputFolder)
+			currentDir = os.getcwd()
+			location = os.path.join(currentDir, outputFolder)
+			print(location)
+			
+		
 	
 	elif len(sys.argv) >= 5:
 	
