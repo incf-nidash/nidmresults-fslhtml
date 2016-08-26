@@ -457,7 +457,7 @@ def main(): #Main program
 	
 	elif len(sys.argv) == 3: #If user specifies folder for html files - Will need to consider style sheet location
 		
-		if os.path.exists(sys.argv[2]) == True:
+		if os.path.exists(sys.argv[2]) == True: #Possible race condition - directory may be created after this is checked
 		
 			print("Error - Folder %s already exists" % sys.argv[2])
 			exit()
