@@ -428,7 +428,7 @@ def main(): #Main program
 		print("You did not enter an input NIDM file, run the program again")
 		exit()
 	
-	elif len(sys.argv) == 2:
+	elif len(sys.argv) == 2: #if user does not specify folder for html files
 	
 		filepath = sys.argv[1]
  
@@ -455,7 +455,7 @@ def main(): #Main program
 		print(checkExtentThreshold(g))
 		os.startfile("Main.html")
 	
-	elif len(sys.argv) == 3:
+	elif len(sys.argv) == 3: #If user specifies folder for html files - Will need to consider style sheet location
 		
 		if os.path.exists(sys.argv[2]) == True:
 		
