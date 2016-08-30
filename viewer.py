@@ -404,9 +404,10 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		
 	
 	else: #If there is no corrected threshold - assume voxel wise
+		mainThreshValue = queryUHeightThresholdValue(graph)
 		if askSpm(graph) == True:
 		
-			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticType, "N/A"))
+			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticType, mainThreshValue[0]))
 			
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
