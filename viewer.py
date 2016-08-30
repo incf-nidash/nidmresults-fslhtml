@@ -263,6 +263,19 @@ def queryHeightThresholdValue(graph):
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
 
+def queryUHeightThresholdValue(graph): #Select value of uncorrect height threshold
+
+	query = """prefix prov: <http://www.w3.org/ns/prov#>
+			   prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
+			   prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+			   prefix nidm_PValueUncorrected: <http://purl.org/nidash/nidm#NIDM_0000160>
+			   prefix obo_statistic: <http://purl.obolibrary.org/obo/STATO_0000039>
+
+			   SELECT ?thresholdValue WHERE {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_HeightThreshold . {?x a obo_statistic . } UNION {?x a nidm_PValueUncorrected .} }"""
+			   
+	queryResult = graph.query(query)
+	return(addQueryToList(queryResult))
+	
 def queryContrastName(graph): #Selects contrast name of statistic map
 
 	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
