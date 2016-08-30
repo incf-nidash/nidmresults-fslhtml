@@ -271,7 +271,7 @@ def queryUHeightThresholdValue(graph): #Select value of uncorrect height thresho
 			   prefix nidm_PValueUncorrected: <http://purl.org/nidash/nidm#NIDM_0000160>
 			   prefix obo_statistic: <http://purl.obolibrary.org/obo/STATO_0000039>
 
-			   SELECT ?thresholdValue WHERE {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_HeightThreshold . {?x a obo_statistic . } UNION {?x a nidm_PValueUncorrected .} }"""
+			   SELECT ?thresholdValue WHERE {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_HeightThreshold: . {?x a obo_statistic: . } UNION {?x a nidm_PValueUncorrected: .} ?x prov:value ?thresholdValue}"""
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
@@ -483,6 +483,8 @@ def main(): #Main program
 		
 		filepath = sys.argv[1]
 		g.parse(filepath, format = rdflib.util.guess_format(filepath))
+		print("Height Thresh value is:")
+		print(queryUHeightThresholdValue(g))
 		destinationFolder = sys.argv[2]
 			
 		createOutputDirectory(sys.argv[2])
