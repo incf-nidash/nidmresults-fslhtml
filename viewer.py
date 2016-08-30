@@ -417,7 +417,16 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	print(postStatsPage, file = postStatsFile)
 	postStatsFile.close()
 		
+def createOutputDirectory(outputFolder):
+
+	try:
 	
+		os.makedirs(outputFolder)
+		
+	except OSError:
+	
+		print("Error - %s directory already exists" % outputFolder)
+		exit()
 
 def main(): #Main program
 	
@@ -457,25 +466,22 @@ def main(): #Main program
 	
 	elif len(sys.argv) == 3: #If user specifies folder for html files - Will need to consider style sheet location
 		
-		if os.path.exists(sys.argv[2]) == True: #Possible race condition - directory may be created after this is checked
 		
-			print("Error - Folder %s already exists" % sys.argv[2])
-			exit()
+		
+		filepath = sys.argv[1]
+		g.parse(filepath, format = rdflib.util.guess_format(filepath))
+		destinationFolder = sys.argv[2]
 			
-		else:
-		
-			filepath = sys.argv[1]
-			g.parse(filepath, format = rdflib.util.guess_format(filepath))
-			outputFolder = sys.argv[2]
-			os.makedirs(outputFolder)
-			currentDir = os.getcwd()
-			dirLocation = os.path.join(currentDir, outputFolder)
-			mainFileName = os.path.join(dirLocation, "main.html")
-			statsFileName = os.path.join(dirLocation, "stats.html")
-			postStatsFileName = os.path.join(dirLocation, "postStats.html")
-			generateStatsHTML(g,statsFileName,postStatsFileName)
-			generatePostStatsHTML(g,statsFileName,postStatsFileName)
-			generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+		createOutputDirectory(sys.argv[2])
+				
+		currentDir = os.getcwd()
+		dirLocation = os.path.join(currentDir, destinationFolder)
+		mainFileName = os.path.join(dirLocation, "main.html")
+		statsFileName = os.path.join(dirLocation, "stats.html")
+		postStatsFileName = os.path.join(dirLocation, "postStats.html")
+		generateStatsHTML(g,statsFileName,postStatsFileName)
+		generatePostStatsHTML(g,statsFileName,postStatsFileName)
+		generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
 			
 		
 	
