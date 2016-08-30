@@ -482,51 +482,7 @@ def main(): #Main program
 		generateStatsHTML(g,statsFileName,postStatsFileName)
 		generatePostStatsHTML(g,statsFileName,postStatsFileName)
 		generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
-			
 		
-	
-	elif len(sys.argv) >= 5:
-	
-		filepath = sys.argv[1]
- 
-		g.parse(filepath, format = rdflib.util.guess_format(filepath))
-		x = queryFslFeatVersion(g)
-		page = markup.page()
-		page.init(title = "Analysis Test", css = "viewerStyles.css")
-		page.h1("Sample FSL Viewer")
-		"""for i in y:
-			page.p("%s %s" % i)
-
-		#fh = open("testhtml.html", "w")
-		#print(page)	
-		#print(page, file = fh)
-		#fh.close()"""
-
-		if os.path.isfile(sys.argv[2]):
-		
-			print("Error - The file %s already exists" % sys.argv[2])
-			exit()
-			
-		elif os.path.isfile(sys.argv[3]):
-		
-			print("Error - The file %s already exists" % sys.argv[3])
-			exit()
-			
-		elif os.path.isfile(sys.argv[4]):
-		
-			print("Error - The file %s already exists" % sys.argv[4])
-			exit()
-			
-		else:
-		
-			generateStatsHTML(g,sys.argv[3],sys.argv[4])
-			generatePostStatsHTML(g,sys.argv[3],sys.argv[4])
-			generateMainHTML(g,sys.argv[2],sys.argv[3],sys.argv[4])
-			print("Testing checkHeightThreshold")
-			print(checkHeightThreshold(g))
-			print("Testing checkExtentThreshold")
-			print(checkExtentThreshold(g))
-			os.startfile(sys.argv[2])
 		
 	else:
 	
