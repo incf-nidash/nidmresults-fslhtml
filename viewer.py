@@ -532,5 +532,7 @@ def main(): #Main program
 	
 		print("Error - Please ensure you run the program as follows.\nviewer.py nidmFileName mainHtmlFileName statsHtmlFileName postStatsHtmlFileName")
 		exit()
-	
-main()
+
+if __name__ == "__main__":
+		
+	main()
