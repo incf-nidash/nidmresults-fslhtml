@@ -292,6 +292,38 @@ def checkVoxelOrClusterThreshold(graph):
 
 	print("Test")
 
+def askIfOboStatistic(graph): #Checks if threshold is an obo_statistic
+	answer = False
+	query = """prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
+               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix obo_statistic: <http://purl.obolibrary.org/obo/STATO_0000039>
+
+               ASK {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_HeightThreshold: . ?x a obo_statistic: .}"""
+			   
+	queryResult = graph.query(query)
+	for row in queryResult:
+	
+		answer = row
+	
+	return(answer)
+
+def askIfPValueUncorrected(graph): #Checks if threshold is a PValueUncorrected
+	answer = False
+	query = """prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
+               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix nidm_PValueUncorrected: <http://purl.org/nidash/nidm#NIDM_0000160>
+
+               ASK {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_HeightThreshold: . ?x a nidm_PValueUncorrected: .}"""
+			   
+	queryResult = graph.query(query)
+	for row in queryResult:
+	
+		answer = row
+		
+	return(answer)
+	
 def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
 
 	mainPage = markup.page()
@@ -405,14 +437,28 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	
 	else: #If there is no corrected threshold - assume voxel wise
 		mainThreshValue = queryUHeightThresholdValue(graph)
-		if askSpm(graph) == True:
+		if askSpm(graph) == True and askIfPValueUncorrected(graph) == True:
 		
 			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticType, mainThreshValue[0]))
+		
+		elif askSpm(graph) == True and askIfOboStatistic(graph) == True:
+		
+			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at %s = %s (uncorrected)" % (softwareLabelNumList[1], statisticType, statisticType, mainThreshValue[0]))
 			
-		elif askFsl(graph) == True:
+			
+		
+		elif askFsl(graph) == True and askIfPValueUncorrected(graph) == True:
+		
 			fslFeatVersion = queryFslFeatVersion(graph)
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
-			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticType, "N/A"))
+			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticType, statisticType, mainThreshValue))
+			
+		elif askFsl(graph) == True and askIfOboStatistic(graph) == True:
+			
+			fslFeatVersion = queryFslFeatVersion(graph)
+			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
+			"%s statistic images were thresholded at %s = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticType, statisticType, mainThreshValue))
+			
 			
 		print("Not ready yet") 
 	
