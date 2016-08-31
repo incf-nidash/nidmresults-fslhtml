@@ -287,6 +287,18 @@ def queryContrastName(graph): #Selects contrast name of statistic map
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
+
+def queryStatisticImage(graph): #Selects statistic map image URI
+
+	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
+               prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
+               prefix prov: <http://www.w3.org/ns/prov#>
+
+               SELECT ?image WHERE {?x a nidm_Inference: . ?x prov:used ?y . ?y a nidm_StatisticMap: . ?y prov:atlocation ?image .}"""
+			   
+	queryResult = graph.query(query)
+	return(addQueryToList(queryResult))
 	
 def checkVoxelOrClusterThreshold(graph):
 
