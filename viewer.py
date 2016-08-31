@@ -335,6 +335,18 @@ def askIfPValueUncorrected(graph): #Checks if threshold is a PValueUncorrected
 		answer = row
 		
 	return(answer)
+
+def clusterFormingThreshType(graph, image):
+
+	if askIfOboStatistic(graph) == True:
+	
+		return(image)
+		
+	elif askIfPValueUncorrected(graph) == True:
+	
+		return("P")
+			   
+	
 	
 def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
 
@@ -436,18 +448,21 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	elif clusterWise == True: #If main threshold is extent threshold
 		print("Cluster thresh Value")
 		mainThreshValue = queryClusterThresholdValue(graph)
+		heightThreshValue = queryUHeightThresholdValue(graph)
+		clusterThreshType = clusterFormingThreshType(graph, statisticType)
 		print(mainThreshValue)
+		print(heightThreshValue)
 		if askSpm(graph) == True:
 	
-			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by ... and a (corrected) "
+			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by %s > %s and a (corrected) "
 			"cluster significance of P = %s " 
-			% (softwareLabelNumList[1], statisticType, mainThreshValue[0]))
+			% (softwareLabelNumList[1], statisticType, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded "
-			"using clusters determined by ... and a (corrected) cluster significance of P = %s" 
-			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType, mainThreshValue[0]))
+			"using clusters determined by %s > %s and a (corrected) cluster significance of P = %s" 
+			%(fslFeatVersion[0], softwareLabelNumList[1], statisticType, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
 		
 	
 	else: #If there is no corrected threshold - assume voxel wise
