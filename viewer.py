@@ -295,7 +295,7 @@ def queryStatisticImage(graph): #Selects statistic map image URI
                prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
                prefix prov: <http://www.w3.org/ns/prov#>
 
-               SELECT ?image WHERE {?x a nidm_Inference: . ?x prov:used ?y . ?y a nidm_StatisticMap: . ?y prov:atlocation ?image .}"""
+               SELECT ?image WHERE {?x a nidm_Inference: . ?x prov:used ?y . ?y a nidm_StatisticMap: . ?y prov:atLocation ?image .}"""
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
@@ -402,6 +402,9 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	statisticType = queryStatisticType(graph)
 	statisticType = statisticImage(statisticType[0])
 	contrastName = queryContrastName(graph)
+	statisticMapImage = queryStatisticImage(graph)
+	print("Statistic map image lists")
+	print(statisticMapImage)
 	print("Stat type")
 	print(statisticType)
 	postStatsPage = markup.page()
@@ -481,6 +484,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	while i < len(contrastName):
 	
 		postStatsPage.p("%s" % contrastName[i])
+		postStatsPage.img(src = statisticMapImage[i], width = 100, height = 80)
 		i = i + 1
 	
 	
