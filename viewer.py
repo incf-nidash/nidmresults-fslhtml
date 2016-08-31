@@ -250,7 +250,7 @@ def queryClusterThresholdValue(graph): #Selects the value of the main threshold 
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
 
-def queryHeightThresholdValue(graph):
+def queryHeightThresholdValue(graph): #Selects the value of the main threshold if voxel-wise
 
 	query = """prefix prov: <http://www.w3.org/ns/prov#>
                prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
@@ -263,7 +263,7 @@ def queryHeightThresholdValue(graph):
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
 
-def queryUHeightThresholdValue(graph): #Select value of uncorrect height threshold
+def queryUHeightThresholdValue(graph): #Select value of uncorrected height threshold
 
 	query = """prefix prov: <http://www.w3.org/ns/prov#>
 			   prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
@@ -372,7 +372,7 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	statsPage.hr()
 	statsPage.h3("Design Matrix")
 	designMatrixLocation = queryDesignMatrixLocation(graph)
-	statsPage.a(e.img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0])
+	statsPage.a(e.img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0]) #Creates image of design matrix and makes it a link
 	
 	
 	statsFile = open(statsFilePath, "w")
@@ -437,11 +437,11 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	
 	else: #If there is no corrected threshold - assume voxel wise
 		mainThreshValue = queryUHeightThresholdValue(graph)
-		if askSpm(graph) == True and askIfPValueUncorrected(graph) == True:
+		if askSpm(graph) == True and askIfPValueUncorrected(graph) == True: #SPM used and threshold type is nidm_PValueUncorrected
 		
 			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticType, mainThreshValue[0]))
 		
-		elif askSpm(graph) == True and askIfOboStatistic(graph) == True:
+		elif askSpm(graph) == True and askIfOboStatistic(graph) == True: #SPM used and threshold type is obo_statistic
 		
 			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at %s = %s (uncorrected)" % (softwareLabelNumList[1], statisticType, statisticType, mainThreshValue[0]))
 			
@@ -477,7 +477,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	print(postStatsPage, file = postStatsFile)
 	postStatsFile.close()
 		
-def createOutputDirectory(outputFolder):
+def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
 
 	try:
 	
