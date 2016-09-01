@@ -377,7 +377,7 @@ def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.ht
 	
 	
 	
-	mainFile = open(mainFilePath, "w")
+	mainFile = open(mainFilePath, "x")
 	print(mainPage, file = mainFile)
 	mainFile.close()
 		
@@ -413,7 +413,7 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	statsPage.a(e.img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0]) #Creates image of design matrix and makes it a link
 	
 	
-	statsFile = open(statsFilePath, "w")
+	statsFile = open(statsFilePath, "x")
 	print(statsPage, file = statsFile)
 	statsFile.close()
 		
@@ -519,7 +519,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	
 	
 	
-	postStatsFile = open(postStatsFilePath, "w")
+	postStatsFile = open(postStatsFilePath, "x")
 	print(postStatsPage, file = postStatsFile)
 	postStatsFile.close()
 		
@@ -543,32 +543,7 @@ def main(): #Main program
 		print("You did not enter an input NIDM file, run the program again")
 		exit()
 	
-	elif len(sys.argv) == 2: #if user does not specify folder for html files
 	
-		filepath = sys.argv[1]
- 
-		g.parse(filepath, format = rdflib.util.guess_format(filepath))
-		x = queryFslFeatVersion(g)
-		page = markup.page()
-		page.init(title = "Analysis Test", css = "viewerStyles.css")
-		page.h1("Sample FSL Viewer")
-		"""for i in y:
-			page.p("%s %s" % i)
-
-		#fh = open("testhtml.html", "w")
-		#print(page)	
-		#print(page, file = fh)
-		#fh.close()"""
-
-		
-		generateStatsHTML(g)
-		generatePostStatsHTML(g)
-		generateMainHTML(g)
-		print("Testing checkHeightThreshold")
-		print(checkHeightThreshold(g))
-		print("Testing checkExtentThreshold")
-		print(checkExtentThreshold(g))
-		os.startfile("Main.html")
 	
 	elif len(sys.argv) == 3: #If user specifies folder for html files - Will need to consider style sheet location
 		
