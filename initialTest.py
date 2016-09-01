@@ -5,13 +5,14 @@ class statsPageTests(unittest.TestCase):
 
 	def test_softwareName(self):
 	
+		x = open(testFileName, "r")
+		found = False
+		for line in x:
+			if "SPM" in line:
+				found = True
+				
 		
-		
-if name == "__main__":
-
-	if len(sys.argv) > 1:
+		self.assertTrue(found)
 	
-		statsPageTests.nidmFile = sys.argv.pop()
-		statsPageTests.outputFolder = sys.argv.pop()
-		statsPageTests.softwareName = sys.argv.pop()
-		statsPageTests.softwareVersionNum = sys.argv.pop()
+		
+		
