@@ -4,11 +4,13 @@ import sys
 
 class fslTests(unittest.TestCase):
 	htmlFile = ""
+	testHtml = ""
 	def test_softwareName(self):
 	
-		file = open(self.htmlFile, "r")
+		resultFile = open(self.htmlFile, "r")
 		found = False
-		for line in file:
+		for line in resultFile:
+			
 			if "FSL" in line:
 				found = True
 				
@@ -17,15 +19,16 @@ class fslTests(unittest.TestCase):
 		
 	def test_versionNum(self):
 	
-		#x = open(testFileName, "r")
-		y = 5
+		file = open(self.htmlFile, "r")
+		
 	
 		
 		
 if __name__ == "__main__":
 
 	if len(sys.argv) > 1:
-	
+		
+		fslTests.testHtml = sys.argv.pop()
 		fslTests.htmlFile = sys.argv.pop()
 		
 	unittest.main()
