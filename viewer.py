@@ -347,6 +347,20 @@ def clusterFormingThreshType(graph, image):
 		return("P")
 			   
 	
+def statisticImageString(statImage):
+
+	if statImage == "T":
+	
+		return("T")
+		
+	elif statImage == "F":
+	
+		return("F")
+		
+	elif statImage == "Z":
+	
+		return("Z (Gaussianised T/F)")
+
 	
 def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
 
