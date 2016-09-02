@@ -496,7 +496,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		
 			fslFeatVersion = queryFslFeatVersion(graph)
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
-			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticType, mainThreshValue[0]))
+			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
 			
 		elif askFsl(graph) == True and askIfOboStatistic(graph) == True:
 			
