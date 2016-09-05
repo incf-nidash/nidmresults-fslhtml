@@ -58,3 +58,4 @@ class fslStatsTests(unittest.TestCase):
 		self.assertIn("Z (Gaussianised T/F)", myString)
 		testFile.close()
 		resultFile.close()
+		
