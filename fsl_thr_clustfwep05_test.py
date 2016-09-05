@@ -6,7 +6,7 @@ import string
 class fslStatsTests(unittest.TestCase):
 	htmlFile = ""
 	testHtml = ""
-	def test_softwareName(self):
+	def test_softwareName(self): #Tests for FSL in HTML page
 		testFile = open(self.testHtml, "r")
 		resultFile = open(self.htmlFile, "r")
 		found = False
