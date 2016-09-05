@@ -65,16 +65,16 @@ class fslPostStatsTests(unittest.TestCase):
 	testHtml = ""
 	
 	def test_Threshold(self):
-	
+		myString = ""
 		resultFile = open(self.htmlFile, "r")
 		for line in resultFile:
 		
-			if "thresholded at " and "(uncorrected)" in line:
+			if "(corrected) cluster significance threshold " in line:
 
 				myString = line
 				break
 		
-		self.assertIn("P = 0.001", myString)
+		self.assertIn("P = 0.05", myString)
 		resultFile.close()
 		
 if __name__ == "__main__":
