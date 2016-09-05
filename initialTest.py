@@ -1,6 +1,7 @@
 import os
 import unittest
 import sys
+import string
 
 class fslStatsTests(unittest.TestCase):
 	htmlFile = ""
@@ -35,6 +36,7 @@ class fslStatsTests(unittest.TestCase):
 			if "Version" in line:
 			
 				myString = line
+				print(myString.split())
 				break
 				
 		self.assertIn("Version 6.00", myString)
