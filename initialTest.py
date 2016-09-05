@@ -2,7 +2,7 @@ import os
 import unittest
 import sys
 
-class fslTests(unittest.TestCase):
+class fslStatsTests(unittest.TestCase):
 	htmlFile = ""
 	testHtml = ""
 	def test_softwareName(self):
