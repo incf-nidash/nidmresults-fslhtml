@@ -57,12 +57,31 @@ class fslStatsTests(unittest.TestCase):
 		testFile.close()
 		resultFile.close()
 		
+class fslPostStatsTests(unittest.TestCase):
+
+	htmlFile = ""
+	testHtml = ""
+	
+	def test_Threshold(self):
+	
+		resultFile = open(self.htmlFile, "r")
+		for line in resultFile:
+		
+			if "thresholded at " and "(uncorrected)" in line:
+
+				myString = line
+				break
+		
+		self.assertIn("P = 0.001", myString)
+		resultFile.close()
 		
 if __name__ == "__main__":
 
 	if len(sys.argv) > 1:
 		
-		fslTests.testHtml = sys.argv.pop()
-		fslTests.htmlFile = sys.argv.pop()
+		fslStatsTests.testHtml = sys.argv.pop()
+		fslStatsTests.htmlFile = sys.argv.pop()
+		fslPostStatsTests.testhtml = fslStatsTests.testHtml
+		fslPostStatsTests.htmlFile = fslStatsTests.htmlFile
 		
 	unittest.main()
