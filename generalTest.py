@@ -59,7 +59,7 @@ class fslStatsTests(unittest.TestCase):
 		testFile.close()
 		resultFile.close()
 		
-	def test_compare(self):
+	def test_compareVersion(self):
 		actualString = ""
 		myString = ""
 		testFile = open(self.testHtml, "r")
@@ -85,6 +85,31 @@ class fslStatsTests(unittest.TestCase):
 		print(actualString)		
 		testFile.close()
 		resultFile.close()
+		self.assertIn(myString, actualString)
+		
+	def test_compareStatImage(self):
+		testFile = open(self.testHtml, "r")
+		resultFile = open(self.htmlFile, "r")
+		myString = ""
+		actualString = ""
+		for line in testFile:
+		
+			if "statistic images" in line:
+			
+				actualString = line
+				break
+		
+		for line in resultFile:
+		
+			if "statistic images" in line:
+				
+				myString = line
+				break
+		
+		actualString = ""
+		myString = ""
+		
+		
 if __name__ == "__main__":
 
 	if len(sys.argv) > 1:
