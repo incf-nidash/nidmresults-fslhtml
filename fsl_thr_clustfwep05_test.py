@@ -20,7 +20,7 @@ class fslStatsTests(unittest.TestCase):
 		testFile.close()
 		resultFile.close()
 	def test_featVersionNum(self):
-	
+		myString = ""
 		testFile = open(self.testHtml, "r")
 		resultFile = open(self.htmlFile, "r")
 		for line in testFile:
@@ -44,7 +44,7 @@ class fslStatsTests(unittest.TestCase):
 		resultFile.close()
 		
 	def testStatImageType(self):
-	
+		myString = ""
 		testFile = open(self.testHtml, "r")
 		resultFile = open(self.htmlFile, "r")
 		
