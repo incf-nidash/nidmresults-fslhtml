@@ -559,7 +559,7 @@ def main(nidmFile, htmlFolder): #Main program
 	generateStatsHTML(g,statsFileName,postStatsFileName)
 	generatePostStatsHTML(g,statsFileName,postStatsFileName)
 	generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
-		
+	return(destinationFolder)	
 		
 	
 
