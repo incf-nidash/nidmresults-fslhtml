@@ -59,3 +59,38 @@ class fslStatsTests(unittest.TestCase):
 		testFile.close()
 		resultFile.close()
 		
+	def test_compare(self):
+		actualString = ""
+		myString = ""
+		testFile = open(self.testHtml, "r")
+		resultFile = open(self.htmlFile, "r")
+		
+		for line in testFile:
+		
+			if "Version" in line: 
+			
+				actualString = line
+				print(actualString.split())
+				break
+				
+		for line in resultFile:
+		
+			if "Version" in line:
+			
+				myString = line
+				break
+		
+		print("Below")
+		print(myString)
+		print(actualString)		
+		testFile.close()
+		resultFile.close()
+if __name__ == "__main__":
+
+	if len(sys.argv) > 1:
+		
+		fslStatsTests.testHtml = sys.argv.pop()
+		fslStatsTests.htmlFile = sys.argv.pop()
+		
+		
+	unittest.main()
