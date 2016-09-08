@@ -6,7 +6,7 @@ import os
 class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 
 	def setUp(self): #Open necessary file
-	
+		self.myString = ""
 		self.data = "fsl_con_f.nidm.ttl"
 		#self.file = open(self.data, "r")
 		self.folder = viewer.main(self.data, "fsl_con_f_testHTML")
@@ -22,10 +22,10 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 		
 			if "FSL" in line:
 			
-				myString = line
+				self.myString = line
 				break
 				
-		self.assertIn("FSL", myString)
+		self.assertIn("FSL", self.myString)
 	
 	def test_softwareNum(self):
 	
@@ -33,7 +33,7 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 		
 			if "Version" in line:
 			
-				myString = line
+				self.myString = line
 				break
 				
 		self.assertIn("6.00", line)
@@ -44,10 +44,10 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 		
 			if "statistic images" in line:
 			
-				myString = line
+				self.myString = line
 				break
 		
-		self.assertIn("Z (Gaussianised T/F)", myString)
+		self.assertIn("Z (Gaussianised T/F)", self.myString)
 		
 	def test_threshold(self):
 	
@@ -55,10 +55,10 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 		
 			if "statistic images were thresholded at" in line:
 			
-				myString = line
+				self.myString = line
 				break
 				
-		self.assertIn("P = 0.001 (uncorrected)", myString)
+		self.assertIn("P = 0.001 (uncorrected)", self.myString)
 	
 	def tearDown(self):
 	
@@ -67,7 +67,7 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tests
 
 	def setUp(self): #Open necessary file
-	
+		self.myString = ""
 		self.data = "fsl_thr_clustfwep05.nidm.ttl"
 		#self.file = open(self.data, "r")
 		self.folder = viewer.main(self.data, "fsl_thr_clustfwep05testHTML")
@@ -82,10 +82,10 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 		
 			if "FSL" in line:
 			
-				myString = line
+				self.myString = line
 				break
 				
-		self.assertIn("FSL", myString)
+		self.assertIn("FSL", self.myString)
 	
 	def test_softwareNum(self):
 	
@@ -93,7 +93,7 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 		
 			if "Version" in line:
 			
-				myString = line
+				self.myString = line
 				break
 				
 		self.assertIn("6.00", line)
@@ -104,10 +104,10 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 		
 			if "statistic images were thresholded using clusters determined by" in line:
 			
-				myString = line
+				self.myString = line
 				break
 				
-		self.assertIn("Z > 2.3", myString)
+		self.assertIn("Z > 2.3", self.myString)
 	
 	def test_threshold(self):
 	
@@ -115,10 +115,10 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 		
 			if "(corrected) cluster significance threshold" in line:
 			
-				myString = line
+				self.myString = line
 				break
 				
-		self.assertIn("P = 0.05", myString)
+		self.assertIn("P = 0.05", self.myString)
 	
 	def tearDown(self):
 	
@@ -127,7 +127,7 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 class fsl_thr_voxelfwep05(unittest.TestCase):
 
 	def setUp(self): #Open necessary file
-	
+		self.myString = ""
 		self.data = "fsl_thr_voxelfwep05.nidm.ttl"
 		#self.file = open(self.data, "r")
 		self.folder = viewer.main(self.data, "fsl_thr_voxelfwep05testHTML")
@@ -142,10 +142,10 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 		
 			if "FSL" in line:
 			
-				myString = line
+				self.myString = line
 				break
 				
-		self.assertIn("FSL", myString)
+		self.assertIn("FSL", self.myString)
 	
 	def test_softwareNum(self):
 	
@@ -153,7 +153,7 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 		
 			if "Version" in line:
 			
-				myString = line
+				self.myString = line
 				break
 				
 		self.assertIn("6.00", line)
@@ -164,19 +164,19 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 		
 			if "(corrected) significance threshold" in line:
 			
-				myString = line
+				self.myString = line
 				break
 				
-		self.assertIn("P = 0.05", myString)
+		self.assertIn("P = 0.05", self.myString)
 	
 	def tearDown(self):
 	
 		self.postStatsFile.close()
 		
 class spm_thr_clustunck10(unittest.TestCase):
-
-	def setUp(self): #Open necessary file
 	
+	def setUp(self): #Open necessary file
+		self.myString = ""
 		self.data = "ex_spm_thr_clustunck10.nidm.ttl"
 		#self.file = open(self.data, "r")
 		self.folder = viewer.main(self.data, "ex_spm_thr_clustunck10_testHTML")
@@ -185,7 +185,88 @@ class spm_thr_clustunck10(unittest.TestCase):
 		self.postStats = os.path.join(self.dest, "postStats.html")
 		self.postStatsFile = open(self.postStats, "r")
 		
+	def test_softwareName(self): #Test to see if FSL is in html file
+	
+		for line in self.postStatsFile:
 		
+			if "SPM" in line:
+			
+				self.myString = line
+				break
+				
+		self.assertIn("SPM", self.myString)
+
+	def test_softwareNum(self):
+	
+		for line in self.postStatsFile:
+		
+			if "Version" in line:
+			
+				self.myString = line
+				break
+				
+		self.assertIn("12.6685", line)
+	
+	def test_pThresh(self):
+	
+		for line in self.postStatsFile:
+		
+			if "P" in line:
+			
+				self.myString = line
+				break
+				
+		self.assertIn("P = 0.001", line)
+	
+	def tearDown(self):
+	
+		self.postStatsFile.close()
+		
+class spm_thr_voxelfdrp05(unittest.TestCase):
+
+	def setUp(self): #Open necessary file
+		self.myString = ""
+		self.data = "ex_spm_thr_voxelfdrp05.nidm.ttl"
+		#self.file = open(self.data, "r")
+		self.folder = viewer.main(self.data, "ex_spm_thr_voxel05_testHTML")
+		self.direc = os.getcwd()
+		self.dest = os.path.join(self.direc, self.folder)
+		self.postStats = os.path.join(self.dest, "postStats.html")
+		self.postStatsFile = open(self.postStats, "r")
+		
+	def test_softwareName(self): #Test to see if FSL is in html file
+	
+		for line in self.postStatsFile:
+		
+			if "SPM" in line:
+			
+				self.myString = line
+				break
+				
+		self.assertIn("SPM", self.self.myString)
+
+	def test_softwareNum(self):
+	
+		for line in self.postStatsFile:
+		
+			if "Version" in line:
+			
+				self.myString = line
+				break
+				
+		self.assertIn("12.6685", line)
+	
+	def test_pThresh(self):
+	
+		for line in self.postStatsFile:
+		
+			if "P" in line:
+			
+				self.myString = line
+				break
+				
+		self.assertIn("P = 0.05", line)
+	
 	def tearDown(self):
 	
 		self.postStatsFile.close()
