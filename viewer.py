@@ -539,7 +539,18 @@ def main(nidmFile, htmlFolder): #Main program
 	
 	g = rdflib.Graph()
 	
+<<<<<<< HEAD
 
+=======
+	if len(sys.argv) == 1:
+		
+		print("You did not enter an input NIDM file, run the program again")
+		exit()
+	
+	
+	
+	elif len(sys.argv) == 3: #If user specifies folder for html files - Will need to consider style sheet location
+>>>>>>> 1491fcf5576684ed2cd63b17f0a078c9a017696b
 		
 		
 		
