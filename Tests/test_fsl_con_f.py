@@ -123,4 +123,19 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 	def tearDown(self):
 	
 		self.postStatsFile.close()
+
+class fsl_thr_voxelfwep05(unittest.TestCase):
+
+	def setUp(self): #Open necessary file
 	
+		self.data = "fsl_thr_clustfwep05.nidm.ttl"
+		#self.file = open(self.data, "r")
+		self.folder = viewer.main(self.data, "fsl_thr_clustfwep05testHTML")
+		self.direc = os.getcwd()
+		self.dest = os.path.join(self.direc, self.folder)
+		self.postStats = os.path.join(self.dest, "postStats.html")
+		self.postStatsFile = open(self.postStats, "r")
+		
+	def tearDown(self):
+	
+		self.postStatsFile.close()
