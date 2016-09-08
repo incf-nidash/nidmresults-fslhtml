@@ -27,6 +27,16 @@ class fsl_con_f(unittest.TestCase):
 				
 		self.assertIn("FSL", myString)
 	
+	def test_softwareNum(self):
+	
+		for line in self.file:
+		
+			if "Version" in line:
+			
+				myString = line
+				break
+				
+		self.assertIn("6.00", line)
 	
 	def tearDown(self):
 	
