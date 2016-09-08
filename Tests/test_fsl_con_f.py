@@ -12,13 +12,13 @@ class fsl_con_f(unittest.TestCase):
 		self.folder = viewer.main(self.data, "fsl_con_f_testHTML")
 		self.direc = os.getcwd()
 		self.dest = os.path.join(self.direc, self.folder)
-		self.stats = os.path.join(self.dest, "stats.html")
-		self.file = open(self.stats, "r")
+		self.postStats = os.path.join(self.dest, "postStats.html")
+		self.postStatsFile = open(self.postStats, "r")
 		
 
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
-		for line in self.file:
+		for line in self.postStatsFile:
 		
 			if "FSL" in line:
 			
@@ -29,7 +29,7 @@ class fsl_con_f(unittest.TestCase):
 	
 	def test_softwareNum(self):
 	
-		for line in self.file:
+		for line in self.postStatsFile:
 		
 			if "Version" in line:
 			
@@ -40,7 +40,7 @@ class fsl_con_f(unittest.TestCase):
 		
 	def test_statImage(self):
 	
-		for line in self.file:
+		for line in self.postStatsFile:
 		
 			if "statistic images" in line:
 			
@@ -48,7 +48,13 @@ class fsl_con_f(unittest.TestCase):
 				break
 		
 		self.assertIn("Z (Gaussianised T/F)", myString)
+		
+	def test_threshold(self):
+	
+		for line in self.postStatsFile:
+		
+			if ""
 	
 	def tearDown(self):
 	
-		self.file.close()
+		self.postStatsFile.close()
