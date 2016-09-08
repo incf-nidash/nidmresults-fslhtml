@@ -3,7 +3,7 @@ import viewer
 import sys
 import os
 
-class fsl_con_f(unittest.TestCase):
+class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 
 	def setUp(self): #Open necessary file
 	
@@ -64,7 +64,7 @@ class fsl_con_f(unittest.TestCase):
 	
 		self.postStatsFile.close()
 		
-class fsl_thr_clustfwep05(unittest.TestCase):
+class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tests
 
 	def setUp(self): #Open necessary file
 	
@@ -98,7 +98,7 @@ class fsl_thr_clustfwep05(unittest.TestCase):
 				
 		self.assertIn("6.00", line)
 	
-	def test_clustThreshold(self):
+	def test_clustThreshold(self): #Test for Z > 2.3
 	
 		for line in self.postStatsFile:
 		
