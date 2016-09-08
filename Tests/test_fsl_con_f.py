@@ -37,6 +37,17 @@ class fsl_con_f(unittest.TestCase):
 				break
 				
 		self.assertIn("6.00", line)
+		
+	def test_statImage(self):
+	
+		for line in self.file:
+		
+			if "statistic images" in line:
+			
+				myString = line
+				break
+		
+		self.assertIn("Z (Gaussianised T/F)", myString)
 	
 	def tearDown(self):
 	
