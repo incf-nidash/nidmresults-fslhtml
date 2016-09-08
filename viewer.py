@@ -539,21 +539,7 @@ def main(nidmFile, htmlFolder): #Main program
 	
 	g = rdflib.Graph()
 	
-
-
-
-	if len(sys.argv) == 1:
-		
-		print("You did not enter an input NIDM file, run the program again")
-		exit()
 	
-	
-	
-	elif len(sys.argv) == 3: #If user specifies folder for html files - Will need to consider style sheet location
-
-		
-		
-		
 	filepath = nidmFile
 	g.parse(filepath, format = rdflib.util.guess_format(filepath))
 	print("Height Thresh value is:")
