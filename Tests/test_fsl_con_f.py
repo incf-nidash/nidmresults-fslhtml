@@ -128,14 +128,47 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 
 	def setUp(self): #Open necessary file
 	
-		self.data = "fsl_thr_clustfwep05.nidm.ttl"
+		self.data = "fsl_thr_voxelfwep05.nidm.ttl"
 		#self.file = open(self.data, "r")
-		self.folder = viewer.main(self.data, "fsl_thr_clustfwep05testHTML")
+		self.folder = viewer.main(self.data, "fsl_thr_voxelfwep05testHTML")
 		self.direc = os.getcwd()
 		self.dest = os.path.join(self.direc, self.folder)
 		self.postStats = os.path.join(self.dest, "postStats.html")
 		self.postStatsFile = open(self.postStats, "r")
+	
+	def test_softwareName(self): #Test to see if FSL is in html file
+	
+		for line in self.postStatsFile:
 		
+			if "FSL" in line:
+			
+				myString = line
+				break
+				
+		self.assertIn("FSL", myString)
+	
+	def test_softwareNum(self):
+	
+		for line in self.postStatsFile:
+		
+			if "Version" in line:
+			
+				myString = line
+				break
+				
+		self.assertIn("6.00", line)
+	
+	def test_voxelThreshold(self): #Test for Z > 2.3
+	
+		for line in self.postStatsFile:
+		
+			if "(corrected) significance threshold" in line:
+			
+				myString = line
+				break
+				
+		self.assertIn("P = 0.05", myString)
+	
 	def tearDown(self):
 	
 		self.postStatsFile.close()
