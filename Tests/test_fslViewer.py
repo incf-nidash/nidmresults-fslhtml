@@ -8,7 +8,6 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 	def setUp(self): #Open necessary file
 		self.myString = ""
 		self.data = "fsl_con_f.nidm.ttl"
-		#self.file = open(self.data, "r")
 		self.folder = viewer.main(self.data, "fsl_con_f_testHTML")
 		self.direc = os.getcwd()
 		self.dest = os.path.join(self.direc, self.folder)
@@ -69,7 +68,6 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 	def setUp(self): #Open necessary file
 		self.myString = ""
 		self.data = "fsl_thr_clustfwep05.nidm.ttl"
-		#self.file = open(self.data, "r")
 		self.folder = viewer.main(self.data, "fsl_thr_clustfwep05testHTML")
 		self.direc = os.getcwd()
 		self.dest = os.path.join(self.direc, self.folder)
@@ -129,7 +127,6 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 	def setUp(self): #Open necessary file
 		self.myString = ""
 		self.data = "fsl_thr_voxelfwep05.nidm.ttl"
-		#self.file = open(self.data, "r")
 		self.folder = viewer.main(self.data, "fsl_thr_voxelfwep05testHTML")
 		self.direc = os.getcwd()
 		self.dest = os.path.join(self.direc, self.folder)
@@ -178,7 +175,6 @@ class spm_thr_clustunck10(unittest.TestCase):
 	def setUp(self): #Open necessary file
 		self.myString = ""
 		self.data = "ex_spm_thr_clustunck10.nidm.ttl"
-		#self.file = open(self.data, "r")
 		self.folder = viewer.main(self.data, "ex_spm_thr_clustunck10_testHTML")
 		self.direc = os.getcwd()
 		self.dest = os.path.join(self.direc, self.folder)
@@ -227,7 +223,6 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 	def setUp(self): #Open necessary file
 		self.myString = ""
 		self.data = "ex_spm_thr_voxelfdrp05.nidm.ttl"
-		#self.file = open(self.data, "r")
 		self.folder = viewer.main(self.data, "ex_spm_thr_voxel05_testHTML")
 		self.direc = os.getcwd()
 		self.dest = os.path.join(self.direc, self.folder)
@@ -276,7 +271,6 @@ class spm_thr_voxelunct4(unittest.TestCase):
 	def setUp(self): #Open necessary file
 		self.myString = ""
 		self.data = "ex_spm_thr_voxelunct4.nidm.ttl"
-		#self.file = open(self.data, "r")
 		self.folder = viewer.main(self.data, "ex_spm_thr_voxelunct4_testHTML")
 		self.direc = os.getcwd()
 		self.dest = os.path.join(self.direc, self.folder)
