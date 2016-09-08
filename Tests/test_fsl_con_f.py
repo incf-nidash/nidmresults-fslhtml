@@ -270,3 +270,52 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 	def tearDown(self):
 	
 		self.postStatsFile.close()
+		
+class spm_thr_voxelunct4(unittest.TestCase):
+
+	def setUp(self): #Open necessary file
+		self.myString = ""
+		self.data = "ex_spm_thr_voxelunct4.nidm.ttl"
+		#self.file = open(self.data, "r")
+		self.folder = viewer.main(self.data, "ex_spm_thr_voxelunct4_testHTML")
+		self.direc = os.getcwd()
+		self.dest = os.path.join(self.direc, self.folder)
+		self.postStats = os.path.join(self.dest, "postStats.html")
+		self.postStatsFile = open(self.postStats, "r")
+		
+	def test_softwareName(self): #Test to see if FSL is in html file
+	
+		for line in self.postStatsFile:
+		
+			if "SPM" in line:
+			
+				self.myString = line
+				break
+				
+		self.assertIn("SPM", self.self.myString)
+
+	def test_softwareNum(self):
+	
+		for line in self.postStatsFile:
+		
+			if "Version" in line:
+			
+				self.myString = line
+				break
+				
+		self.assertIn("12.6685", line)
+	
+	def test_tThresh(self):
+	
+		for line in self.postStatsFile:
+		
+			if "T statistic images" in line:
+			
+				self.myString = line
+				break
+				
+		self.assertIn("T = 4.0 (uncorrected)", line)
+	
+	def tearDown(self):
+	
+		self.postStatsFile.close()
