@@ -158,7 +158,7 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 				
 		self.assertIn("6.00", line)
 	
-	def test_voxelThreshold(self): #Test for Z > 2.3
+	def test_voxelThreshold(self): #Test voxel wise P = 0.05
 	
 		for line in self.postStatsFile:
 		
