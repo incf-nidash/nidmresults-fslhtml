@@ -172,3 +172,20 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 	def tearDown(self):
 	
 		self.postStatsFile.close()
+		
+class spm_thr_clustunck10(unittest.TestCase):
+
+	def setUp(self): #Open necessary file
+	
+		self.data = "ex_spm_thr_clustunck10.nidm.ttl"
+		#self.file = open(self.data, "r")
+		self.folder = viewer.main(self.data, "ex_spm_thr_clustunck10_testHTML")
+		self.direc = os.getcwd()
+		self.dest = os.path.join(self.direc, self.folder)
+		self.postStats = os.path.join(self.dest, "postStats.html")
+		self.postStatsFile = open(self.postStats, "r")
+		
+		
+	def tearDown(self):
+	
+		self.postStatsFile.close()
