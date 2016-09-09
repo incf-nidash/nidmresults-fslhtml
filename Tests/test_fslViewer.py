@@ -314,3 +314,7 @@ class spm_thr_voxelunct4(unittest.TestCase):
 	def tearDown(self):
 	
 		self.postStatsFile.close()
+		
+if __name__ == "__main__":
+
+	unittest.main()
