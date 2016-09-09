@@ -10,7 +10,7 @@ class generalTests(unittest.TestCase):
 
 	def test_error(self):
 	
-		data = glob.glob("*.ttl")
+		data = glob.glob("data\\*.ttl")
 		print(data)
 		for i in data:
 		
