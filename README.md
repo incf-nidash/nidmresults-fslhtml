@@ -9,5 +9,5 @@ Positional arguments:
 	
 Test usage (Command line):
 
-	test_fslViewer.py
-	testError.py
+	Tests\test_fslViewer.py
+	Tests\testError.py
