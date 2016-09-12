@@ -63,17 +63,14 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 		
 		self.postStatsFile.close()
 		#shutil.rmtree("fsl_con_f_testHTML")
-"""		
+		
 class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tests
 
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\fsl_thr_clustfwep05.nidm.ttl"
-		self.folder = viewer.main(self.data, "fsl_thr_clustfwep05testHTML")
-		self.direc = os.getcwd()
-		self.dest = os.path.join(self.direc, self.folder)
-		self.postStats = os.path.join(self.dest, "postStats.html")
-		self.postStatsFile = open(self.postStats, "r")
+		self.data = "data\\fsl_thr_clustfwep05.nidm.ttlTestResults\\postStats.html"
+		
+		self.postStatsFile = open(self.data, "r")
 	
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
@@ -122,17 +119,14 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 	def tearDown(self):
 	
 		self.postStatsFile.close()
-
+"""
 class fsl_thr_voxelfwep05(unittest.TestCase):
 
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\fsl_thr_voxelfwep05.nidm.ttl"
-		self.folder = viewer.main(self.data, "fsl_thr_voxelfwep05testHTML")
-		self.direc = os.getcwd()
-		self.dest = os.path.join(self.direc, self.folder)
-		self.postStats = os.path.join(self.dest, "postStats.html")
-		self.postStatsFile = open(self.postStats, "r")
+		self.data = "data\\fsl_thr_voxelfwep05.nidm.ttlTestResults\\postStats.html"
+		
+		self.postStatsFile = open(self.data, "r")
 	
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
@@ -175,12 +169,9 @@ class spm_thr_clustunck10(unittest.TestCase):
 	
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\ex_spm_thr_clustunck10.nidm.ttl"
-		self.folder = viewer.main(self.data, "ex_spm_thr_clustunck10_testHTML")
-		self.direc = os.getcwd()
-		self.dest = os.path.join(self.direc, self.folder)
-		self.postStats = os.path.join(self.dest, "postStats.html")
-		self.postStatsFile = open(self.postStats, "r")
+		self.data = "data\\ex_spm_thr_clustunck10.nidm.ttlTestResults\\postStats.html"
+		
+		self.postStatsFile = open(self.data, "r")
 		
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
@@ -223,12 +214,9 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\ex_spm_thr_voxelfdrp05.nidm.ttl"
-		self.folder = viewer.main(self.data, "ex_spm_thr_voxel05_testHTML")
-		self.direc = os.getcwd()
-		self.dest = os.path.join(self.direc, self.folder)
-		self.postStats = os.path.join(self.dest, "postStats.html")
-		self.postStatsFile = open(self.postStats, "r")
+		self.data = "data\\ex_spm_thr_voxelfdrp05.nidm.ttlTestResults\\postStats.html"
+		
+		self.postStatsFile = open(self.data, "r")
 		
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
@@ -271,12 +259,9 @@ class spm_thr_voxelunct4(unittest.TestCase):
 
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\ex_spm_thr_voxelunct4.nidm.ttl"
-		self.folder = viewer.main(self.data, "ex_spm_thr_voxelunct4_testHTML")
-		self.direc = os.getcwd()
-		self.dest = os.path.join(self.direc, self.folder)
-		self.postStats = os.path.join(self.dest, "postStats.html")
-		self.postStatsFile = open(self.postStats, "r")
+		self.data = "data\\ex_spm_thr_voxelunct4.nidm.ttlTestResults\\postStats.html"
+		
+		self.postStatsFile = open(self.data, "r")
 		
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
