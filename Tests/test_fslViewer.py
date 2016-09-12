@@ -301,6 +301,10 @@ class spm_thr_voxelunct4(unittest.TestCase):
 		self.postStatsFile.close()"""
 		
 if __name__ == "__main__":
+	scriptPath = os.path.dirname(os.path.abspath(__file__))
+	print(scriptPath)
+	dataPath = os.path.join(scriptPath, "data")
+	print(dataPath)
 	data = glob.glob("data\\*.ttl")
 	print(data)
 	for i in data:
