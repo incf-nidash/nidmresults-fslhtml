@@ -65,6 +65,7 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 	def tearDown(self):
 		
 		self.postStatsFile.close()
+		#shutil.rmtree("fsl_con_f_testHTML")
 """		
 class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tests
 
