@@ -4,6 +4,7 @@ import viewer
 import sys
 import os
 import shutil
+import glob
 
 class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 	
@@ -319,5 +320,9 @@ class spm_thr_voxelunct4(unittest.TestCase):
 		self.postStatsFile.close()"""
 		
 if __name__ == "__main__":
+	data = glob.glob("data\\*.ttl")
+	print(data)
+	for i in data:
 	
-	unittest.main()
+		viewer.main(i, i + "TestResults")
+	#unittest.main()
