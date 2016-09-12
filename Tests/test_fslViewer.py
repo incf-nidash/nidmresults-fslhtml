@@ -305,7 +305,8 @@ if __name__ == "__main__":
 	print(scriptPath)
 	dataPath = os.path.join(scriptPath, "data")
 	print(dataPath)
-	data = glob.glob("data\\*.ttl")
+	globData = os.path.join(dataPath,"*.ttl")
+	data = glob.glob(globData)
 	print(data)
 	for i in data:
 	
