@@ -10,13 +10,9 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 	
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\fsl_con_f.nidm.ttl"
-		self.folder = viewer.main(self.data, "fsl_con_f_testHTML")
-		self.direc = os.getcwd()
+		self.data = "data\\fsl_con_f.nidm.ttlTestResults\\postStats.html"
 		
-		self.dest = os.path.join(self.direc, self.folder)
-		self.postStats = os.path.join(self.dest, "postStats.html")
-		self.postStatsFile = open(self.postStats, "r")
+		self.postStatsFile = open(self.data, "r")
 		
 
 	def test_softwareName(self): #Test to see if FSL is in html file
@@ -33,7 +29,7 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 	def test_softwareNum(self):
 	
 		for line in self.postStatsFile:
-		
+			
 			if "Version" in line:
 			
 				self.myString = line
@@ -325,4 +321,4 @@ if __name__ == "__main__":
 	for i in data:
 	
 		viewer.main(i, i + "TestResults")
-	#unittest.main()
+	unittest.main()
