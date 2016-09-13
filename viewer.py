@@ -143,6 +143,7 @@ def queryDesignMatrixLocation(graph): #Selects location of design matrix
 def queryStatisticType(graph): #Checks Statistic Map Type
 
 	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+	prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
                prefix nidm_statisticType: <http://purl.org/nidash/nidm#NIDM_0000123>
 			   prefix nidm_statisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
                prefix prov: <http://www.w3.org/ns/prov#>
@@ -151,7 +152,7 @@ def queryStatisticType(graph): #Checks Statistic Map Type
                prefix obo_Fstatistic: <http://purl.obolibrary.org/obo/STATO_0000282>
                prefix obo_Zstatistic: <http://purl.obolibrary.org/obo/STATO_0000376>
 
-               SELECT ?statType WHERE {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}"""
+               SELECT ?statType WHERE { {?y a nidm_ConjunctionInference: .} UNION { ?y a nidm_Inference: .} ?y prov:used ?x . ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}"""
 			   
 	queryResult = graph.query(query)
 	for i in queryResult:
@@ -534,44 +535,31 @@ def createOutputDirectory(outputFolder): #Attempts to create folder for HTML fil
 		print("Error - %s directory already exists" % outputFolder)
 		exit()
 
-def main(): #Main program
+def main(nidmFile, htmlFolder): #Main program
 	
 	g = rdflib.Graph()
 	
-	if len(sys.argv) == 1:
-		
-		print("You did not enter an input NIDM file, run the program again")
-		exit()
 	
-	
-	
-	elif len(sys.argv) == 3: #If user specifies folder for html files - Will need to consider style sheet location
-		
-		
-		
-		filepath = sys.argv[1]
-		g.parse(filepath, format = rdflib.util.guess_format(filepath))
-		print("Height Thresh value is:")
-		print(queryUHeightThresholdValue(g))
-		destinationFolder = sys.argv[2]
+	filepath = nidmFile
+	g.parse(filepath, format = rdflib.util.guess_format(filepath))
+	print("Height Thresh value is:")
+	print(queryUHeightThresholdValue(g))
+	destinationFolder = htmlFolder
 			
-		createOutputDirectory(sys.argv[2])
+	createOutputDirectory(htmlFolder)
 				
-		currentDir = os.getcwd()
-		dirLocation = os.path.join(currentDir, destinationFolder)
-		mainFileName = os.path.join(dirLocation, "main.html")
-		statsFileName = os.path.join(dirLocation, "stats.html")
-		postStatsFileName = os.path.join(dirLocation, "postStats.html")
-		generateStatsHTML(g,statsFileName,postStatsFileName)
-		generatePostStatsHTML(g,statsFileName,postStatsFileName)
-		generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+	currentDir = os.getcwd()
+	dirLocation = os.path.join(currentDir, destinationFolder)
+	mainFileName = os.path.join(dirLocation, "main.html")
+	statsFileName = os.path.join(dirLocation, "stats.html")
+	postStatsFileName = os.path.join(dirLocation, "postStats.html")
+	generateStatsHTML(g,statsFileName,postStatsFileName)
+	generatePostStatsHTML(g,statsFileName,postStatsFileName)
+	generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+	return(destinationFolder)	
 		
-		
-	else:
 	
-		print("Error - Please ensure you run the program as follows.\nviewer.py nidmFileName mainHtmlFileName statsHtmlFileName postStatsHtmlFileName")
-		exit()
 
 if __name__ == "__main__":
 		
-	main()
+	main(sys.argv[1],sys.argv[2])
