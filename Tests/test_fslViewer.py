@@ -20,7 +20,7 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 	def test_softwareName(self): #Test to see if FSL is in html file
 		
 		for line in self.postStatsFile:
-			print(line)
+			
 			if "FSL" in line:
 			
 				self.myString = line
@@ -325,12 +325,9 @@ class spm_thr_voxelunct4(unittest.TestCase):
 		
 if __name__ == "__main__":
 	scriptPath = os.path.dirname(os.path.abspath(__file__))
-	print(scriptPath)
 	dataPath = os.path.join(scriptPath, "data")
-	print(dataPath)
 	globData = os.path.join(dataPath,"*.ttl")
 	data = glob.glob(globData)
-	print(data)
 	for i in data:
 	
 		viewer.main(i, i + "TestResults")
