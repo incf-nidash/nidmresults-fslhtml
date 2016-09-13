@@ -70,6 +70,7 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 
 	def setUp(self): #Open necessary file
 		self.myString = ""
+		self.found = False
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
 		self.dataPath = os.path.join(self.dataPath, "fsl_thr_clustfwep05.nidm.ttlTestResults")
@@ -113,12 +114,22 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 	
 		for line in self.postStatsFile:
 		
-			if "(corrected) cluster significance threshold" in line:
+			if "(corrected)" in line:
 			
-				self.myString = line
+				self.found = True
 				break
 				
-		self.assertIn("P = 0.05", self.myString)
+		self.assertTrue(self.found)
+	
+	def test_thresholdValue(self):
+	
+		for line in self.postStatsFile:
+		
+			if "P = 0.05" in line:
+			
+				self.found = True
+				
+		self.assertTrue(self.found)
 	
 	def tearDown(self):
 	
