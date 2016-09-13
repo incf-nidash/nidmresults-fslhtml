@@ -2,6 +2,8 @@
 import os
 import sys
 import rdflib
+from dominate import document
+from dominate.tags import *
 import markup
 import errno
 from markup import oneliner as e
@@ -364,7 +366,11 @@ def statisticImageString(statImage):
 
 	
 def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
-
+	main = document(title="FSL Viewer")
+	main += h1("Sample FSL Viewer")
+	main += ul(li(a("stats", href="stats.html")))
+	print(main)
+	
 	mainPage = markup.page()
 	mainPage.init(title = "FSL Viewer", css = "viewerStyles.css")
 	mainPage.h1("Sample FSL Viewer")
