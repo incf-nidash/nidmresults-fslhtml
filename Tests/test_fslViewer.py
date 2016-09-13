@@ -10,9 +10,11 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 	
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\fsl_con_f.nidm.ttlTestResults\\postStats.html"
-		
-		self.postStatsFile = open(self.data, "r")
+		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
+		self.dataPath = os.path.join(self.scriptPath, "data")
+		self.dataPath = os.path.join(self.dataPath, "fsl_con_f.nidm.ttlTestResults")
+		self.fileName = os.path.join(self.dataPath, "postStats.html")
+		self.postStatsFile = open(self.fileName, "r")
 		
 
 	def test_softwareName(self): #Test to see if FSL is in html file
@@ -68,9 +70,11 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\fsl_thr_clustfwep05.nidm.ttlTestResults\\postStats.html"
-		
-		self.postStatsFile = open(self.data, "r")
+		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
+		self.dataPath = os.path.join(self.scriptPath, "data")
+		self.dataPath = os.path.join(self.dataPath, "fsl_thr_clustfwep05.nidm.ttlTestResults")
+		self.fileName = os.path.join(self.dataPath, "postStats.html")
+		self.postStatsFile = open(self.fileName, "r")
 	
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
@@ -124,9 +128,11 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\fsl_thr_voxelfwep05.nidm.ttlTestResults\\postStats.html"
-		
-		self.postStatsFile = open(self.data, "r")
+		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
+		self.dataPath = os.path.join(self.scriptPath, "data")
+		self.dataPath = os.path.join(self.dataPath, "fsl_thr_voxelfwep05.nidm.ttlTestResults")
+		self.fileName = os.path.join(self.dataPath, "postStats.html")
+		self.postStatsFile = open(self.fileName, "r")
 	
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
@@ -163,15 +169,17 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 	
 	def tearDown(self):
 	
-		self.postStatsFile.close()
+		self.postStatsFile.close()"""
 		
 class spm_thr_clustunck10(unittest.TestCase):
 	
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\ex_spm_thr_clustunck10.nidm.ttlTestResults\\postStats.html"
-		
-		self.postStatsFile = open(self.data, "r")
+		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
+		self.dataPath = os.path.join(self.scriptPath, "data")
+		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_clustunck10.nidm.ttlTestResults")
+		self.fileName = os.path.join(self.dataPath, "postStats.html")
+		self.postStatsFile = open(self.fileName, "r")
 		
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
@@ -199,7 +207,7 @@ class spm_thr_clustunck10(unittest.TestCase):
 	
 		for line in self.postStatsFile:
 		
-			if "P" in line:
+			if "P = " in line:
 			
 				self.myString = line
 				break
@@ -214,9 +222,11 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\ex_spm_thr_voxelfdrp05.nidm.ttlTestResults\\postStats.html"
-		
-		self.postStatsFile = open(self.data, "r")
+		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
+		self.dataPath = os.path.join(self.scriptPath, "data")
+		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelfdrp05.nidm.ttlTestResults")
+		self.fileName = os.path.join(self.dataPath, "postStats.html")
+		self.postStatsFile = open(self.fileName, "r")
 		
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
@@ -227,7 +237,7 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 				self.myString = line
 				break
 				
-		self.assertIn("SPM", self.self.myString)
+		self.assertIn("SPM", self.myString)
 
 	def test_softwareNum(self):
 	
@@ -244,7 +254,7 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 	
 		for line in self.postStatsFile:
 		
-			if "P" in line:
+			if "P = " in line:
 			
 				self.myString = line
 				break
@@ -259,9 +269,11 @@ class spm_thr_voxelunct4(unittest.TestCase):
 
 	def setUp(self): #Open necessary file
 		self.myString = ""
-		self.data = "data\\ex_spm_thr_voxelunct4.nidm.ttlTestResults\\postStats.html"
-		
-		self.postStatsFile = open(self.data, "r")
+		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
+		self.dataPath = os.path.join(self.scriptPath, "data")
+		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelunct4.nidm.ttlTestResults")
+		self.fileName = os.path.join(self.dataPath, "postStats.html")
+		self.postStatsFile = open(self.fileName, "r")
 		
 	def test_softwareName(self): #Test to see if FSL is in html file
 	
@@ -272,7 +284,7 @@ class spm_thr_voxelunct4(unittest.TestCase):
 				self.myString = line
 				break
 				
-		self.assertIn("SPM", self.self.myString)
+		self.assertIn("SPM", self.myString)
 
 	def test_softwareNum(self):
 	
@@ -298,7 +310,7 @@ class spm_thr_voxelunct4(unittest.TestCase):
 	
 	def tearDown(self):
 	
-		self.postStatsFile.close()"""
+		self.postStatsFile.close()
 		
 if __name__ == "__main__":
 	scriptPath = os.path.dirname(os.path.abspath(__file__))
