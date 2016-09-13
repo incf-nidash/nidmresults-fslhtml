@@ -21,7 +21,7 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 		
 		for line in self.postStatsFile:
 			
-			if "FSL" in line:
+			if "FSL" in line and "FMRI" in line:
 			
 				self.myString = line
 				break
@@ -81,7 +81,7 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 	
 		for line in self.postStatsFile:
 		
-			if "FSL" in line:
+			if "FSL" in line and "FMRI" in line:
 			
 				self.myString = line
 				break
@@ -149,7 +149,7 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 	
 		for line in self.postStatsFile:
 		
-			if "FSL" in line:
+			if "FSL" in line and "FMRI" in line:
 			
 				self.myString = line
 				break
