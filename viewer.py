@@ -441,12 +441,11 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
 	
 	elif clusterWise == True: #If main threshold is extent threshold
-		print("Cluster thresh Value")
+		
 		mainThreshValue = queryClusterThresholdValue(graph)
 		heightThreshValue = queryUHeightThresholdValue(graph)
 		clusterThreshType = clusterFormingThreshType(graph, statisticType)
-		print(mainThreshValue)
-		print(heightThreshValue)
+		
 		if askSpm(graph) == True:
 			
 			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by %s > %s and a (corrected) "
