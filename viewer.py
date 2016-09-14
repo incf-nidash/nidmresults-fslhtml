@@ -400,48 +400,21 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	stats += hr()
 	stats += h3("Analysis Methods")
 	
-	###################################################
-	statsPage = markup.page()
-	statsPage.init(title = "FSL Viewer", css = "viewerStyles.css")
-	statsPage.h1("Sample FSL Viewer")
-	statsPage.ul()
-	statsPage.li(e.a("Stats", href = "stats.html"))
-	statsPage.li("-")
-	statsPage.li(e.a("Post Stats", href = "postStats.html"))
-	statsPage.ul.close()
-	statsPage.h2("Stats")
-	statsPage.hr()
-
-	statsPage.h3("Analysis methods")
 	if askSpm(graph) == True: #Checks if SPM was used
 		
 		stats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
 		
-		statsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
-	
 	elif askFsl(graph) == True: #Checks if FSL was used
 		
 		fslFeatVersion = queryFslFeatVersion(graph)
 		stats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % (fslFeatVersion[0], softwareLabelNumList[1]))
 		
-		
-		statsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % (fslFeatVersion[0], softwareLabelNumList[1]))
-	
 	stats += hr()
 	stats += h3("Design Matrix")
-	
-	statsPage.hr()
-	statsPage.h3("Design Matrix")
 	designMatrixLocation = queryDesignMatrixLocation(graph)
 	stats += a(img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0])
-	
-	
-	statsPage.a(e.img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0]) #Creates image of design matrix and makes it a link
-	
-	
 	statsFile = open(statsFilePath, "x")
 	print(stats, file = statsFile)
-	#print(statsPage, file = statsFile)
 	statsFile.close()
 		
 	
