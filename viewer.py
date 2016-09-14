@@ -156,8 +156,6 @@ def queryStatisticType(graph): #Checks Statistic Map Type
                SELECT ?statType WHERE { {?y a nidm_ConjunctionInference: .} UNION { ?y a nidm_Inference: .} ?y prov:used ?x . ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}"""
 			   
 	queryResult = graph.query(query)
-	for i in queryResult:
-		print(i)
 	return(addQueryToList(queryResult))
 
 def statisticImage(stat): #Returns type of statistic image
@@ -516,8 +514,6 @@ def main(nidmFile, htmlFolder): #Main program
 	
 	filepath = nidmFile
 	g.parse(filepath, format = rdflib.util.guess_format(filepath))
-	print("Height Thresh value is:")
-	print(queryUHeightThresholdValue(g))
 	destinationFolder = htmlFolder
 			
 	createOutputDirectory(htmlFolder)
