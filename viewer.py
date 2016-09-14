@@ -369,23 +369,8 @@ def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.ht
 	main = document(title="FSL Viewer")
 	main += h1("Sample FSL Viewer")
 	main += ul(li(a("stats", href="stats.html")), li("-"),li(a("postStats.html")))
-	print(main)
-	
-	mainPage = markup.page()
-	mainPage.init(title = "FSL Viewer", css = "viewerStyles.css")
-	mainPage.h1("Sample FSL Viewer")
-	#mainPage.div(e.a("Stats", href = "stats.html"))
-	#mainPage.div(e.a("Post Stats", href = "postStats.html"))
-	mainPage.ul()
-	mainPage.li(e.a("Stats", href = "stats.html"))
-	mainPage.li("-")
-	mainPage.li(e.a("Post Stats", href = "postStats.html"))
-	mainPage.ul.close()
-	
-	
-	
 	mainFile = open(mainFilePath, "x")
-	print(mainPage, file = mainFile)
+	print(main, file = mainFile)
 	mainFile.close()
 		
 	
