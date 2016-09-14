@@ -366,6 +366,7 @@ def statisticImageString(statImage):
 
 	
 def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
+
 	main = document(title="FSL Viewer")
 	main += h1("Sample FSL Viewer")
 	main += ul(li(a("stats", href="stats.html")), li("-"),li(a("postStats.html")))
@@ -375,9 +376,11 @@ def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.ht
 		
 	
 def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "postStats.html"): #Generates the Stats HTML section
+
 	firstLevel = checkFirstLevel(graph)
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
+	
 	stats = document(title="FSL Viewer") #Creates initial html page (stats)
 	stats += h1("Sample FSL Viewer")
 	stats += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
@@ -396,8 +399,10 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 		
 	stats += hr()
 	stats += h3("Design Matrix")
+	
 	designMatrixLocation = queryDesignMatrixLocation(graph)
 	stats += a(img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0]) #Adds design matrix image (as a link) to html page
+	
 	statsFile = open(statsFilePath, "x")
 	print(stats, file = statsFile) #Prints html page to a file
 	statsFile.close()
@@ -415,12 +420,8 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	statisticTypeString = statisticImageString(statisticType)
 	contrastName = queryContrastName(graph)
 	statisticMapImage = queryStatisticImage(graph)
-	print("Statistic map image lists")
-	print(statisticMapImage)
-	print("Stat type")
-	print(statisticType)
 	
-	postStats = document(title="FSL Viewer")
+	postStats = document(title="FSL Viewer") #Creates initial HTML page (Post Stats)
 	postStats += h1("Sample FSL Viewer")
 	postStats += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
 	postStats += h2("Post-stats")
