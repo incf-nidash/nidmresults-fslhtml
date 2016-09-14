@@ -434,6 +434,13 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	print(statisticMapImage)
 	print("Stat type")
 	print(statisticType)
+	
+	postStats = document(title="FSL Viewer")
+	postStats += h1("Sample FSL Viewer")
+	postStats += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
+	postStats += h2("Post-stats")
+	postStats += hr()
+	postStats += h3("Analysis Methods")
 	postStatsPage = markup.page()
 	postStatsPage.init(title = "FSL Viewer", css = "viewerStyles.css")
 	postStatsPage.h1("Sample FSL Viewer")
