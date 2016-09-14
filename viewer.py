@@ -458,11 +458,18 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	if voxelWise == True: #If main threshold is Height Threshold
 		mainThreshValue = queryHeightThresholdValue(graph)
 		if askSpm(graph) == True:
-	
+			
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (corrected)" % (softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			
 			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (corrected)" % (softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
+			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
+			"%s statistic images were thresholded at P = %s (corrected)" 
+			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			
+			
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
 			"%s statistic images were thresholded at P = %s (corrected)" 
 			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
@@ -475,13 +482,21 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		print(mainThreshValue)
 		print(heightThreshValue)
 		if askSpm(graph) == True:
-	
+			
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by %s > %s and a (corrected) "
+			"cluster significance of P = %s " 
+			% (softwareLabelNumList[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
+			
 			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by %s > %s and a (corrected) "
 			"cluster significance of P = %s " 
 			% (softwareLabelNumList[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
+			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded "
+			"using clusters determined by %s > %s and a (corrected) cluster significance of P = %s" 
+			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
+			
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded "
 			"using clusters determined by %s > %s and a (corrected) cluster significance of P = %s" 
 			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
@@ -490,11 +505,13 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	else: #If there is no corrected threshold - assume voxel wise
 		mainThreshValue = queryUHeightThresholdValue(graph)
 		if askSpm(graph) == True and askIfPValueUncorrected(graph) == True: #SPM used and threshold type is nidm_PValueUncorrected
-		
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			
 			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
 		
 		elif askSpm(graph) == True and askIfOboStatistic(graph) == True: #SPM used and threshold type is obo_statistic
-		
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at %s = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, statisticType, mainThreshValue[0]))
+			
 			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at %s = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, statisticType, mainThreshValue[0]))
 			
 			
@@ -502,17 +519,33 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		elif askFsl(graph) == True and askIfPValueUncorrected(graph) == True:
 			
 			fslFeatVersion = queryFslFeatVersion(graph)
+			postStats += p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
+			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
 			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
 			
 		elif askFsl(graph) == True and askIfOboStatistic(graph) == True:
 			
 			fslFeatVersion = queryFslFeatVersion(graph)
+			postStats += p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
+			"%s statistic images were thresholded at %s = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, statisticType, mainThreshValue[0]))
+			
 			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
 			"%s statistic images were thresholded at %s = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, statisticType, mainThreshValue[0]))
 			
 			
 		print("Not ready yet") 
+	
+	postStats += hr()
+	postStats += h3("Thresholded Activation Images")
+	postStats += hr()
+	i = 0
+	while i < len(contrastName):
+	
+		postStats += p("%s" % contrastName[i])
+		postStats += img(scr = statisticMapImage[i], width = 100, height = 80)
+		i = i + 1
 	
 	postStatsPage.hr()
 	postStatsPage.h3("Thresholded Activation Images")
@@ -527,7 +560,8 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	
 	
 	postStatsFile = open(postStatsFilePath, "x")
-	print(postStatsPage, file = postStatsFile)
+	print(postStats, file = postStatsFile)
+	#print(postStatsPage, file = postStatsFile)
 	postStatsFile.close()
 		
 def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
