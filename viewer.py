@@ -368,7 +368,7 @@ def statisticImageString(statImage):
 def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
 	main = document(title="FSL Viewer")
 	main += h1("Sample FSL Viewer")
-	main += ul(li(a("stats", href="stats.html")))
+	main += ul(li(a("stats", href="stats.html")), li("-"),li(a("postStats.html")))
 	print(main)
 	
 	mainPage = markup.page()
