@@ -393,7 +393,7 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	firstLevel = checkFirstLevel(graph)
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
-	stats = document(title="FSL Viewer") #creates initial html page (stats)
+	stats = document(title="FSL Viewer") #Creates initial html page (stats)
 	stats += h1("Sample FSL Viewer")
 	stats += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
 	stats += h2("Stats")
@@ -414,7 +414,7 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	designMatrixLocation = queryDesignMatrixLocation(graph)
 	stats += a(img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0]) #Adds design matrix image (as a link) to html page
 	statsFile = open(statsFilePath, "x")
-	print(stats, file = statsFile) #prints html page to a file
+	print(stats, file = statsFile) #Prints html page to a file
 	statsFile.close()
 		
 	
