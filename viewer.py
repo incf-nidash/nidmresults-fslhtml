@@ -4,9 +4,8 @@ import sys
 import rdflib
 from dominate import document
 from dominate.tags import *
-import markup
 import errno
-from markup import oneliner as e
+
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
 	for row in query: 
@@ -497,6 +496,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	postStatsFile = open(postStatsFilePath, "x")
 	print(postStats, file = postStatsFile)
 	postStatsFile.close()
+	
 		
 def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
 
