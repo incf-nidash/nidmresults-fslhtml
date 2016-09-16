@@ -25,7 +25,7 @@ if __name__ == "__main__":
 	
 	scriptDir = os.path.dirname(os.path.abspath(__file__))
 	dataDir = os.path.join(scriptDir, "data")
-	dataNames = ["fsl_con_", "fsl_thr_clustfwep05","ex_spm_thr_voxelunct4","ex_spm_thr_clustunck10","ex_spm_thr_voxelfdrp05"]
+	dataNames = ["fsl_con_f", "fsl_thr_clustfwep05","ex_spm_thr_voxelunct4","ex_spm_thr_clustunck10","ex_spm_thr_voxelfdrp05"]
 	local = True
 	for dataName in dataNames: #Checks if data is on local machine
 	
@@ -36,29 +36,29 @@ if __name__ == "__main__":
 			break
 	
 	if local == False:
-		"""print("Downloading data")
-		req = urllib.request.Request("http://neurovault.org/api/collections/1692/images")
+	
+		print("Downloading data")
+		req = urllib.request.Request("http://neurovault.org/api/collections/1692/nidm_results")
 		resp = urllib.request.urlopen(req)
 		readResp = resp.read()
 		data = json.loads(readResp.decode('utf-8'))
-		print("Data")
-		print(data.keys())
-		turtList = []
 		for nidmResult in data["results"]:
+		
 			
-			turt = nidmResult["nidm_results_ttl"]
-			turtList.append(turt)
-			#print(turt)
+			turtUrl = nidmResult["ttl_file"]
+			dataName = nidmResult["name"]
+			
+			if dataName in [d + ".nidm" for d in dataNames]:
+			
+				print(dataName)
+				turtFile = urllib.request.urlopen(turtUrl)
+				dataPath = os.path.join(dataDir, dataName + ".ttl")
+				dataFile = open(dataPath, "w")
+				decTurt = turtFile.read()
+				dataFile.write(decTurt.decode('utf-8'))
+				dataFile.close()
 		
-		uniqueTurtList = list(set(turtList))
-		print(uniqueTurtList)
-		print(len(uniqueTurtList))
-		for turtleFile in uniqueTurtList:
 		
-			url = urllib.request.urlopen(turtleFile)
-			#print(url.read())
-			#input("Enter")
-		
-	#unittest.main()"""
+	unittest.main()
 	
 		
