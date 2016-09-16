@@ -107,7 +107,7 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 				self.myString = line
 				break
 				
-		self.assertIn("Z > 2.3", self.myString)
+		self.assertIn("Z &gt; 2.3", self.myString)
 	
 	def test_threshold(self):
 	

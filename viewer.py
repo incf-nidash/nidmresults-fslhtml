@@ -2,9 +2,10 @@
 import os
 import sys
 import rdflib
-import markup
+from dominate import document
+from dominate.tags import *
 import errno
-from markup import oneliner as e
+
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
 	for row in query: 
@@ -155,8 +156,6 @@ def queryStatisticType(graph): #Checks Statistic Map Type
                SELECT ?statType WHERE { {?y a nidm_ConjunctionInference: .} UNION { ?y a nidm_Inference: .} ?y prov:used ?x . ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}"""
 			   
 	queryResult = graph.query(query)
-	for i in queryResult:
-		print(i)
 	return(addQueryToList(queryResult))
 
 def statisticImage(stat): #Returns type of statistic image
@@ -365,57 +364,44 @@ def statisticImageString(statImage):
 	
 def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
 
-	mainPage = markup.page()
-	mainPage.init(title = "FSL Viewer", css = "viewerStyles.css")
-	mainPage.h1("Sample FSL Viewer")
-	#mainPage.div(e.a("Stats", href = "stats.html"))
-	#mainPage.div(e.a("Post Stats", href = "postStats.html"))
-	mainPage.ul()
-	mainPage.li(e.a("Stats", href = "stats.html"))
-	mainPage.li("-")
-	mainPage.li(e.a("Post Stats", href = "postStats.html"))
-	mainPage.ul.close()
-	
-	
-	
+	main = document(title="FSL Viewer")
+	main += h1("Sample FSL Viewer")
+	main += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
 	mainFile = open(mainFilePath, "x")
-	print(mainPage, file = mainFile)
+	print(main, file = mainFile)
 	mainFile.close()
 		
 	
 def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "postStats.html"): #Generates the Stats HTML section
+
 	firstLevel = checkFirstLevel(graph)
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
-	statsPage = markup.page()
-	statsPage.init(title = "FSL Viewer", css = "viewerStyles.css")
-	statsPage.h1("Sample FSL Viewer")
-	statsPage.ul()
-	statsPage.li(e.a("Stats", href = "stats.html"))
-	statsPage.li("-")
-	statsPage.li(e.a("Post Stats", href = "postStats.html"))
-	statsPage.ul.close()
-	statsPage.h2("Stats")
-	statsPage.hr()
-
-	statsPage.h3("Analysis methods")
+	
+	stats = document(title="FSL Viewer") #Creates initial html page (stats)
+	stats += h1("Sample FSL Viewer")
+	stats += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
+	stats += h2("Stats")
+	stats += hr()
+	stats += h3("Analysis Methods")
+	
 	if askSpm(graph) == True: #Checks if SPM was used
-	
-		statsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
-	
+		
+		stats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
+		
 	elif askFsl(graph) == True: #Checks if FSL was used
 		
 		fslFeatVersion = queryFslFeatVersion(graph)
-		statsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % (fslFeatVersion[0], softwareLabelNumList[1]))
+		stats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % (fslFeatVersion[0], softwareLabelNumList[1]))
 		
-	statsPage.hr()
-	statsPage.h3("Design Matrix")
-	designMatrixLocation = queryDesignMatrixLocation(graph)
-	statsPage.a(e.img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0]) #Creates image of design matrix and makes it a link
+	stats += hr()
+	stats += h3("Design Matrix")
 	
+	designMatrixLocation = queryDesignMatrixLocation(graph)
+	stats += a(img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0]) #Adds design matrix image (as a link) to html page
 	
 	statsFile = open(statsFilePath, "x")
-	print(statsPage, file = statsFile)
+	print(stats, file = statsFile) #Prints html page to a file
 	statsFile.close()
 		
 	
@@ -431,52 +417,41 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	statisticTypeString = statisticImageString(statisticType)
 	contrastName = queryContrastName(graph)
 	statisticMapImage = queryStatisticImage(graph)
-	print("Statistic map image lists")
-	print(statisticMapImage)
-	print("Stat type")
-	print(statisticType)
-	postStatsPage = markup.page()
-	postStatsPage.init(title = "FSL Viewer", css = "viewerStyles.css")
-	postStatsPage.h1("Sample FSL Viewer")
-	#mainPage.div(e.a("Stats", href = "stats.html"))
-	#mainPage.div(e.a("Post Stats", href = "postStats.html"))
-	postStatsPage.ul()
-	postStatsPage.li(e.a("Stats", href = "stats.html"))
-	postStatsPage.li("-")
-	postStatsPage.li(e.a("Post Stats", href = "postStats.html"))
-	postStatsPage.ul.close()
-	postStatsPage.h2("Post-stats")
-	postStatsPage.hr()
-	postStatsPage.h3("Analysis Methods") 
+	
+	postStats = document(title="FSL Viewer") #Creates initial HTML page (Post Stats)
+	postStats += h1("Sample FSL Viewer")
+	postStats += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
+	postStats += h2("Post-stats")
+	postStats += hr()
+	postStats += h3("Analysis Methods")
 	
 	if voxelWise == True: #If main threshold is Height Threshold
 		mainThreshValue = queryHeightThresholdValue(graph)
 		if askSpm(graph) == True:
-	
-			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (corrected)" % (softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (corrected)" % (softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
-			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
+			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
 			"%s statistic images were thresholded at P = %s (corrected)" 
 			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
 	
 	elif clusterWise == True: #If main threshold is extent threshold
-		print("Cluster thresh Value")
+		
 		mainThreshValue = queryClusterThresholdValue(graph)
 		heightThreshValue = queryUHeightThresholdValue(graph)
 		clusterThreshType = clusterFormingThreshType(graph, statisticType)
-		print(mainThreshValue)
-		print(heightThreshValue)
+		
 		if askSpm(graph) == True:
-	
-			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by %s > %s and a (corrected) "
+			
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by %s > %s and a (corrected) "
 			"cluster significance of P = %s " 
 			% (softwareLabelNumList[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
-			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded "
+			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded "
 			"using clusters determined by %s > %s and a (corrected) cluster significance of P = %s" 
 			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
 		
@@ -484,45 +459,42 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	else: #If there is no corrected threshold - assume voxel wise
 		mainThreshValue = queryUHeightThresholdValue(graph)
 		if askSpm(graph) == True and askIfPValueUncorrected(graph) == True: #SPM used and threshold type is nidm_PValueUncorrected
-		
-			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			
 		
 		elif askSpm(graph) == True and askIfOboStatistic(graph) == True: #SPM used and threshold type is obo_statistic
-		
-			postStatsPage.p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at %s = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, statisticType, mainThreshValue[0]))
-			
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at %s = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, statisticType, mainThreshValue[0]))
 			
 		
 		elif askFsl(graph) == True and askIfPValueUncorrected(graph) == True:
 			
 			fslFeatVersion = queryFslFeatVersion(graph)
-			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
+			postStats += p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
 			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			
 			
 		elif askFsl(graph) == True and askIfOboStatistic(graph) == True:
 			
 			fslFeatVersion = queryFslFeatVersion(graph)
-			postStatsPage.p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
+			postStats += p("FMRI data processing was carried out using FEAT (FMRI Experet Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
 			"%s statistic images were thresholded at %s = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, statisticType, mainThreshValue[0]))
 			
-			
-		print("Not ready yet") 
+		
 	
-	postStatsPage.hr()
-	postStatsPage.h3("Thresholded Activation Images")
+	postStats += hr()
+	postStats += h3("Thresholded Activation Images")
+	postStats += hr()
 	i = 0
-	print(contrastName)
 	while i < len(contrastName):
 	
-		postStatsPage.p("%s" % contrastName[i])
-		postStatsPage.img(src = statisticMapImage[i], width = 100, height = 80)
+		postStats += p("%s" % contrastName[i])
+		postStats += img(scr = statisticMapImage[i], width = 100, height = 80)
 		i = i + 1
 	
-	
-	
 	postStatsFile = open(postStatsFilePath, "x")
-	print(postStatsPage, file = postStatsFile)
+	print(postStats, file = postStatsFile)
 	postStatsFile.close()
+	
 		
 def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
 
@@ -542,8 +514,6 @@ def main(nidmFile, htmlFolder): #Main program
 	
 	filepath = nidmFile
 	g.parse(filepath, format = rdflib.util.guess_format(filepath))
-	print("Height Thresh value is:")
-	print(queryUHeightThresholdValue(g))
 	destinationFolder = htmlFolder
 			
 	createOutputDirectory(htmlFolder)
