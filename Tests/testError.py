@@ -36,7 +36,7 @@ if __name__ == "__main__":
 			break
 	
 	if local == False:
-		print("Downloading data")
+		"""print("Downloading data")
 		req = urllib.request.Request("http://neurovault.org/api/collections/1692/images")
 		resp = urllib.request.urlopen(req)
 		readResp = resp.read()
@@ -52,6 +52,13 @@ if __name__ == "__main__":
 		
 		uniqueTurtList = list(set(turtList))
 		print(uniqueTurtList)
-	#unittest.main()
+		print(len(uniqueTurtList))
+		for turtleFile in uniqueTurtList:
+		
+			url = urllib.request.urlopen(turtleFile)
+			#print(url.read())
+			#input("Enter")
+		
+	#unittest.main()"""
 	
 		
