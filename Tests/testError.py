@@ -41,10 +41,17 @@ if __name__ == "__main__":
 		resp = urllib.request.urlopen(req)
 		readResp = resp.read()
 		data = json.loads(readResp.decode('utf-8'))
-		print(data)
+		print("Data")
+		print(data.keys())
+		turtList = []
+		for nidmResult in data["results"]:
+			
+			turt = nidmResult["nidm_results_ttl"]
+			turtList.append(turt)
+			#print(turt)
 		
-		
-	
+		uniqueTurtList = list(set(turtList))
+		print(uniqueTurtList)
 	#unittest.main()
 	
 		
