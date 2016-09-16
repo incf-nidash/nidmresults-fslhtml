@@ -35,30 +35,30 @@ if __name__ == "__main__":
 			local = False
 			break
 	
-	if local == False:
+	if local == False: #Data not on local machine
 	
 		print("Downloading data")
-		req = urllib.request.Request("http://neurovault.org/api/collections/1692/nidm_results")
+		req = urllib.request.Request("http://neurovault.org/api/collections/1692/nidm_results") #Request from neurovault api
 		resp = urllib.request.urlopen(req)
 		readResp = resp.read()
 		data = json.loads(readResp.decode('utf-8'))
 		for nidmResult in data["results"]:
 		
 			
-			turtUrl = nidmResult["ttl_file"]
-			dataName = nidmResult["name"]
+			turtUrl = nidmResult["ttl_file"] #Url of turtle file
+			dataName = nidmResult["name"] #Name of data (e.g. fsl_con_f.nidm)
 			
-			if dataName in [d + ".nidm" for d in dataNames]:
+			if dataName in [d + ".nidm" for d in dataNames]: #Check if data is required for tests
 			
 				print(dataName)
 				turtFile = urllib.request.urlopen(turtUrl)
-				dataPath = os.path.join(dataDir, dataName + ".ttl")
-				dataFile = open(dataPath, "w")
+				dataPath = os.path.join(dataDir, dataName + ".ttl") 
+				dataFile = open(dataPath, "w") 
 				decTurt = turtFile.read()
-				dataFile.write(decTurt.decode('utf-8'))
+				dataFile.write(decTurt.decode('utf-8')) #Write turtle file to data directory
 				dataFile.close()
 		
 		
-	unittest.main()
+	unittest.main() #Tests
 	
 		
