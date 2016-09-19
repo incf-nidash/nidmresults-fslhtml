@@ -31,7 +31,7 @@ if __name__ == "__main__":
 	
 		
 		if os.path.isfile(os.path.join(dataDir, dataName + ".nidm.ttl")) == False: #Data not found on local machine
-			print(dataName)
+			
 			local = False
 			break
 	
@@ -50,7 +50,6 @@ if __name__ == "__main__":
 			
 			if dataName in [d + ".nidm" for d in dataNames]: #Check if data is required for tests
 			
-				print(dataName)
 				turtFile = urllib.request.urlopen(turtUrl)
 				dataPath = os.path.join(dataDir, dataName + ".ttl") 
 				dataFile = open(dataPath, "w") 
@@ -58,7 +57,15 @@ if __name__ == "__main__":
 				dataFile.write(decTurt.decode('utf-8')) #Write turtle file to data directory
 				dataFile.close()
 		
-		
+				if os.path.isfile(dataPath) == False:
+				
+					dataFile = open(dataPath, "w") 
+					decTurt = turtFile.read()
+					dataFile.write(decTurt.decode('utf-8')) #Write turtle file to data directory
+					dataFile.close()
+				
+				
+				
 	unittest.main() #Tests
 	
 		
