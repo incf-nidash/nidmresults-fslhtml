@@ -4,6 +4,8 @@ import viewer
 import sys
 import os
 import glob
+import urllib.request
+import json
 
 class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 	
@@ -323,10 +325,48 @@ class spm_thr_voxelunct4(unittest.TestCase):
 		self.postStatsFile.close()
 		
 if __name__ == "__main__":
+
 	scriptPath = os.path.dirname(os.path.abspath(__file__)) #Get path of script
-	dataPath = os.path.join(scriptPath, "data")
-	globData = os.path.join(dataPath,"*.ttl")
-	data = glob.glob(globData)
+	dataDir = os.path.join(scriptPath, "data")
+	dataNames = ["fsl_con_f", "fsl_thr_clustfwep05","ex_spm_thr_voxelunct4","ex_spm_thr_clustunck10","ex_spm_thr_voxelfdrp05"]
+	local = True
+	
+	for dataName in dataNames: #Check if data is on local machine
+	
+		if os.path.isfile(os.path.join(dataDir, dataName + ".nidm.ttl")) == False: #Data not found on local machine
+		
+			local = False
+			break
+			
+	if local == False:
+	
+		req = urllib.request.Request("http://neurovault.org/api/collections/1692/nidm_results") #Request from neurovault api
+		resp = urllib.request.urlopen(req)
+		readResp = resp.read()
+		data = json.loads(readResp.decode('utf-8'))
+		
+		for nidmResult in data["results"]:
+		
+			
+			turtUrl = nidmResult["ttl_file"] #Url of turtle file
+			dataName = nidmResult["name"] #Name of data (e.g. fsl_con_f.nidm)
+			
+			if dataName in [d + ".nidm" for d in dataNames]: #Check if data is required for tests
+			
+				turtFile = urllib.request.urlopen(turtUrl)
+				dataPath = os.path.join(dataDir, dataName + ".ttl") 
+				
+				if os.path.isfile(dataPath) == False:
+				
+					dataFile = open(dataPath, "w") 
+					decTurt = turtFile.read()
+					dataFile.write(decTurt.decode('utf-8')) #Write turtle file to data directory
+					dataFile.close()
+				
+				
+				
+	globData = os.path.join(dataDir,"*.ttl") 
+	data = glob.glob(globData) #Get names of all turtle files in data folder
 	
 	for i in data: #Loop over all turtle files in data folder and create html
 	
