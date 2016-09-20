@@ -518,7 +518,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		
 def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
 	
-	reply = input("y/n")
+	reply = raw_input("y/n")
 	try:
 	
 		os.makedirs(outputFolder)
