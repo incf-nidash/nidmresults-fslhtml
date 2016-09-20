@@ -5,6 +5,7 @@ import rdflib
 from dominate import document
 from dominate.tags import *
 import errno
+import argparse
 
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
@@ -551,11 +552,20 @@ def main(nidmFile, htmlFolder): #Main program
 	
 
 if __name__ == "__main__":
+
+	parser = argparse.ArgumentParser(description = "NIDM-Results Viewer")
+	parser.add_argument("nidmFile", help = "NIDM-Results Turtle file")
+	parser.add_argument("outFolder",help = "Destination folder for HTML pages")
+	args = parser.parse_args()
 	
-	if len(sys.argv) == 3:
+	main(args.nidmFile, args.outFolder)
+	
+	"""if len(sys.argv) == 3:
 	
 		main(sys.argv[1],sys.argv[2])
 		
 	else:
 	
-		print("Please ensure you run the command with the nidm file and destination folder\nas arguments: viewer.py nidmFile destFolder")
+		print("Please ensure you run the command with the nidm file and destination folder\nas arguments: viewer.py nidmFile destFolder")"""
+		
+	
