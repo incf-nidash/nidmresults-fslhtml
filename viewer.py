@@ -531,5 +531,11 @@ def main(nidmFile, htmlFolder): #Main program
 	
 
 if __name__ == "__main__":
+
+	if len(sys.argv) == 3:
+	
+		main(sys.argv[1],sys.argv[2])
 		
-	main(sys.argv[1],sys.argv[2])
+	else:
+	
+		print("Please ensure you run the command with the nidm file and destination folder as arguments: viewer.py nidmFile destFolder")
