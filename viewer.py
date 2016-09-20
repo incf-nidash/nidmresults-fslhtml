@@ -292,10 +292,26 @@ def queryStatisticImage(graph): #Selects statistic map image URI
 
 	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
                prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
+			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
                prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
                prefix prov: <http://www.w3.org/ns/prov#>
+			   prefix dc: <http://purl.org/dc/elements/1.1/>
 
-               SELECT ?image WHERE {?x a nidm_Inference: . ?x prov:used ?y . ?y a nidm_StatisticMap: . ?y prov:atLocation ?image .}"""
+               SELECT ?image WHERE {?x a nidm_Inference: . ?x prov:used ?y . ?y a nidm_ExcursionSetMap: . ?y prov:atLocation ?image .}"""
+			   
+	queryResult = graph.query(query)
+	return(addQueryToList(queryResult))
+
+def queryExcursionSetMap(graph): #Selects excursion images
+
+	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
+			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
+               prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
+               prefix prov: <http://www.w3.org/ns/prov#>
+			   prefix dc: <http://purl.org/dc/elements/1.1/>
+
+               SELECT ?image WHERE {?x a nidm_Inference: . ?y prov:wasGeneratedBy ?x . ?y a nidm_ExcursionSetMap: . ?y dc:description ?z . ?z prov:atLocation ?image .}"""
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
@@ -416,7 +432,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	statisticType = statisticImage(statisticType[0])
 	statisticTypeString = statisticImageString(statisticType)
 	contrastName = queryContrastName(graph)
-	statisticMapImage = queryStatisticImage(graph)
+	statisticMapImage = queryExcursionSetMap(graph)
 	
 	postStats = document(title="FSL Viewer") #Creates initial HTML page (Post Stats)
 	postStats += h1("Sample FSL Viewer")
@@ -485,10 +501,11 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	postStats += h3("Thresholded Activation Images")
 	postStats += hr()
 	i = 0
-	while i < len(contrastName):
 	
+	while i < len(contrastName):
+		
 		postStats += p("%s" % contrastName[i])
-		postStats += img(scr = statisticMapImage[i], width = 100, height = 80)
+		postStats += img(src = statisticMapImage[i])
 		i = i + 1
 	
 	postStatsFile = open(postStatsFilePath, "x")
