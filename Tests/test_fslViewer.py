@@ -329,8 +329,8 @@ if __name__ == "__main__":
 	scriptPath = os.path.dirname(os.path.abspath(__file__)) #Get path of script
 	dataDir = os.path.join(scriptPath, "data")
 	
-	if os.path.isdir(dataDir) == False:
-	
+	if os.path.isdir(dataDir) == False: #Data folder does not exist
+		
 		os.makedirs(dataDir)
 		
 		
