@@ -517,7 +517,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		
 def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
 	
-	
+	reply = input("y/n")
 	try:
 	
 		os.makedirs(outputFolder)
@@ -551,7 +551,7 @@ def main(nidmFile, htmlFolder): #Main program
 	
 
 if __name__ == "__main__":
-
+	
 	if len(sys.argv) == 3:
 	
 		main(sys.argv[1],sys.argv[2])
