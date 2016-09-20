@@ -502,11 +502,13 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	postStats += hr()
 	i = 0
 	
-	while i < len(contrastName):
+	if askFsl(graph) == True:
+	
+		while i < len(contrastName):
 		
-		postStats += p("%s" % contrastName[i])
-		postStats += img(src = statisticMapImage[i])
-		i = i + 1
+			postStats += p("%s" % contrastName[i])
+			postStats += img(src = statisticMapImage[i])
+			i = i + 1
 	
 	postStatsFile = open(postStatsFilePath, "x")
 	print(postStats, file = postStatsFile)
