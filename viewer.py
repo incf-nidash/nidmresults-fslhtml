@@ -538,4 +538,4 @@ if __name__ == "__main__":
 		
 	else:
 	
-		print("Please ensure you run the command with the nidm file and destination folder as arguments: viewer.py nidmFile destFolder")
+		print("Please ensure you run the command with the nidm file and destination folder\nas arguments: viewer.py nidmFile destFolder")
