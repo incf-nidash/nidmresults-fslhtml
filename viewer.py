@@ -3,7 +3,7 @@ import os
 import sys
 import rdflib
 from dominate import document
-from dominate.tags import *
+from dominate.tags import p, a, h1, h2, h3, img, ul
 import errno
 import argparse
 
@@ -517,8 +517,10 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	
 		
 def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
-	
-	reply = raw_input("y/n")
+	print("starting input")
+	reply = input("y/n")
+	print("finishing input")
+	print("the reply is " + str(reply))
 	try:
 	
 		os.makedirs(outputFolder)
@@ -552,11 +554,17 @@ def main(nidmFile, htmlFolder): #Main program
 	
 
 if __name__ == "__main__":
-
+	this = input("Please enter something")
+	print("Input was %r" % this)
 	parser = argparse.ArgumentParser(description = "NIDM-Results Viewer")
 	parser.add_argument("nidmFile", help = "NIDM-Results Turtle file")
 	parser.add_argument("outFolder",help = "Destination folder for HTML pages")
+	parser.add_argument("--d", help="Overwite output folder if it already exists", action="store_true")
 	args = parser.parse_args()
+	
+	if args.d == True:
+	
+		print("Overwite the folder")
 	
 	main(args.nidmFile, args.outFolder)
 	
