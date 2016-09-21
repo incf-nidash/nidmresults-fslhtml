@@ -1,13 +1,24 @@
 Create HTML output of NIDM-Results files (In an FSL-like format).
 
-Command line usage: viewer.py nidmFile htmlOutputFolder.
+##### Usage
 
-Positional arguments:
+```
+$ nidmviewerfsl -h
+usage: nidmviewerfsl [-h] [--d] nidmFile outFolder
 
-	nidmFile 			pathname/url of NIDM-Results files.
-	htmlOutputFolder	Name of folder to store HTML pages in (Note: viewer.py will create this folder if it does not exist, and will exit if the folder does exist).
+NIDM-Results Viewer
+
+positional arguments:
+  nidmFile    NIDM-Results Turtle file
+  outFolder   Destination folder for HTML pages
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
 	
-Test usage (Command line):
-
+##### Tests
+To run the tests:
+```
 	Tests\test_fslViewer.py
 	Tests\testError.py
+```
