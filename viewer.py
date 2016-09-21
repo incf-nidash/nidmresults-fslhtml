@@ -3,7 +3,7 @@ import os
 import sys
 import rdflib
 from dominate import document
-from dominate.tags import p, a, h1, h2, h3, img, ul
+from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
 import errno
 import argparse
 
