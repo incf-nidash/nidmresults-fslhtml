@@ -25,6 +25,12 @@ if __name__ == "__main__":
 	
 	scriptDir = os.path.dirname(os.path.abspath(__file__))
 	dataDir = os.path.join(scriptDir, "data")
+	
+	if os.path.isdir(dataDir) == False:
+	
+		os.makedirs(dataDir)
+		
+		
 	dataNames = ["fsl_con_f", "fsl_thr_clustfwep05","ex_spm_thr_voxelunct4","ex_spm_thr_clustunck10","ex_spm_thr_voxelfdrp05"]
 	local = True
 	for dataName in dataNames: #Checks if data is on local machine
@@ -42,6 +48,7 @@ if __name__ == "__main__":
 		resp = urllib.request.urlopen(req)
 		readResp = resp.read()
 		data = json.loads(readResp.decode('utf-8'))
+		
 		for nidmResult in data["results"]:
 		
 			
