@@ -5,7 +5,6 @@ import rdflib
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
 import errno
-import argparse
 
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
@@ -550,23 +549,7 @@ def main(nidmFile, htmlFolder): #Main program
 	generatePostStatsHTML(g,statsFileName,postStatsFileName)
 	generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
 	return(destinationFolder)	
-		
-	
 
-if __name__ == "__main__":
-	"""this = input("Please enter something")
-	print("Input was %r" % this)"""
-	parser = argparse.ArgumentParser(description = "NIDM-Results Viewer")
-	parser.add_argument("nidmFile", help = "NIDM-Results Turtle file")
-	parser.add_argument("outFolder",help = "Destination folder for HTML pages")
-	parser.add_argument("--d", help="Overwite output folder if it already exists", action="store_true")
-	args = parser.parse_args()
-	
-	if args.d == True:
-	
-		print("Overwite the folder")
-	
-	main(args.nidmFile, args.outFolder)
 	
 
 		

@@ -1,0 +1,26 @@
+#!/usr/bin/python
+"""
+Viewing of NIDM-Results pack as FSL-like HTML pages
+"""
+
+from nidmviewerfsl import viewer
+import argparse
+
+
+if __name__ == "__main__":
+    """this = input("Please enter something")
+    print("Input was %r" % this)"""
+    parser = argparse.ArgumentParser(description="NIDM-Results Viewer")
+    parser.add_argument("nidmFile", help="NIDM-Results Turtle file")
+    parser.add_argument("outFolder", help="Destination folder for HTML pages")
+    parser.add_argument(
+        "--d",
+        help="Overwite output folder if it already exists",
+        action="store_true")
+    args = parser.parse_args()
+
+    if args.d is True:
+
+        print("Overwite the folder")
+
+    viewer.main(args.nidmFile, args.outFolder)
