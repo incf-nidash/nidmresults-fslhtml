@@ -1,0 +1,9 @@
+.main{color: red; display: inline-block; text-align: center;}
+
+h1 {
+	text-align: center;
+}
+
+ul {list-style-type: none; text-align: center;}
+
+li {display: inline;}
