@@ -517,10 +517,10 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	
 		
 def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
-	print("starting input")
+	"""print("starting input")
 	reply = input("y/n")
 	print("finishing input")
-	print("the reply is " + str(reply))
+	print("the reply is " + str(reply))"""
 	try:
 	
 		os.makedirs(outputFolder)
@@ -554,8 +554,8 @@ def main(nidmFile, htmlFolder): #Main program
 	
 
 if __name__ == "__main__":
-	this = input("Please enter something")
-	print("Input was %r" % this)
+	"""this = input("Please enter something")
+	print("Input was %r" % this)"""
 	parser = argparse.ArgumentParser(description = "NIDM-Results Viewer")
 	parser.add_argument("nidmFile", help = "NIDM-Results Turtle file")
 	parser.add_argument("outFolder",help = "Destination folder for HTML pages")
