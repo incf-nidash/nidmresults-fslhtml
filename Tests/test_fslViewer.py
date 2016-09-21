@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
+from nidmviewerfsl import viewer
 import unittest
-import viewer
 import sys
 import os
 import glob

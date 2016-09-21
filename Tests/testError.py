@@ -3,7 +3,7 @@ import os
 import unittest
 import sys
 import string
-import viewer
+from nidmviewerfsl import viewer
 import glob
 import urllib.request
 import json
