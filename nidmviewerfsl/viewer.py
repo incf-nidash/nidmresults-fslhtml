@@ -144,7 +144,8 @@ def queryDesignMatrixLocation(graph): #Selects location of design matrix
 def queryStatisticType(graph): #Checks Statistic Map Type
 
 	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-	prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+	           prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+			   prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
                prefix nidm_statisticType: <http://purl.org/nidash/nidm#NIDM_0000123>
 			   prefix nidm_statisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
                prefix prov: <http://www.w3.org/ns/prov#>
@@ -153,7 +154,7 @@ def queryStatisticType(graph): #Checks Statistic Map Type
                prefix obo_Fstatistic: <http://purl.obolibrary.org/obo/STATO_0000282>
                prefix obo_Zstatistic: <http://purl.obolibrary.org/obo/STATO_0000376>
 
-               SELECT ?statType WHERE { {?y a nidm_ConjunctionInference: .} UNION { ?y a nidm_Inference: .} ?y prov:used ?x . ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}"""
+               SELECT ?statType WHERE { {?y a nidm_ConjunctionInference: .} UNION { ?y a nidm_Inference: .} UNION {?y a spm_PartialConjunctionInference: .} ?y prov:used ?x . ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}"""
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
