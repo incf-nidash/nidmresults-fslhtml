@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import shutil
 import sys
 import rdflib
 from dominate import document
@@ -530,7 +531,7 @@ def createOutputDirectory(outputFolder): #Attempts to create folder for HTML fil
 		print("Error - %s directory already exists" % outputFolder)
 		exit()
 
-def main(nidmFile, htmlFolder): #Main program
+def main(nidmFile, htmlFolder, overwrite=False): #Main program
 	
 	g = rdflib.Graph()
 	
@@ -538,6 +539,13 @@ def main(nidmFile, htmlFolder): #Main program
 	filepath = nidmFile
 	g.parse(filepath, format = rdflib.util.guess_format(filepath))
 	destinationFolder = htmlFolder
+	
+	if overwrite == True:
+		print("Overwrite")
+		if os.path.isdir(destinationFolder) == True:
+		
+			print("Removing %r" % destinationFolder)
+			
 			
 	createOutputDirectory(htmlFolder)
 				
