@@ -23,4 +23,4 @@ if __name__ == "__main__":
 
         print("Overwite the folder")
 
-    viewer.main(args.nidmFile, args.outFolder)
+    viewer.main(args.nidmFile, args.outFolder, args.d)
