@@ -19,7 +19,7 @@ class generalTests(unittest.TestCase):
 		
 		for i in data: #Loop over all turtle files in data
 		
-			viewer.main(i,i + "test") #Run viewer on turtle file
+			viewer.main(i,i + "test", True) #Run viewer on turtle file
 			
 if __name__ == "__main__":
 	
