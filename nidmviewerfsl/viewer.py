@@ -540,7 +540,7 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 	g.parse(filepath, format = rdflib.util.guess_format(filepath))
 	destinationFolder = htmlFolder
 	
-	if overwrite == True:
+	if overwrite == True: #User wants to overwite folder
 		print("Overwrite")
 		if os.path.isdir(destinationFolder) == True:
 		
