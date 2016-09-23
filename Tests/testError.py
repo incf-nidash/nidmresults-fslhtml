@@ -55,7 +55,7 @@ if __name__ == "__main__":
 			turtUrl = nidmResult["ttl_file"] #Url of turtle file
 			dataName = nidmResult["name"] #Name of data (e.g. fsl_con_f.nidm)
 			
-			"""if dataName in [d + ".nidm" for d in dataNames]: #Check if data is required for tests"""
+			
 			
 			turtFile = urllib.request.urlopen(turtUrl)
 			dataPath = os.path.join(dataDir, dataName + ".ttl") 
