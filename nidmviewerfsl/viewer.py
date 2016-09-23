@@ -520,10 +520,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	
 		
 def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
-	"""print("starting input")
-	reply = input("y/n")
-	print("finishing input")
-	print("the reply is " + str(reply))"""
+	
 	try:
 	
 		os.makedirs(outputFolder)
@@ -540,26 +537,27 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 	
 	filepath = nidmFile
 	
-	if filepath.endswith(".nidm.zip"):
-		zip = zipfile.ZipFile(filepath, "r")
-		print("Zip File")
-		zip.extractall(htmlFolder)
-		turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
-		print(turtleFile)
+	
 		
 	g.parse(filepath, format = rdflib.util.guess_format(filepath))
 	destinationFolder = htmlFolder
 	
 	if overwrite == True: #User wants to overwite folder
 		print("Overwrite")
-		if os.path.isdir(destinationFolder) == True:
+		if os.path.isdir(destinationFolder) == True: #Check if directory already exists
 		
 			print("Removing %r" % destinationFolder)
 			
 			
-	createOutputDirectory(htmlFolder)
+	createOutputDirectory(htmlFolder) #Create the html folder
 	
+	if filepath.endswith(".nidm.zip"): #Nidm Zip file specified
 	
+		zip = zipfile.ZipFile(filepath, "r")
+		print("Zip File")
+		zip.extractall(htmlFolder) #Extract zip file to destination folder
+		turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
+		print(turtleFile)
 	
 	
 	currentDir = os.getcwd()
@@ -570,7 +568,8 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 	generateStatsHTML(g,statsFileName,postStatsFileName)
 	generatePostStatsHTML(g,statsFileName,postStatsFileName)
 	generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
-	return(destinationFolder)	
+	
+	return(destinationFolder) #Return the html/zip-extraction folder
 
 	
 
