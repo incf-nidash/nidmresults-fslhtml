@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 import rdflib
+import zipfile
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
 import errno
@@ -548,7 +549,15 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 			
 			
 	createOutputDirectory(htmlFolder)
-				
+	
+	if filepath.endswith(".nidm.zip"):
+	
+		print("Zip File")
+		
+	else:
+	
+		print("Turtle file")
+	
 	currentDir = os.getcwd()
 	dirLocation = os.path.join(currentDir, destinationFolder)
 	mainFileName = os.path.join(dirLocation, "main.html")
