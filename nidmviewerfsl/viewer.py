@@ -4,6 +4,7 @@ import shutil
 import sys
 import rdflib
 import zipfile
+import glob
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
 import errno
@@ -538,6 +539,14 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 	
 	
 	filepath = nidmFile
+	
+	if filepath.endswith(".nidm.zip"):
+		zip = zipfile.ZipFile(filepath, "r")
+		print("Zip File")
+		zip.extractall(htmlFolder)
+		turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
+		print(turtleFile)
+		
 	g.parse(filepath, format = rdflib.util.guess_format(filepath))
 	destinationFolder = htmlFolder
 	
@@ -550,13 +559,8 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 			
 	createOutputDirectory(htmlFolder)
 	
-	if filepath.endswith(".nidm.zip"):
 	
-		print("Zip File")
-		
-	else:
 	
-		print("Turtle file")
 	
 	currentDir = os.getcwd()
 	dirLocation = os.path.join(currentDir, destinationFolder)
