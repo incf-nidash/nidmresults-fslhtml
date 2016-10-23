@@ -533,12 +533,27 @@ def createOutputDirectory(outputFolder): #Attempts to create folder for HTML fil
 def main(nidmFile, htmlFolder, overwrite=False): #Main program
 	
 	g = rdflib.Graph()
-	
-	
 	filepath = nidmFile
 	
+	if filepath.endswith(".nidm.zip"): #Nidm Zip file specified
 	
-		
+		zip = zipfile.ZipFile(filepath, "r")
+		print("Zip File")
+		zip.extractall(htmlFolder) #Extract zip file to destination folder
+		turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
+		print(turtleFile)
+		g.parse(turtleFile[0], format = rdflib.util.guess_format(turtleFile[0]))
+		htmlLocation = os.path.join(htmlFolder,"html") 
+		createOutputDirectory(htmlLocation) #Create the html folder inside the folder where zip was extracted to
+		mainFileName = os.path.join(htmlLocation, "main.html")
+		statsFileName = os.path.join(htmlLocation, "stats.html")
+		postStatsFileName = os.path.join(htmlLocation, "postStats.html")
+		generateStatsHTML(g,statsFileName,postStatsFileName)
+		generatePostStatsHTML(g,statsFileName,postStatsFileName)
+		generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+		print(mainFileName)
+		print(htmlLocation)
+
 	g.parse(filepath, format = rdflib.util.guess_format(filepath))
 	destinationFolder = htmlFolder
 	
@@ -556,13 +571,7 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 			
 	createOutputDirectory(htmlFolder) #Create the html folder
 	
-	if filepath.endswith(".nidm.zip"): #Nidm Zip file specified
 	
-		zip = zipfile.ZipFile(filepath, "r")
-		print("Zip File")
-		zip.extractall(htmlFolder) #Extract zip file to destination folder
-		turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
-		print(turtleFile)
 	
 	
 	currentDir = os.getcwd()
