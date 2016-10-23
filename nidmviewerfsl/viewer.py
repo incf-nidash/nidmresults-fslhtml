@@ -548,6 +548,11 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 		
 			print("Removing %r" % destinationFolder)
 			
+			if os.path.isdir(destinationFolder + "Backup") == False:
+			
+				shutil.copytree(destinationFolder, destinationFolder + "Backup") #Backup the folder
+				
+			shutil.rmtree(destinationFolder) #Remove the folder
 			
 	createOutputDirectory(htmlFolder) #Create the html folder
 	
