@@ -554,35 +554,37 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 		generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
 		print(mainFileName)
 		print(htmlLocation)
-
-	g.parse(filepath, format = rdflib.util.guess_format(filepath))
-	destinationFolder = htmlFolder
 	
-	if overwrite == True: #User wants to overwite folder
-		print("Overwrite")
-		if os.path.isdir(destinationFolder) == True: #Check if directory already exists
+	else:
+	
+		g.parse(filepath, format = rdflib.util.guess_format(filepath))
+		destinationFolder = htmlFolder
+	
+		if overwrite == True: #User wants to overwite folder
+			print("Overwrite")
+			if os.path.isdir(destinationFolder) == True: #Check if directory already exists
 		
-			print("Removing %r" % destinationFolder)
+				print("Removing %r" % destinationFolder)
 			
-			if os.path.isdir(destinationFolder + "Backup") == False:
+				if os.path.isdir(destinationFolder + "Backup") == False:
 			
-				shutil.copytree(destinationFolder, destinationFolder + "Backup") #Backup the folder
+					shutil.copytree(destinationFolder, destinationFolder + "Backup") #Backup the folder
 				
-			shutil.rmtree(destinationFolder) #Remove the folder
+				shutil.rmtree(destinationFolder) #Remove the folder
 			
-	createOutputDirectory(htmlFolder) #Create the html folder
+		createOutputDirectory(htmlFolder) #Create the html folder
 	
 	
 	
 	
-	currentDir = os.getcwd()
-	dirLocation = os.path.join(currentDir, destinationFolder)
-	mainFileName = os.path.join(dirLocation, "main.html")
-	statsFileName = os.path.join(dirLocation, "stats.html")
-	postStatsFileName = os.path.join(dirLocation, "postStats.html")
-	generateStatsHTML(g,statsFileName,postStatsFileName)
-	generatePostStatsHTML(g,statsFileName,postStatsFileName)
-	generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+		currentDir = os.getcwd()
+		dirLocation = os.path.join(currentDir, destinationFolder)
+		mainFileName = os.path.join(dirLocation, "main.html")
+		statsFileName = os.path.join(dirLocation, "stats.html")
+		postStatsFileName = os.path.join(dirLocation, "postStats.html")
+		generateStatsHTML(g,statsFileName,postStatsFileName)
+		generatePostStatsHTML(g,statsFileName,postStatsFileName)
+		generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
 	
 	return(destinationFolder) #Return the html/zip-extraction folder
 
