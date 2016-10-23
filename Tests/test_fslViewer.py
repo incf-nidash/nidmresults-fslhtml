@@ -376,6 +376,6 @@ if __name__ == "__main__":
 	
 	for i in data: #Loop over all turtle files in data folder and create html
 	
-		viewer.main(i, i + "TestResults")
+		viewer.main(i, i + "TestResults", overwrite=True)
 		
 	unittest.main() #Tests

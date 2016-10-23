@@ -418,6 +418,7 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	stats += h3("Design Matrix")
 	
 	designMatrixLocation = queryDesignMatrixLocation(graph)
+	
 	stats += a(img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0]) #Adds design matrix image (as a link) to html page
 	
 	statsFile = open(statsFilePath, "x")
