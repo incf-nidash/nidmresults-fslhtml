@@ -538,6 +538,7 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 	
 	if filepath.endswith(".nidm.zip"): #Nidm Zip file specified
 	
+		destinationFolder = htmlFolder
 		zip = zipfile.ZipFile(filepath, "r")
 		print("Zip File")
 		zip.extractall(htmlFolder) #Extract zip file to destination folder
