@@ -544,16 +544,14 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 		turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
 		print(turtleFile)
 		g.parse(turtleFile[0], format = rdflib.util.guess_format(turtleFile[0]))
-		htmlLocation = os.path.join(htmlFolder,"html") 
-		createOutputDirectory(htmlLocation) #Create the html folder inside the folder where zip was extracted to
-		mainFileName = os.path.join(htmlLocation, "main.html")
-		statsFileName = os.path.join(htmlLocation, "stats.html")
-		postStatsFileName = os.path.join(htmlLocation, "postStats.html")
+		mainFileName = os.path.join(htmlFolder, "main.html")
+		statsFileName = os.path.join(htmlFolder, "stats.html")
+		postStatsFileName = os.path.join(htmlFolder, "postStats.html")
 		generateStatsHTML(g,statsFileName,postStatsFileName)
 		generatePostStatsHTML(g,statsFileName,postStatsFileName)
 		generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
 		print(mainFileName)
-		print(htmlLocation)
+		
 	
 	else:
 	
