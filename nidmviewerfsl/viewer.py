@@ -539,16 +539,16 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 	if filepath.endswith(".nidm.zip"): #Nidm Zip file specified
 	
 		destinationFolder = htmlFolder
-		if os.path.isdir(htmlFolder) == True:
+		
+		if os.path.isdir(htmlFolder) == True: #Html/extract folder already exists
 		
 			print("The folder %s already exists, would you like to overwrite it? y/n" % htmlFolder)
 			reply = input()
-			if reply == "y":
+			if reply == "y": #User wants to overwrite folder
 			
 				print("Overwriting")
-				shutil.rmtree(htmlFolder)
+				shutil.rmtree(htmlFolder) #Removes folder
 				zip = zipfile.ZipFile(filepath, "r")
-				print("Zip File")
 				zip.extractall(htmlFolder) #Extract zip file to destination folder
 				turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
 				print(turtleFile)
@@ -559,7 +559,7 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 				generateStatsHTML(g,statsFileName,postStatsFileName)
 				generatePostStatsHTML(g,statsFileName,postStatsFileName)
 				generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
-				print(mainFileName)
+				
 				
 			else:
 			
@@ -568,7 +568,6 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 		else:
 			
 			zip = zipfile.ZipFile(filepath, "r")
-			print("Zip File")
 			zip.extractall(htmlFolder) #Extract zip file to destination folder
 			turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
 			print(turtleFile)
@@ -579,7 +578,7 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 			generateStatsHTML(g,statsFileName,postStatsFileName)
 			generatePostStatsHTML(g,statsFileName,postStatsFileName)
 			generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
-			print(mainFileName)
+			
 		
 	
 	else:
