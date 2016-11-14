@@ -50,7 +50,8 @@ if __name__ == "__main__":
 		data = json.loads(readResp.decode('utf-8'))
 		
 		for nidmResult in data["results"]:
-		
+			print(nidmResult["zip_file"])
+			input()
 			
 			turtUrl = nidmResult["ttl_file"] #Url of turtle file
 			dataName = nidmResult["name"] #Name of data (e.g. fsl_con_f.nidm)
