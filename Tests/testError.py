@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import shutil
 import unittest
 import sys
 import string
@@ -7,6 +8,8 @@ from nidmviewerfsl import viewer
 import glob
 import urllib.request
 import json
+import zipfile
+import urllib.parse
 
 class generalTests(unittest.TestCase):
 
@@ -51,23 +54,21 @@ if __name__ == "__main__":
 		
 		for nidmResult in data["results"]:
 			print(nidmResult["zip_file"])
-			input()
 			
-			turtUrl = nidmResult["ttl_file"] #Url of turtle file
+			
+			zipUrl = nidmResult["zip_file"] #Url of turtle file
 			dataName = nidmResult["name"] #Name of data (e.g. fsl_con_f.nidm)
+			dataNameFile = os.path.join(dataDir, dataName + ".zip")
+			#zipUrl = urllib.parse.urlencode(zipUrl, "bytes")
+			
+			zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile)
+		
 			
 			
-			
-			turtFile = urllib.request.urlopen(turtUrl)
-			dataPath = os.path.join(dataDir, dataName + ".ttl") 
+			dataPath = os.path.join(dataDir, dataName + ".zip") 
 				
 		
-			if os.path.isfile(dataPath) == False:
-				
-				dataFile = open(dataPath, "w") 
-				decTurt = turtFile.read()
-				dataFile.write(decTurt.decode('utf-8')) #Write turtle file to data directory
-				dataFile.close()
+			
 				
 				
 				
