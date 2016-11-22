@@ -552,7 +552,7 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 				zip.extractall(htmlFolder) #Extract zip file to destination folder
 				turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
 				print(turtleFile)
-				g.parse(turtleFile[0], format = rdflib.util.guess_format(turtleFile[0]))
+				g.parse(turtleFile[0], format = "turtle")
 				mainFileName = os.path.join(htmlFolder, "main.html")
 				statsFileName = os.path.join(htmlFolder, "stats.html")
 				postStatsFileName = os.path.join(htmlFolder, "postStats.html")
