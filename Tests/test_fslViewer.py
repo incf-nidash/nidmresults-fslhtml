@@ -13,7 +13,7 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 		self.myString = ""
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "fsl_con_f.nidm.ttlTestResults")
+		self.dataPath = os.path.join(self.dataPath, "fsl_con_f.nidm.zipTestResults")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 		
@@ -74,7 +74,7 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 		self.found = False
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "fsl_thr_clustfwep05.nidm.ttlTestResults")
+		self.dataPath = os.path.join(self.dataPath, "fsl_thr_clustfwep05.nidm.zipTestResults")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 	
@@ -189,7 +189,7 @@ class spm_thr_clustunck10(unittest.TestCase):
 		self.myString = ""
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_clustunck10.nidm.ttlTestResults")
+		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_clustunck10.nidm.zipTestResults")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 		
@@ -236,7 +236,7 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 		self.myString = ""
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelfdrp05.nidm.ttlTestResults")
+		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelfdrp05.nidm.zipTestResults")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 		
@@ -283,7 +283,7 @@ class spm_thr_voxelunct4(unittest.TestCase):
 		self.myString = ""
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelunct4.nidm.ttlTestResults")
+		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelunct4.nidm.zipTestResults")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 		
@@ -353,28 +353,21 @@ if __name__ == "__main__":
 		
 		for nidmResult in data["results"]:
 		
+			print(nidmResult["zip_file"])
 			
-			turtUrl = nidmResult["ttl_file"] #Url of turtle file
+			zipUrl = nidmResult["zip_file"] #Url of zip file
 			dataName = nidmResult["name"] #Name of data (e.g. fsl_con_f.nidm)
+			dataNameFile = os.path.join(dataDir, dataName + ".zip")
 			
-			if dataName in [d + ".nidm" for d in dataNames]: #Check if data is required for tests
+			if os.path.isfile(dataNameFile) == False:
 			
-				turtFile = urllib.request.urlopen(turtUrl)
-				dataPath = os.path.join(dataDir, dataName + ".ttl") 
-				
-				if os.path.isfile(dataPath) == False:
-				
-					dataFile = open(dataPath, "w") 
-					decTurt = turtFile.read()
-					dataFile.write(decTurt.decode('utf-8')) #Write turtle file to data directory
-					dataFile.close()
-				
-				
-				
-	globData = os.path.join(dataDir,"*.ttl") 
-	data = glob.glob(globData) #Get names of all turtle files in data folder
+				zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile) #copy zip file to local machine
+		
+						
+	globData = os.path.join(dataDir,"*.zip") 
+	data = glob.glob(globData) #Get names of all zip files in data folder
 	
-	for i in data: #Loop over all turtle files in data folder and create html
+	for i in data: #Loop over all zip files in data folder and create html
 	
 		viewer.main(i, i + "TestResults", overwrite=True)
 		
