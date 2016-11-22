@@ -17,11 +17,11 @@ class generalTests(unittest.TestCase):
 	
 		script = os.path.dirname(os.path.abspath(__file__))
 		dataFolder = os.path.join(script, "data")
-		globData = os.path.join(dataFolder,"*.ttl")
+		globData = os.path.join(dataFolder,"*.zip")
 		data = glob.glob(globData)
 		
 		for i in data: #Loop over all turtle files in data
-		
+			print(i)
 			viewer.main(i,i + "test",overwrite=True) #Run viewer on turtle file
 			
 if __name__ == "__main__":
@@ -53,18 +53,17 @@ if __name__ == "__main__":
 		data = json.loads(readResp.decode('utf-8'))
 		
 		for nidmResult in data["results"]:
+		
 			print(nidmResult["zip_file"])
 			
-			
-			zipUrl = nidmResult["zip_file"] #Url of turtle file
+			zipUrl = nidmResult["zip_file"] #Url of zip file
 			dataName = nidmResult["name"] #Name of data (e.g. fsl_con_f.nidm)
 			dataNameFile = os.path.join(dataDir, dataName + ".zip")
-			#zipUrl = urllib.parse.urlencode(zipUrl, "bytes")
 			
-			zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile)
+			if os.path.isfile(dataNameFile) == False:
+			
+				zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile)
 		
-			
-			
 			dataPath = os.path.join(dataDir, dataName + ".zip") 
 				
 		
