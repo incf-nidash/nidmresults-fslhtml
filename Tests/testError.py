@@ -20,9 +20,9 @@ class generalTests(unittest.TestCase):
 		globData = os.path.join(dataFolder,"*.zip")
 		data = glob.glob(globData)
 		
-		for i in data: #Loop over all turtle files in data
+		for i in data: #Loop over all nidm zip files in data
 			print(i)
-			viewer.main(i,i + "test",overwrite=True) #Run viewer on turtle file
+			viewer.main(i,i + "test",overwrite=True) #Run viewer on zip file
 			
 if __name__ == "__main__":
 	
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 			
 			if os.path.isfile(dataNameFile) == False:
 			
-				zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile)
+				zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile) #copy zip file to local machine
 		
 			dataPath = os.path.join(dataDir, dataName + ".zip") 
 				
