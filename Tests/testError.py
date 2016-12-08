@@ -22,7 +22,7 @@ class generalTests(unittest.TestCase):
 		
 		for i in data: #Loop over all nidm zip files in data
 			print(i)
-			viewer.main(i,i + "test",overwrite=True) #Run viewer on zip file
+			viewer.main(i, i.replace(".nidm.zip", "") + "_test_err",overwrite=True) #Run viewer on zip file
 			
 if __name__ == "__main__":
 	

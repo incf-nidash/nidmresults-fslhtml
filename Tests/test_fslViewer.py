@@ -369,6 +369,6 @@ if __name__ == "__main__":
 	
 	for i in data: #Loop over all zip files in data folder and create html
 	
-		viewer.main(i, i + "TestResults", overwrite=True)
+		viewer.main(i, i.replace(".nidm.zip", "") + "_test", overwrite=True)
 		
 	unittest.main() #Tests
