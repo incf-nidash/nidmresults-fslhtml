@@ -39,7 +39,7 @@ if __name__ == "__main__":
 	for dataName in dataNames: #Checks if data is on local machine
 	
 		
-		if os.path.isfile(os.path.join(dataDir, dataName + ".nidm.ttl")) == False: #Data not found on local machine
+		if os.path.isfile(os.path.join(dataDir, dataName + ".nidm.zip")) == False: #Data not found on local machine
 			
 			local = False
 			break
