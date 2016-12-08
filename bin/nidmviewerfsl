@@ -11,7 +11,7 @@ if __name__ == "__main__":
     """this = input("Please enter something")
     print("Input was %r" % this)"""
     parser = argparse.ArgumentParser(description="NIDM-Results Viewer")
-    parser.add_argument("nidmFile", help="NIDM-Results Turtle file")
+    parser.add_argument("nidmFile", help="NIDM-Results pack")
     parser.add_argument("outFolder", help="Destination folder for HTML pages")
     parser.add_argument(
         "--d",
