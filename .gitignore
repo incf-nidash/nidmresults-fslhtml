@@ -1,3 +1,6 @@
+# Test data
+Tests/data
+
 # NIDM folders
 *.nidm
 *.ttl
