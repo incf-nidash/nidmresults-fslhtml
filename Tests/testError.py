@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import shutil
 import unittest
 import sys
 import string
@@ -7,6 +8,8 @@ from nidmviewerfsl import viewer
 import glob
 import urllib.request
 import json
+import zipfile
+import urllib.parse
 
 class generalTests(unittest.TestCase):
 
@@ -14,12 +17,12 @@ class generalTests(unittest.TestCase):
 	
 		script = os.path.dirname(os.path.abspath(__file__))
 		dataFolder = os.path.join(script, "data")
-		globData = os.path.join(dataFolder,"*.ttl")
+		globData = os.path.join(dataFolder,"*.zip")
 		data = glob.glob(globData)
 		
-		for i in data: #Loop over all turtle files in data
-		
-			viewer.main(i,i + "test") #Run viewer on turtle file
+		for i in data: #Loop over all nidm zip files in data
+			print(i)
+			viewer.main(i, i.replace(".nidm.zip", "") + "_test_err",overwrite=True) #Run viewer on zip file
 			
 if __name__ == "__main__":
 	
@@ -36,7 +39,7 @@ if __name__ == "__main__":
 	for dataName in dataNames: #Checks if data is on local machine
 	
 		
-		if os.path.isfile(os.path.join(dataDir, dataName + ".nidm.ttl")) == False: #Data not found on local machine
+		if os.path.isfile(os.path.join(dataDir, dataName + ".nidm.zip")) == False: #Data not found on local machine
 			
 			local = False
 			break
@@ -51,25 +54,20 @@ if __name__ == "__main__":
 		
 		for nidmResult in data["results"]:
 		
+			print(nidmResult["zip_file"])
 			
-			turtUrl = nidmResult["ttl_file"] #Url of turtle file
+			zipUrl = nidmResult["zip_file"] #Url of zip file
 			dataName = nidmResult["name"] #Name of data (e.g. fsl_con_f.nidm)
+			dataNameFile = os.path.join(dataDir, dataName + ".zip")
 			
-			if dataName in [d + ".nidm" for d in dataNames]: #Check if data is required for tests
+			if os.path.isfile(dataNameFile) == False:
 			
-				turtFile = urllib.request.urlopen(turtUrl)
-				dataPath = os.path.join(dataDir, dataName + ".ttl") 
-				dataFile = open(dataPath, "w") 
-				decTurt = turtFile.read()
-				dataFile.write(decTurt.decode('utf-8')) #Write turtle file to data directory
-				dataFile.close()
+				zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile) #copy zip file to local machine
 		
-				if os.path.isfile(dataPath) == False:
+			dataPath = os.path.join(dataDir, dataName + ".zip") 
 				
-					dataFile = open(dataPath, "w") 
-					decTurt = turtFile.read()
-					dataFile.write(decTurt.decode('utf-8')) #Write turtle file to data directory
-					dataFile.close()
+		
+			
 				
 				
 				

@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 import os
+import shutil
 import sys
 import rdflib
+import zipfile
+import glob
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
 import errno
@@ -144,7 +147,8 @@ def queryDesignMatrixLocation(graph): #Selects location of design matrix
 def queryStatisticType(graph): #Checks Statistic Map Type
 
 	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-	prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+	           prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+			   prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
                prefix nidm_statisticType: <http://purl.org/nidash/nidm#NIDM_0000123>
 			   prefix nidm_statisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
                prefix prov: <http://www.w3.org/ns/prov#>
@@ -153,7 +157,7 @@ def queryStatisticType(graph): #Checks Statistic Map Type
                prefix obo_Fstatistic: <http://purl.obolibrary.org/obo/STATO_0000282>
                prefix obo_Zstatistic: <http://purl.obolibrary.org/obo/STATO_0000376>
 
-               SELECT ?statType WHERE { {?y a nidm_ConjunctionInference: .} UNION { ?y a nidm_Inference: .} ?y prov:used ?x . ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}"""
+               SELECT ?statType WHERE { {?y a nidm_ConjunctionInference: .} UNION { ?y a nidm_Inference: .} UNION {?y a spm_PartialConjunctionInference: .} ?y prov:used ?x . ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}"""
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
@@ -414,6 +418,7 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	stats += h3("Design Matrix")
 	
 	designMatrixLocation = queryDesignMatrixLocation(graph)
+	
 	stats += a(img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0]) #Adds design matrix image (as a link) to html page
 	
 	statsFile = open(statsFilePath, "x")
@@ -516,10 +521,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	
 		
 def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
-	"""print("starting input")
-	reply = input("y/n")
-	print("finishing input")
-	print("the reply is " + str(reply))"""
+	
 	try:
 	
 		os.makedirs(outputFolder)
@@ -529,26 +531,91 @@ def createOutputDirectory(outputFolder): #Attempts to create folder for HTML fil
 		print("Error - %s directory already exists" % outputFolder)
 		exit()
 
-def main(nidmFile, htmlFolder): #Main program
+def main(nidmFile, htmlFolder, overwrite=False): #Main program
 	
 	g = rdflib.Graph()
-	
-	
 	filepath = nidmFile
-	g.parse(filepath, format = rdflib.util.guess_format(filepath))
-	destinationFolder = htmlFolder
+	
+	if filepath.endswith(".nidm.zip"): #Nidm Zip file specified
+	
+		destinationFolder = htmlFolder
+		
+		if os.path.isdir(htmlFolder) == True: #Html/extract folder already exists
+		
+			if not overwrite:
+				print("The folder %s already exists, would you like to overwrite it? y/n" % htmlFolder)
+				reply = input()
+				overwrite = (reply == "y")
+
+			if overwrite: #User wants to overwrite folder
 			
-	createOutputDirectory(htmlFolder)
+				print("Overwriting")
+				shutil.rmtree(htmlFolder) #Removes folder
+				zip = zipfile.ZipFile(filepath, "r")
+				zip.extractall(htmlFolder) #Extract zip file to destination folder
+				turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
+				print(turtleFile)
+				g.parse(turtleFile[0], format = "turtle")
+				mainFileName = os.path.join(htmlFolder, "main.html")
+				statsFileName = os.path.join(htmlFolder, "stats.html")
+				postStatsFileName = os.path.join(htmlFolder, "postStats.html")
+				generateStatsHTML(g,statsFileName,postStatsFileName)
+				generatePostStatsHTML(g,statsFileName,postStatsFileName)
+				generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
 				
-	currentDir = os.getcwd()
-	dirLocation = os.path.join(currentDir, destinationFolder)
-	mainFileName = os.path.join(dirLocation, "main.html")
-	statsFileName = os.path.join(dirLocation, "stats.html")
-	postStatsFileName = os.path.join(dirLocation, "postStats.html")
-	generateStatsHTML(g,statsFileName,postStatsFileName)
-	generatePostStatsHTML(g,statsFileName,postStatsFileName)
-	generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
-	return(destinationFolder)	
+				
+			else:
+			
+				exit()
+			
+		else:
+			
+			zip = zipfile.ZipFile(filepath, "r")
+			zip.extractall(htmlFolder) #Extract zip file to destination folder
+			turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
+			print(turtleFile)
+			g.parse(turtleFile[0], format = rdflib.util.guess_format(turtleFile[0]))
+			mainFileName = os.path.join(htmlFolder, "main.html")
+			statsFileName = os.path.join(htmlFolder, "stats.html")
+			postStatsFileName = os.path.join(htmlFolder, "postStats.html")
+			generateStatsHTML(g,statsFileName,postStatsFileName)
+			generatePostStatsHTML(g,statsFileName,postStatsFileName)
+			generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+			
+		
+	
+	else:
+	
+		g.parse(filepath, format = rdflib.util.guess_format(filepath))
+		destinationFolder = htmlFolder
+	
+		if overwrite == True: #User wants to overwite folder
+			print("Overwrite")
+			if os.path.isdir(destinationFolder) == True: #Check if directory already exists
+		
+				print("Removing %r" % destinationFolder)
+			
+				if os.path.isdir(destinationFolder + "Backup") == False:
+			
+					shutil.copytree(destinationFolder, destinationFolder + "Backup") #Backup the folder
+				
+				shutil.rmtree(destinationFolder) #Remove the folder
+			
+		createOutputDirectory(htmlFolder) #Create the html folder
+	
+	
+	
+	
+		currentDir = os.getcwd()
+		dirLocation = os.path.join(currentDir, destinationFolder)
+		mainFileName = os.path.join(dirLocation, "main.html")
+		statsFileName = os.path.join(dirLocation, "stats.html")
+		postStatsFileName = os.path.join(dirLocation, "postStats.html")
+		generateStatsHTML(g,statsFileName,postStatsFileName)
+		generatePostStatsHTML(g,statsFileName,postStatsFileName)
+		generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+	
+	return(destinationFolder) #Return the html/zip-extraction folder
 
 	
 
