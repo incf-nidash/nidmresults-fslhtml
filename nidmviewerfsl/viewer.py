@@ -542,9 +542,12 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 		
 		if os.path.isdir(htmlFolder) == True: #Html/extract folder already exists
 		
-			print("The folder %s already exists, would you like to overwrite it? y/n" % htmlFolder)
-			reply = input()
-			if reply == "y": #User wants to overwrite folder
+			if not overwrite:
+				print("The folder %s already exists, would you like to overwrite it? y/n" % htmlFolder)
+				reply = input()
+				overwrite = (reply == "y")
+
+			if overwrite: #User wants to overwrite folder
 			
 				print("Overwriting")
 				shutil.rmtree(htmlFolder) #Removes folder
