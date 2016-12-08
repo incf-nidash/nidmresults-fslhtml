@@ -13,7 +13,7 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 		self.myString = ""
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "fsl_con_f.nidm.zipTestResults")
+		self.dataPath = os.path.join(self.dataPath, "fsl_con_f_test")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 		
@@ -74,7 +74,7 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 		self.found = False
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "fsl_thr_clustfwep05.nidm.zipTestResults")
+		self.dataPath = os.path.join(self.dataPath, "fsl_thr_clustfwep05_test")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 	
@@ -189,7 +189,7 @@ class spm_thr_clustunck10(unittest.TestCase):
 		self.myString = ""
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_clustunck10.nidm.zipTestResults")
+		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_clustunck10_test")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 		
@@ -236,7 +236,7 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 		self.myString = ""
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelfdrp05.nidm.zipTestResults")
+		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelfdrp05_test")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 		
@@ -283,7 +283,7 @@ class spm_thr_voxelunct4(unittest.TestCase):
 		self.myString = ""
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelunct4.nidm.zipTestResults")
+		self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelunct4_test")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 		
