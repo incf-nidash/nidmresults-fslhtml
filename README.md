@@ -15,7 +15,12 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
 ```
-	
+
+##### Install from source
+```
+pip install https://github.com/incf-nidash/nidmresults-fslhtml.git@master
+```
+
 ##### Tests
 To run the tests:
 ```
