@@ -1,4 +1,9 @@
 from setuptools import setup, find_packages
+import pip
+
+#nipy and matplotlib need pip installation as setup.py does not install their dependencies correctly.
+pip.main(["install",'nipy'])
+pip.main(["install",'matplotlib'])
 
 readme = "Empty for now"
 
