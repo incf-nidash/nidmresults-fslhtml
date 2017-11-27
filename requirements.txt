@@ -1,2 +1,6 @@
 rdflib
 dominate
+nilearn
+sklearn
+zlib
+Pillow

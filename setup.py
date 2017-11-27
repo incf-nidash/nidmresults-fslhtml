@@ -3,7 +3,11 @@ import pip
 
 #nipy and matplotlib need pip installation as setup.py does not install their dependencies correctly.
 pip.main(["install",'nipy'])
+pip.main(["install",'nilearn'])
 pip.main(["install",'matplotlib'])
+pip.main(["install",'sklearn'])
+pip.main(["install",'zlib'])
+pip.main(["install",'Pillow'])
 
 readme = "Empty for now"
 

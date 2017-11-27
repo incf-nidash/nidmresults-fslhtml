@@ -37,8 +37,8 @@ numSlicePerCol = math.ceil((zdim/numSlicePerRow))
 fig = plt.figure(figsize=(numSlicePerRow-1,numSlicePerCol-1))
 for i in list(range(0,numSlicePerCol)):
     axis = plt.subplot2grid((numSlicePerRow, numSlicePerCol), (i, 0), rowspan =1, colspan=numSlicePerCol)
-    plotting.plot_stat_map(to_display, axes=axis, cut_coords=list(range(i*numSlicePerRow,i*numSlicePerRow + numSlicePerRow)), draw_cross=False, display_mode='z', threshold=0.05, colorbar=False, vmax=max_activation, title='')
+    plotting.plot_stat_map(to_display, axes=axis, figure = fig, cut_coords=list(range(i*numSlicePerRow,i*numSlicePerRow + numSlicePerRow)), draw_cross=False, display_mode='z', threshold=0.05, colorbar=False, vmax=max_activation, title='')
 
-plt.subplots_adjust(left=None, bottom=None, right=None, top=None,wspace=None, hspace=None)
+fig.subplots_adjust(bottom=None, top = None, left = None, right = None)
 plt.show()
 
