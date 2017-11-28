@@ -8,6 +8,7 @@ import glob
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
 import errno
+import callSlicer
 
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
@@ -437,7 +438,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	statisticType = statisticImage(statisticType[0])
 	statisticTypeString = statisticImageString(statisticType)
 	contrastName = queryContrastName(graph)
-	statisticMapImage = queryExcursionSetMap(graph)
+	excursionSetImage = queryExcursionSetMap(graph)
 	
 	postStats = document(title="FSL Viewer") #Creates initial HTML page (Post Stats)
 	postStats += h1("Sample FSL Viewer")
@@ -512,9 +513,9 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		while i < len(contrastName):
 		
 			postStats += p("%s" % contrastName[i])
-			postStats += img(src = statisticMapImage[i])
-			i = i + 1
-	
+			postStats += img(src = excursionSetImage[i])
+			i = i + 1	
+
 	postStatsFile = open(postStatsFilePath, "x")
 	print(postStats, file = postStatsFile)
 	postStatsFile.close()
