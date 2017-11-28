@@ -8,7 +8,6 @@ import glob
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
 import errno
-import callSlicer
 
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
@@ -293,7 +292,7 @@ def queryContrastName(graph): #Selects contrast name of statistic map
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
 
-def queryStatisticImage(graph): #Selects statistic map image URI
+def queryStatisticImage(graph): #Selects statistic image URI
 
 	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
                prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
@@ -307,7 +306,20 @@ def queryStatisticImage(graph): #Selects statistic map image URI
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
 
-def queryExcursionSetMap(graph): #Selects excursion images
+def queryStatisticNifti(graph): #Selects statistic NIFTI URI
+
+        query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
+			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
+               prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
+               prefix prov: <http://www.w3.org/ns/prov#>
+			   prefix dc: <http://purl.org/dc/elements/1.1/>
+
+               SELECT ?image WHERE {?x a nidm_Inference: . ?y prov:wasGeneratedBy ?x . ?y a nidm_ExcursionSetMap: . ?y prov:atLocation ?image .}"""
+			
+        queryResult = g.query(query)
+
+def queryExcursionSetImage(graph): #Selects excursion images
 
 	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
                prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
@@ -438,7 +450,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	statisticType = statisticImage(statisticType[0])
 	statisticTypeString = statisticImageString(statisticType)
 	contrastName = queryContrastName(graph)
-	excursionSetImage = queryExcursionSetMap(graph)
+	excursionSetImage = queryExcursionSetImage(graph)
 	
 	postStats = document(title="FSL Viewer") #Creates initial HTML page (Post Stats)
 	postStats += h1("Sample FSL Viewer")
