@@ -1,3 +1,61 @@
+#=======================================================================================================
+#
+# The following functions are designed to resize SPM nifti maps to align with an FSL template and create
+# corresponding slice images. It does this by making several calls to FSL using the bash command line
+# through fsl subprocess. To create an FSL slice image for an SPM excursion set simply call
+# `generateSliceImage(<excursion set filepath>)`.
+#
+#======================================================================================================
+#
+# Documentation of matrix creation:
+#
+#======================================================================================================
+#
+# When the voxel size in mm in both maps is the same:
+#
+# An SPM map containing a brain volume will be larger than an FSL template holding a brain volume of
+# the same size (more blank space is included at the edges/sides). To resize an SPM map to match the
+# layout of an FSL template the FSL function `flirt` can be used. However, to do this specific transform
+# a resize matrix is required.
+#
+# By default, if resizing a smaller map to a larger map `flirt` creates an empty map of the same size
+# as the larger map and places the smaller map in the front-left hand corner, centered in the z-axis.
+#
+# In other words when the smaller map is enlarged, (x, y, z) in the original small map becomes
+# (x, y, {l_z-s_z}/2 + z) in the larger map where l_z is the z dimension of the larger map and s_z
+# is the z dimension of the smaller map.
+#
+# This means the z dimensions of the SPM brain volume is now aligned with the z dimension of the FSL
+# template brain volume but the x and y dimensions are not. To rectify this the following transform
+# matrix must be used in flirt:
+#
+#  / 1 0 0 dx \
+# |  0 1 0 dy  |
+# |  0 0 1 0   |
+#  \ 0 0 0 1  /
+#
+# Where dx = l_x - s_x, the difference in size of the x dimensions.
+# and dy = l_y - s_y, the difference in size of the y dimensions.
+#
+#-------------------------------------------------------------------------------------------------------
+#
+# When the voxel size in mm in both maps is not the same:
+#
+# When the voxel size in mm is not the same a scaling factor must be added. When the SPM map has a
+# voxel size larger than 2, the matrix to scale and align the SPM map to the FSL 2mm template
+# simplifies to:
+#
+#  / 1 0 0 s*dx \
+# |  0 1 0 s*dy  |
+# |  0 0 1  0    |
+#  \ 0 0 0  1   /
+#
+# where s = 1/v_spm where v_spm is the voxel size of the SPM map.
+#
+#-------------------------------------------------------------------------------------------------------
+# Source: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FLIRT/FAQ
+# Author: Tom Maullin (29/11/2017)
+
 import subprocess
 import os
 import shutil
@@ -19,11 +77,9 @@ def nifDim(niftiFilename, k):
 
     #Make the command
     getDimString = "fslhd " + niftiFilename + " | cat -v | grep ^" + arg
-    print(getDimString)
     #Run the command
     process = subprocess.Popen(getDimString, shell=True, stdout=subprocess.PIPE)
     output = process.communicate()
-    print(output[0].decode('utf-8').rstrip('\r|\n').replace(arg, '').replace(' ', ''))
     dimension = int(float(output[0].decode('utf-8').rstrip('\r|\n').replace(arg, '').replace(' ', '')))
     
     return(dimension)
@@ -46,8 +102,8 @@ def createResizeMatrix(niftiFilename1, niftiFilename2, scalefactor, tempDir):
     #Close the matrix file.
     matrixFile.close()
 
-def resize(exc_set, template, scalefactor, tempDir):
-    #This function resizes a nifti to a template if necessary, assuming the volume of the
+def resizeSPMtoFSL(exc_set, template, scalefactor, tempDir):
+    #This function resizes an SPM excursion set to a FSL template if necessary, assuming the volume of the
     #brain in both the template and excursion set are the same and they are correctly aligned.
 
     #Create necessary tranformation.
@@ -91,11 +147,11 @@ def overlay(exc_set, template, tempDir):
 def getSliceImageFromNifti(tempDir, outputName):
     #Get Slices. Slices are saved as slices.png.
     
-    slicerCommand = "slicer '" + os.path.join(tempDir, "outputTemp.nii.gz") + "' -S 2 900 '"+ outputName + "'"
+    slicerCommand = "slicer '" + os.path.join(tempDir, "outputTemp.nii.gz") + "' -s 0.667 -S 2 750 '"+ outputName + "'"
     process = subprocess.Popen(slicerCommand, shell=True)
     process.wait()
     
-def generateSliceImage(exc_set):
+def generateSliceImage_SPM(exc_set):
     
     tempFolder = 'temp_NIDM_viewer' + str(random.randint(0, 999999))
     os.mkdir(tempFolder)
@@ -112,7 +168,7 @@ def generateSliceImage(exc_set):
         scalefactor = 1/nifDim(exc_set, 'pix')
 
     #Check which is bigger and resize if necessary
-    resize(exc_set, template, scalefactor, tempFolder)
+    resizeSPMtoFSL(exc_set, template, scalefactor, tempFolder)
     resized_exc_set = os.path.join(tempFolder, 'resizedNifti.nii.gz')
 
     #Overlay niftis
@@ -124,6 +180,3 @@ def generateSliceImage(exc_set):
     shutil.rmtree(tempFolder)
 
     return(exc_set.replace('.nii', '').replace('.gz','')+'.png')
-
-generateSliceImage('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/ex_spm_conjunction_test/ExcursionSet.nii.gz')
-

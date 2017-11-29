@@ -287,8 +287,10 @@ def queryContrastName(graph): #Selects contrast name of statistic map
                prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
                prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
                prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+               prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
 
-               SELECT ?contrastName WHERE {?x a nidm_Inference: . ?x prov:used ?y . ?y a nidm_StatisticMap: . ?y nidm_contrastName: ?contrastName .}"""
+               SELECT ?contrastName WHERE {{?x a nidm_Inference:} UNION {?x a nidm_ConjunctionInference:} UNION {?x a spm_PartialConjunctionInference:}. ?x prov:used ?y . ?y a nidm_StatisticMap: . ?y nidm_contrastName: ?contrastName .}"""
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
@@ -300,10 +302,14 @@ def queryExcursionSetNifti(graph): #Selects excursoion set NIFTI URI
 			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
                prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
                prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+               prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
 			   prefix dc: <http://purl.org/dc/elements/1.1/>
+			   prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+			   prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
 
-               SELECT ?image WHERE {?x a nidm_Inference: . ?y prov:wasGeneratedBy ?x . ?y a nidm_ExcursionSetMap: . ?y prov:atLocation ?image .}"""
-			
+               SELECT ?image WHERE {{?x a nidm_Inference:} UNION {?x a nidm_ConjunctionInference:} UNION {?x a spm_PartialConjunctionInference:}. ?y prov:wasGeneratedBy ?x . ?y a nidm_ExcursionSetMap: . ?y prov:atLocation ?image}"""
+
         queryResult = graph.query(query)
         return(addQueryToList(queryResult))
 
@@ -519,11 +525,11 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 
 	if askSpm(graph) == True:
 	
-		while i < len(contrastName):
+		while i < len(excursionSetNifti):
 		
 			postStats += p("%s" % contrastName[i])
-			print(excursionSetNifti[i])
-			postStats += img(src = generateSliceImage(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i])))
+			print(postStatsFilePath)
+			postStats += img(src = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i])))
 			i = i + 1
 			
 	postStatsFile = open(postStatsFilePath, "x")
@@ -559,13 +565,11 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 				overwrite = (reply == "y")
 
 			if overwrite: #User wants to overwrite folder
-			
-				print("Overwriting")
+                                
 				shutil.rmtree(htmlFolder) #Removes folder
 				zip = zipfile.ZipFile(filepath, "r")
 				zip.extractall(htmlFolder) #Extract zip file to destination folder
 				turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
-				print(turtleFile)
 				g.parse(turtleFile[0], format = "turtle")
 				mainFileName = os.path.join(htmlFolder, "main.html")
 				statsFileName = os.path.join(htmlFolder, "stats.html")
