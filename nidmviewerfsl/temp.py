@@ -7,6 +7,7 @@ import glob
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
 import errno
+
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
 	for row in query: 
@@ -32,11 +33,11 @@ def printQuery(query): #Generic function for printing the results of a query - u
 	#ENDFOR
 
 g = rdflib.Graph()
-turtleFile = glob.glob('C:/Users/owner/Downloads/spm12/toolbox/NIDM_display/test/data/fsl_full_examples001_130.nidm/nidm.ttl')
+#turtleFile = glob.glob('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/ex_spm_conjunction_test/nidm.ttl')
+turtleFile = glob.glob('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/ex_spm_contrast_mask_test/nidm.ttl')
 
 print(turtleFile)
 g.parse(turtleFile[0], format = "turtle")
-
 query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
                prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
 			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
@@ -44,7 +45,7 @@ query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
                prefix prov: <http://www.w3.org/ns/prov#>
 			   prefix dc: <http://purl.org/dc/elements/1.1/>
 
-               SELECT ?image WHERE {?x a nidm_Inference: . ?y prov:wasGeneratedBy ?x . ?y a nidm_ExcursionSetMap: . ?y prov:atLocation ?image .}"""
+               SELECT ?image WHERE {?image a nidm_Inference:}"""
 			
 queryResult = g.query(query)
 printQuery(queryResult)

@@ -19,10 +19,11 @@ def nifDim(niftiFilename, k):
 
     #Make the command
     getDimString = "fslhd " + niftiFilename + " | cat -v | grep ^" + arg
-    
+    print(getDimString)
     #Run the command
     process = subprocess.Popen(getDimString, shell=True, stdout=subprocess.PIPE)
     output = process.communicate()
+    print(output[0].decode('utf-8').rstrip('\r|\n').replace(arg, '').replace(' ', ''))
     dimension = int(float(output[0].decode('utf-8').rstrip('\r|\n').replace(arg, '').replace(' ', '')))
     
     return(dimension)
@@ -87,10 +88,10 @@ def overlay(exc_set, template, tempDir):
     process = subprocess.Popen(overlayCommand, shell=True)
     process.wait()
 
-def getSliceImageFromNifti(tempDir):
+def getSliceImageFromNifti(tempDir, outputName):
     #Get Slices. Slices are saved as slices.png.
     
-    slicerCommand = "slicer '" + os.path.join(tempDir, "outputTemp.nii.gz") + "' -S 2 900 'slices.png'"
+    slicerCommand = "slicer '" + os.path.join(tempDir, "outputTemp.nii.gz") + "' -S 2 900 '"+ outputName + "'"
     process = subprocess.Popen(slicerCommand, shell=True)
     process.wait()
     
@@ -114,7 +115,15 @@ def generateSliceImage(exc_set):
     resize(exc_set, template, scalefactor, tempFolder)
     resized_exc_set = os.path.join(tempFolder, 'resizedNifti.nii.gz')
 
+    #Overlay niftis
     overlay(resized_exc_set, template, tempFolder)
-    getSliceImageFromNifti(tempFolder)
+
+    #Get the slices image
+    getSliceImageFromNifti(tempFolder, exc_set.replace('.nii', '').replace('.gz','')+'.png')
 
     shutil.rmtree(tempFolder)
+
+    return(exc_set.replace('.nii', '').replace('.gz','')+'.png')
+
+generateSliceImage('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/ex_spm_conjunction_test/ExcursionSet.nii.gz')
+
