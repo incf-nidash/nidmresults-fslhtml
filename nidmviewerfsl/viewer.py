@@ -523,14 +523,28 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 			postStats += img(src = excursionSetImage[i])
 			i = i + 1
 
-	if askSpm(graph) == True:
+	if askSpm(graph) == True and len(excursionSetNifti) == len(contrastName):
 	
 		while i < len(excursionSetNifti):
 		
 			postStats += p("%s" % contrastName[i])
-			print(postStatsFilePath)
 			postStats += img(src = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i])))
 			i = i + 1
+
+	if askSpm(graph) == True and len(excursionSetNifti) < len(contrastName):
+		
+		conString = 'Conjunction : '
+		
+		while i < len(contrastName):
+		
+			conString += contrastName[i]
+			if i < len(contrastName) - 1:
+				conString += '/'
+			i = i + 1
+
+		postStats += p('%s' % conString)
+		postStats += img(src = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[0])))
+
 			
 	postStatsFile = open(postStatsFilePath, "x")
 	print(postStats, file = postStatsFile)
