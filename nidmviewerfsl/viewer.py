@@ -8,6 +8,7 @@ import glob
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
 import errno
+from locateCSS import *
 
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
@@ -397,6 +398,11 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	firstLevel = checkFirstLevel(graph)
 	softwareLabelNum = queryVersionNum(graph)
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
+	print('wtyftftft')
+	x = cssStyleSheet()
+	print(x)
+	print('vlaaaaaaaaaaaaaaah')
+
 	
 	stats = document(title="FSL Viewer") #Creates initial html page (stats)
 	stats += h1("Sample FSL Viewer")
