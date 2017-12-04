@@ -391,7 +391,7 @@ def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.ht
 	with main.head:
 		style(raw(getRawCSS()))
 	main += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src ="' + encodeLogo() + '" align="right"></a>')
-	main += raw('<div align="center"><h1>Sample FSL Viewer</h1>')
+	main += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
 	main += raw(os.path.dirname(mainFilePath)+'<br>')
 	main += raw('NIDM-Results display generated on '+time.strftime("%c")+'<br>')
 	main += raw('<a href="stats.html" target="_top"> Stats </a> - <a href="postStats.html" target="_top"> Post-stats </a></div>')
@@ -410,7 +410,7 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	with stats.head:
 		style(raw(getRawCSS()))
 	stats += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src ="' + encodeLogo() + '" align="right"></a>')
-	stats += raw('<div align="center"><h1>Sample FSL Viewer</h1>')
+	stats += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
 	stats += raw(os.path.dirname(statsFilePath)+'<br>')
 	stats += raw('NIDM-Results display generated on '+time.strftime("%c")+'<br>')
 	stats += raw('<a href="main.html" target="_top"> Up to main page </a> - <a href="stats.html" target="_top"> Stats </a> - <a href="postStats.html" target="_top"> Post-stats </a></div>')
@@ -456,7 +456,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	with postStats.head:
 		style(raw(getRawCSS()))
 	postStats += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src ="' + encodeLogo() + '" align="right"></a>')
-	postStats += raw('<div align="center"><h1>Sample FSL Viewer</h1>')
+	postStats += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
 	postStats += raw(os.path.dirname(postStatsFilePath)+'<br>')
 	postStats += raw('NIDM-Results display generated on '+time.strftime("%c")+'<br>')
 	postStats += raw('<a href="main.html" target="_top"> Up to main page </a> - <a href="stats.html" target="_top"> Stats </a> - <a href="postStats.html" target="_top"> Post-stats </a></div>')
