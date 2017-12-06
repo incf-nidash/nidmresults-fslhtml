@@ -33,6 +33,17 @@ def printQuery(query): #Generic function for printing the results of a query - u
 	print('length: ' + str(i))
 	#ENDFOR
 
+def convertToArray(query, intOrStr):
+
+        if intOrStr == 'int':
+                array = [int("%s" % row) for row in query]
+        elif intOrStr == 'str':
+                array = ["%s" % row for row in query]
+        else:
+                return(0)
+
+        return(array)
+
 g = rdflib.Graph()
 #turtleFile = glob.glob('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/ex_spm_conjunction_test/nidm.ttl')
 turtleFile = glob.glob('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/ex_spm_contrast_mask_test/nidm.ttl')
@@ -51,12 +62,21 @@ query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_
 
 ############################################################################################################################
 
-#query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
-#               prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
-#               
-#               SELECT ?clus_size WHERE {?clus a nidm_SupraThresholdCluster: . ?clus nidm_clusterSizeInVoxels: ?clus_size}"""
+query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
+               prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
+               
+               SELECT ?clus_size WHERE {?clus a nidm_SupraThresholdCluster: . ?clus nidm_clusterSizeInVoxels: ?clus_size}"""
 
 
-		
 queryResult = g.query(query)
-printQuery(queryResult)
+print(convertToArray(queryResult, 'int'))
+print()
+print()
+unsortedArray = convertToArray(queryResult, 'int')
+sortPermutation = sorted(range(len(unsortedArray)), reverse = True, key=lambda k: unsortedArray[k])
+print(sortPermutation)
+
+sortedArray = [unsortedArray[i] for i in sortPermutation]
+print()
+print()
+print(sortedArray)
