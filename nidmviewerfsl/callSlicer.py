@@ -5,6 +5,10 @@
 # through fsl subprocess. To create an FSL slice image for an SPM excursion set simply call
 # `generateSliceImage(<excursion set filepath>)`.
 #
+# Note: This resizing is necessary as the SPM excursion set map will be surrounded by less blank space
+# (e.g. there will be less zeros/NaNs on the border of the NIFTI image) than the FSL template and without
+# this adjustment, the excursion set will not be aligned with the background it is displayed on. 
+#
 #======================================================================================================
 #
 # Documentation of matrix creation:
@@ -14,9 +18,13 @@
 # When the voxel size in mm in both maps is the same:
 #
 # An SPM map containing a brain volume will be larger than an FSL template holding a brain volume of
-# the same size (more blank space is included at the edges/sides). To resize an SPM map to match the
-# layout of an FSL template the FSL function `flirt` can be used. However, to do this specific transform
-# a resize matrix is required.
+# the same size (more blank space is included at the edges/sides). In order to display a slice view this
+# extra blank space at the side of the nifti must be accounted for (else the FSL template and SPM
+# excursion set will not align in the slice display) and to do this, we must resize the SPM nifti by adding
+# more blank space to the side (note this does not affect the statistic values inside the excursion set).
+#
+# To resize an SPM map to match the layout of an FSL template the FSL function `flirt` can be used. However,
+# to do this specific transform a resize matrix is required.
 #
 # By default, if resizing a smaller map to a larger map `flirt` creates an empty map of the same size
 # as the larger map and places the smaller map in the front-left hand corner, centered in the z-axis.
@@ -78,6 +86,7 @@ def nifDim(niftiFilename, k):
     #Make the command
     getDimString = "fslhd " + niftiFilename + " | cat -v | grep ^" + arg
     #Run the command
+    subprocess.check_call(getDimString, shell=True, stdout=subprocess.PIPE)
     process = subprocess.Popen(getDimString, shell=True, stdout=subprocess.PIPE)
     output = process.communicate()
     dimension = int(float(output[0].decode('utf-8').rstrip('\r|\n').replace(arg, '').replace(' ', '')))
@@ -111,6 +120,7 @@ def resizeSPMtoFSL(exc_set, template, scalefactor, tempDir):
     
     #Run the command  if necessary.
     resizeCommand = "flirt -init " + os.path.join(tempDir, "resizeMatrix.mat") + " -in " + exc_set + " -ref " + template + " -out " + os.path.join(tempDir, "resizedNifti.nii.gz") + " -applyxfm"
+    subprocess.check_call(resizeCommand, shell=True)
     process = subprocess.Popen(resizeCommand, shell=True)
     process.wait()
     
@@ -126,6 +136,7 @@ def getVal(niftiFilename, minOrMax):
         error('Please enter "min" or "max"')
 
     #Process the command to obtain the value
+    subprocess.check_call(getValString, shell=True, stdout=subprocess.PIPE)
     process = subprocess.Popen(getValString, shell=True, stdout=subprocess.PIPE)
     output = process.communicate()
 
@@ -141,13 +152,15 @@ def overlay(exc_set, template, tempDir):
     
     #Place the template onto the excursion set using overlay
     overlayCommand = "overlay 1 1 " + template + " -a " + exc_set + " " + minZ + " " + maxZ + " " + os.path.join(tempDir, "outputTemp.nii.gz")
+    subprocess.check_call(overlayCommand, shell=True)
     process = subprocess.Popen(overlayCommand, shell=True)
     process.wait()
 
 def getSliceImageFromNifti(tempDir, outputName):
     #Get Slices. Slices are saved as slices.png.
     
-    slicerCommand = "slicer '" + os.path.join(tempDir, "outputTemp.nii.gz") + "' -s 0.667 -S 2 750 '"+ outputName + "'"
+    slicerCommand = "slicer '" + os.path.join(tempDir, "outputTemp.nii.gz") + "' -s 0.72 -S 2 750 '"+ outputName + "'"
+    subprocess.check_call(slicerCommand, shell=True)
     process = subprocess.Popen(slicerCommand, shell=True)
     process.wait()
     
