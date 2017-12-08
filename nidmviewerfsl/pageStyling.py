@@ -14,10 +14,7 @@ import base64
 #Obtain the FSL directory.
 def obtainFSLdir():
     
-    fsldirCommand = "echo $FSLDIR"
-    process = subprocess.Popen(fsldirCommand, shell=True, stdout=subprocess.PIPE)
-    output = process.communicate()
-    return(output[0].decode('utf-8').rstrip('\r|\n'))
+    return(os.environ['FSLDIR'])
 
 #Obtain the FSL style sheet.
 def findCSS():
