@@ -62,7 +62,7 @@ def formatPeakStats(g):
                 yLocations[i] = int(formattedLoc[1])
                 zLocations[i] = int(formattedLoc[2])
         
-        #Obtain permutation used to sort the results in order of cluster index and then for each cluster by peak statistic size.
+        #Obtain permutation used to sort the results in order of descending cluster index and then for each cluster by peak statistic size.
         peaksSortPermutation = sorted(range(len(clusterIndices)), reverse = True, key=lambda k: (-clusterIndices[k], peaksZstats[k]))
 
         #Sort all peak data using this permutation.
