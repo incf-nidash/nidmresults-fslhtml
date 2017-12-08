@@ -68,6 +68,7 @@ import subprocess
 import os
 import shutil
 import random
+import shlex
 
 def nifDim(niftiFilename, k):
     #Retrieve the k dimension of a nifti given it's filename using FSL.
@@ -83,12 +84,17 @@ def nifDim(niftiFilename, k):
     else:
         error('Enter a valid dimension... x, y, z or pix')
 
-    #Make the command
-    getDimString = "fslhd " + niftiFilename + " | cat -v | grep ^" + arg
+    #Make the commands
+    getDimString1 = ["fslhd", niftiFilename]
+    getDimString2 = ["cat", "-v"]
+    getDimString3 = ["grep", "^" + arg]
+    
     #Run the command
-    subprocess.check_call(getDimString, shell=True, stdout=subprocess.PIPE)
-    process = subprocess.Popen(getDimString, shell=True, stdout=subprocess.PIPE)
-    output = process.communicate()
+    process_1 = subprocess.Popen(getDimString1, shell=False, stdout=subprocess.PIPE)
+    process_2 = subprocess.Popen(getDimString2, shell=False, stdin=process_1.stdout, stdout=subprocess.PIPE)
+    process_3 = subprocess.Popen(getDimString3, shell=False, stdin=process_2.stdout, stdout=subprocess.PIPE)
+    output = process_3.communicate()
+
     dimension = int(float(output[0].decode('utf-8').rstrip('\r|\n').replace(arg, '').replace(' ', '')))
     
     return(dimension)
@@ -120,25 +126,26 @@ def resizeSPMtoFSL(exc_set, template, scalefactor, tempDir):
     
     #Run the command  if necessary.
     resizeCommand = "flirt -init " + os.path.join(tempDir, "resizeMatrix.mat") + " -in " + exc_set + " -ref " + template + " -out " + os.path.join(tempDir, "resizedNifti.nii.gz") + " -applyxfm"
-    subprocess.check_call(resizeCommand, shell=True)
-    process = subprocess.Popen(resizeCommand, shell=True)
+    subprocess.check_call(shlex.split(resizeCommand), shell=False)
+    process = subprocess.Popen(shlex.split(resizeCommand), shell=False)
     process.wait()
     
 
 def getVal(niftiFilename, minOrMax):
     #Retrieve the min or max values of the image.
-    
+
+    getValString1 = "fslstats '" + niftiFilename + "' -l 0.01 -R"
     if minOrMax == 'min':
-        getValString = "fslstats '" + niftiFilename + "' -l 0.01 -R | awk '{print $1}'"
+        getValString2 = "awk '{print $1}'"
     elif minOrMax == 'max':
-        getValString = 'fslstats ' + niftiFilename + " -l 0.01 -R | awk '{print $2}'"
+        getValString2 = "awk '{print $2}'"
     else:
         error('Please enter "min" or "max"')
 
     #Process the command to obtain the value
-    subprocess.check_call(getValString, shell=True, stdout=subprocess.PIPE)
-    process = subprocess.Popen(getValString, shell=True, stdout=subprocess.PIPE)
-    output = process.communicate()
+    process_1 = subprocess.Popen(shlex.split(getValString1), shell=False, stdout=subprocess.PIPE)
+    process_2 = subprocess.Popen(shlex.split(getValString2), shell=False, stdin=process_1.stdout, stdout=subprocess.PIPE)
+    output = process_2.communicate()
 
     #Return value.
     return(output[0].decode('utf-8').rstrip('\r|\n'))
@@ -152,32 +159,33 @@ def overlay(exc_set, template, tempDir):
     
     #Place the template onto the excursion set using overlay
     overlayCommand = "overlay 1 1 " + template + " -a " + exc_set + " " + minZ + " " + maxZ + " " + os.path.join(tempDir, "outputTemp.nii.gz")
-    subprocess.check_call(overlayCommand, shell=True)
-    process = subprocess.Popen(overlayCommand, shell=True)
+    subprocess.check_call(shlex.split(overlayCommand), shell=False)
+    process = subprocess.Popen(shlex.split(overlayCommand), shell=False)
     process.wait()
 
 def getSliceImageFromNifti(tempDir, outputName):
     #Get Slices. Slices are saved as slices.png.
     
     slicerCommand = "slicer '" + os.path.join(tempDir, "outputTemp.nii.gz") + "' -s 0.72 -S 2 750 '"+ outputName + "'"
-    subprocess.check_call(slicerCommand, shell=True)
-    process = subprocess.Popen(slicerCommand, shell=True)
+    subprocess.check_call(shlex.split(slicerCommand), shell=False)
+    process = subprocess.Popen(shlex.split(slicerCommand), shell=False)
     process.wait()
     
 def generateSliceImage_SPM(exc_set):
     
     tempFolder = 'temp_NIDM_viewer' + str(random.randint(0, 999999))
     os.mkdir(tempFolder)
-    
+    FSLDIR = os.environ['FSLDIR']
+
     #Find the template. If we can't find an appropriate template scaling will be required later.
     if nifDim(exc_set, 'pix') == 1:
-        template = '${FSLDIR}/data/standard/MNI152_T1_1mm_brain.nii.gz'
+        template = os.path.join(FSLDIR, 'data', 'standard', 'MNI152_T1_1mm_brain.nii.gz')
         scalefactor = 1
     elif nifDim(exc_set, 'pix') == 2:
-        template = '${FSLDIR}/data/standard/MNI152_T1_2mm_brain.nii.gz'
+        template = os.path.join(FSLDIR, 'data', 'standard', 'MNI152_T1_2mm_brain.nii.gz')
         scalefactor = 1
     else:
-        template = '${FSLDIR}/data/standard/MNI152_T1_2mm_brain.nii.gz'
+        template = os.path.join(FSLDIR, 'data', 'standard', 'MNI152_T1_2mm_brain.nii.gz')
         scalefactor = 1/nifDim(exc_set, 'pix')
 
     #Check which is bigger and resize if necessary
