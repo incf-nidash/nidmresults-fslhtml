@@ -34,7 +34,7 @@ if __name__ == "__main__":
 		os.makedirs(dataDir)
 		
 		
-	dataNames = ["fsl_con_f", "fsl_thr_clustfwep05","ex_spm_thr_voxelunct4","ex_spm_thr_clustunck10","ex_spm_thr_voxelfdrp05"]
+	dataNames = ["fsl_con_f_130", "fsl_thr_clustfwep05_130","ex_spm_thr_voxelunct4_130","ex_spm_thr_clustunck10_130","ex_spm_thr_voxelfdrp05_130"]
 	local = True
 	for dataName in dataNames: #Checks if data is on local machine
 	
@@ -47,7 +47,7 @@ if __name__ == "__main__":
 	if local == False: #Data not on local machine
 	
 		print("Downloading data")
-		req = urllib.request.Request("http://neurovault.org/api/collections/1692/nidm_results") #Request from neurovault api
+		req = urllib.request.Request("http://neurovault.org/api/collections/2210/nidm_results") #Request from neurovault api
 		resp = urllib.request.urlopen(req)
 		readResp = resp.read()
 		data = json.loads(readResp.decode('utf-8'))
