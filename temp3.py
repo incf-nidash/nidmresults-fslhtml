@@ -86,6 +86,103 @@ def formatPeakStats(g, conName):
         print(sortedxLocationsArray)
         print(sortedyLocationsArray)
         print(sortedzLocationsArray)
+
+def formatClusterStats(g, conName):
+
+        peak_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
+               prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
+               prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
+               prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
+               prefix prov: <http://www.w3.org/ns/prov#>
+               
+               SELECT ?peakStat ?clus_index
+
+               WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . ?clus a nidm_SupraThresholdCluster: .
+                       ?exc dc:description ?z . ?exc prov:atLocation ?conMap . ?clus nidm_clusterLabelID: ?clus_index .
+                       ?peak prov:wasDerivedFrom ?clus . ?peak nidm_equivalentZStatistic: ?peakStat}
+
+               FILTER(STR(?conMap) = '""" + conName + """'^^xsd:string)}"""
+
+        #Run the peak query
+        peakQueryResult = g.query(peak_query)
+
+        #Retrieve query results.
+        clusterIndices = [int("%0.0s %s" % row) for row in peakQueryResult]
+        peakZstats = [float("%s %0.0s" % row) for row in peakQueryResult]
+
+        #Create an array for the highest peaks
+        highestPeakArray = [0]*len(set(clusterIndices))
+        for i in list(range(0, len(peakZstats))):
+                if highestPeakArray[clusterIndices[i]-1] < peakZstats[i]:
+                        highestPeakArray[clusterIndices[i]-1] = peakZstats[i]
+
+        clus_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
+               prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
+               prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
+               prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
+               prefix prov: <http://www.w3.org/ns/prov#>
+               
+               SELECT ?clus_index ?clus_size
+
+               WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . ?clus a nidm_SupraThresholdCluster: .
+                       ?exc dc:description ?z . ?exc prov:atLocation ?conMap . ?clus a nidm_SupraThresholdCluster: .
+                       ?clus nidm_clusterLabelID: ?clus_index . ?clus nidm_clusterSizeInVoxels: ?clus_size}
+
+               FILTER(STR(?conMap) = '""" + conName + """'^^xsd:string)}"""
+
+        #Run the cluster query
+        clusQueryResult = g.query(clus_query)
+
+        #Retrieve query results.
+        clusterIndices = [int("%s %0.0s" % row) for row in clusQueryResult]
+        clusterSizes = [int("%0.0s %s" % row) for row in clusQueryResult]
+
+        #Obtain permutation used to sort the results in order of descending cluster index and then for each cluster by peak statistic size.
+        clusterSortPermutation = sorted(range(len(clusterIndices)), reverse = True, key=lambda k: clusterSizes[k])
+
+        #Sorted cluster arrays
+        sortedClusSizeArray = [clusterSizes[i] for i in clusterSortPermutation]
+        sortedClusIndicesArray = [clusterIndices[i] for i in clusterSortPermutation]
+
+        #Sort the highest peaks
+        sortedPeakZstats = [highestPeakArray[sortedClusIndicesArray[i]-1] for i in list(range(0, len(clusterIndices)))]
+        
+        print(sortedClusSizeArray)
+        print(sortedClusIndicesArray)
+        print(sortedPeakZstats)
+
+        #Obtain cluster information and peaks from clusters
+        #clusterSizes = [int("%s %0.0s %0.0s" % row) for row in queryResult]
+        #clusterIndices = [int("%0.0s %s %0.0s" % row) for row in queryResult]
+        #peaksZstats = [float("%0.0s %0.0s %s" % row) for row in queryResult]
+
+        #Order by cluster size and peak value
+        #peaksSortPermutation = sorted(range(len(clusterIndices)), reverse = True, key=lambda k: (clusterSizes[k], peaksZstats[k]))
+
+        #Sort all cluster data using this permutation.
+        #sortedPeaksZstatsArray = [peaksZstats[i] for i in peaksSortPermutation]
+        #sortedClusIndexArray = [clusterIndices[i] for i in peaksSortPermutation]
+        #sortedClusSizeArray = [clusterSizes[i] for i in peaksSortPermutation]
+        
+        #We only want the highest peaks for the cluster table. Everything else can be discarded.
+        #highestPeakIndexArray = [None]*len(set(clusterIndices))
+        #previousIndex = -1
+        #j = 0
+        #for i in list(range(0, len(peaksZstats))):
+        #        if previousIndex != sortedClusIndexArray[i]:
+        #                highestPeakIndexArray[j] = i
+        #                print(sortedClusIndexArray[i])
+        #                j += 1
+        #                previousIndex = sortedClusIndexArray[i]
+
+        #Now we reduce to the values we only need.
+        #sortedPeaksZstatsArray = [sortedPeaksZstatsArray[i] for i in highestPeakIndexArray]
+        #sortedClusIndexArray = [sortedClusIndexArray[i] for i in highestPeakIndexArray]
+        #sortedClusSizeArray = [sortedClusSizeArray[i] for i in highestPeakIndexArray]
+
+        #print(sortedPeaksZstatsArray)
+        #print(sortedClusIndexArray)
+        #print(sortedClusSizeArray)
         
 g = rdflib.Graph()
 turtleFile = glob.glob('C:/Users/owner/Documents/NISOx/Peters_Viewer/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/nidm.ttl')
@@ -95,3 +192,9 @@ g.parse(turtleFile[0], format = "turtle")
 
 conName = "ExcursionSet_T004.nii.gz"
 formatPeakStats(g, conName)
+print('')
+print('')
+print('Cluster')
+print('')
+print('')
+formatClusterStats(g, conName)
