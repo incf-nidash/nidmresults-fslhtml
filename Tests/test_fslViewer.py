@@ -13,7 +13,7 @@ class fsl_con_f(unittest.TestCase): #Class for fsl_con_f tests
 		self.myString = ""
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "fsl_con_f_test")
+		self.dataPath = os.path.join(self.dataPath, "fsl_con_f_130_test")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 		
@@ -74,7 +74,7 @@ class fsl_thr_clustfwep05(unittest.TestCase): #Class for fsl_thr_clustfwep05 tes
 		self.found = False
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "fsl_thr_clustfwep05_test")
+		self.dataPath = os.path.join(self.dataPath, "fsl_thr_clustfwep05_130_test")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 	
@@ -142,7 +142,7 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 		self.myString = ""
 		self.scriptPath = os.path.dirname(os.path.abspath(__file__))
 		self.dataPath = os.path.join(self.scriptPath, "data")
-		self.dataPath = os.path.join(self.dataPath, "fsl_thr_voxelfwep05.nidm.ttlTestResults")
+		self.dataPath = os.path.join(self.dataPath, "fsl_thr_voxelfwep05_130.nidm.ttlTestResults")
 		self.fileName = os.path.join(self.dataPath, "postStats.html")
 		self.postStatsFile = open(self.fileName, "r")
 	
@@ -213,7 +213,7 @@ class spm_thr_clustunck10(unittest.TestCase):
 				self.myString = line
 				break
 				
-		self.assertIn("12.6685", line)
+		self.assertIn("12.6906", line)
 	
 	def test_pThresh(self):
 	
@@ -260,7 +260,7 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 				self.myString = line
 				break
 				
-		self.assertIn("12.6685", line)
+		self.assertIn("12.6906", line)
 	
 	def test_pThresh(self):
 	
@@ -307,7 +307,7 @@ class spm_thr_voxelunct4(unittest.TestCase):
 				self.myString = line
 				break
 				
-		self.assertIn("12.6685", line)
+		self.assertIn("12.6906", line)
 	
 	def test_tThresh(self):
 	
@@ -334,7 +334,7 @@ if __name__ == "__main__":
 		os.makedirs(dataDir)
 		
 		
-	dataNames = ["fsl_con_f", "fsl_thr_clustfwep05","ex_spm_thr_voxelunct4","ex_spm_thr_clustunck10","ex_spm_thr_voxelfdrp05"]
+	dataNames = ["fsl_con_f_130", "fsl_thr_clustfwep05_130","ex_spm_thr_voxelunct4","ex_spm_thr_clustunck10","ex_spm_thr_voxelfdrp05"]
 	local = True
 	
 	for dataName in dataNames: #Check if data is on local machine
@@ -346,7 +346,7 @@ if __name__ == "__main__":
 			
 	if local == False:
 	
-		req = urllib.request.Request("http://neurovault.org/api/collections/1692/nidm_results") #Request from neurovault api
+		req = urllib.request.Request("http://neurovault.org/api/collections/2210/nidm_results") #Request from neurovault api
 		resp = urllib.request.urlopen(req)
 		readResp = resp.read()
 		data = json.loads(readResp.decode('utf-8'))
