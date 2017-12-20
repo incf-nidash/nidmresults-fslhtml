@@ -36,7 +36,7 @@ def printQuery(query): #Generic function for printing the results of a query - u
 	print('length: ' + str(i))
 	#ENDFOR
 
-def formatClusterStats(g, conName):
+def formatClusterStats(g, excName):
 
         #---------------------------------------------------------------------------------------------------------
         #First we gather data for peaks table.
@@ -55,7 +55,7 @@ def formatClusterStats(g, conName):
                        ?peak prov:wasDerivedFrom ?clus . ?peak nidm_equivalentZStatistic: ?peakStat .
                        ?peak prov:atLocation ?locObj . ?locObj nidm_coordinateVector: ?loc}
 
-               FILTER(STR(?conMap) = '""" + conName + """'^^xsd:string)}"""
+               FILTER(STR(?conMap) = '""" + excName + """'^^xsd:string)}"""
 
         #Run the peak query
         peakQueryResult = g.query(peak_query)
@@ -89,7 +89,7 @@ def formatClusterStats(g, conName):
                        ?exc prov:atLocation ?conMap . ?clus a nidm_SupraThresholdCluster: .
                        ?clus nidm_clusterLabelID: ?clus_index . ?clus nidm_clusterSizeInVoxels: ?clus_size}
 
-               FILTER(STR(?conMap) = '""" + conName + """'^^xsd:string)}"""
+               FILTER(STR(?conMap) = '""" + excName + """'^^xsd:string)}"""
         
         #Run the cluster query
         clusQueryResult = g.query(clus_query)
@@ -125,72 +125,72 @@ def formatClusterStats(g, conName):
                 'peakClusIndices':sortedClusIndicesForPeaks,
                 'peakLocations':sortedPeakLocations})
 
-def createConPage(outdir, conName, conData):
+def generateExcPage(outdir, excName, conData):
 
         #Create new document.
-        conPage = document(title="Cluster List") #Creates initial HTML page (Post Stats)
-        with conPage.head:
+        excPage = document(title="Cluster List") #Creates initial HTML page (Post Stats)
+        with excPage.head:
                 style(raw(getRawCSS()))
-        conPage += raw("<center>")
-        conPage += hr()
-        conPage += raw("Co-ordinate information for " + conName + " - ")
-        conPage += raw("<a href='../main.html'>back</a>")
-        conPage += raw(" to main page")
-        conPage += hr()
+        excPage += raw("<center>")
+        excPage += hr()
+        excPage += raw("Co-ordinate information for " + excName + " - ")
+        excPage += raw("<a href='../main.html'>back</a>")
+        excPage += raw(" to main page")
+        excPage += hr()
 
         #Cluster statistics section.
-        conPage += h1("Cluster List")
+        excPage += h1("Cluster List")
 
         #Make the cluster statistics table.
-        conPage += raw("<table cellspacing='3' border='3'><tbody>")
-        conPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
+        excPage += raw("<table cellspacing='3' border='3'><tbody>")
+        excPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
         
         #Add the cluster statistics data into the table.
         for cluster in range(0, len(conData['clusSizes'])):
                 #New row
-                conPage += raw("<tr>")
-                conPage += raw("<td>" + str(conData['clusIndices'][cluster]) + "</td>")
-                conPage += raw("<td>" + str(conData['clusSizes'][cluster]) + "</td>")
-                conPage += raw("<td>" + str(conData['clusPeakZstats'][cluster]) + "</td>")
+                excPage += raw("<tr>")
+                excPage += raw("<td>" + str(conData['clusIndices'][cluster]) + "</td>")
+                excPage += raw("<td>" + str(conData['clusSizes'][cluster]) + "</td>")
+                excPage += raw("<td>" + str(conData['clusPeakZstats'][cluster]) + "</td>")
 
                 #Peak location
                 formattedLoc = conData['clusPeakLocations'][cluster].replace(" ", "").replace("[", "").replace("]","").split(",")
-                conPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
-                conPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
-                conPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
-                conPage += raw("</tr>")
+                excPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
+                excPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
+                excPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
+                excPage += raw("</tr>")
 
         #Close table
-        conPage += raw("</tbody></table>")
+        excPage += raw("</tbody></table>")
 
-        conPage += br()
-        conPage += br()
-        conPage += h1("Local Maxima")
+        excPage += br()
+        excPage += br()
+        excPage += h1("Local Maxima")
         
         #Make the peak statistics table.
-        conPage += raw("<table cellspacing='3' border='3'><tbody>")
-        conPage += raw("<tr><th>Cluster Index</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
+        excPage += raw("<table cellspacing='3' border='3'><tbody>")
+        excPage += raw("<tr><th>Cluster Index</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
 
         #Add the peak statistics data into the table.
         for peak in range(0, len(conData['peakZstats'])):
                 #New row
-                conPage += raw("<tr>")
-                conPage += raw("<td>" + str(conData['peakClusIndices'][peak]) + "</td>")
-                conPage += raw("<td>" + str(conData['peakZstats'][peak]) + "</td>")
+                excPage += raw("<tr>")
+                excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) + "</td>")
+                excPage += raw("<td>" + str(conData['peakZstats'][peak]) + "</td>")
 
                 #Peak location
                 formattedLoc = conData['peakLocations'][peak].replace(" ", "").replace("[", "").replace("]","").split(",")
-                conPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
-                conPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
-                conPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
-                conPage += raw("</tr>")
+                excPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
+                excPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
+                excPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
+                excPage += raw("</tr>")
 
         #Close table
-        conPage += raw("</tbody></table>")
+        excPage += raw("</tbody></table>")
         
-        conPage += raw("</center>")
-        conFile = open(os.path.join(outdir, conName + ".html"), "x")
-        print(conPage, file = conFile) #Prints html page to a file
+        excPage += raw("</center>")
+        conFile = open(os.path.join(outdir, excName + ".html"), "x")
+        print(excPage, file = conFile) #Prints html page to a file
         conFile.close()        
 
 def queryExcursionSetNifti(graph): #Selects excursoion set NIFTI URI
@@ -213,23 +213,23 @@ def queryExcursionSetNifti(graph): #Selects excursoion set NIFTI URI
         queryResult = graph.query(query)
         return(queryResult)
 
-#################################################################################################################################################
-#shutil.rmtree('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/Contrast_Displays')
+##################################################################################################################################################
+shutil.rmtree('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/Cluster_Data')
 outdir = '/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/'
-os.mkdir(os.path.join(outdir, 'Contrast_Displays'))
+os.mkdir(os.path.join(outdir, 'Cluster_Data'))
 t = time.time()
 g = rdflib.Graph()
-turtleFile = glob.glob('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/nidm.ttl')
+turtleFile = glob.glob(os.path.join(outdir, 'nidm.ttl'))
 #turtleFile = glob.glob('C:/Users/owner/Documents/NISOx/Peters_Viewer/nidmresults-fslhtml/Tests/data/ex_spm_partial_conjunction_test/nidm.ttl')
 g.parse(turtleFile[0], format = "turtle")
 ##################################################################################################################################################
 
-contrastNiftiNames = queryExcursionSetNifti(g)
+excNiftiNames = queryExcursionSetNifti(g)
 
-for row in contrastNiftiNames:
-        conName = "%s" % row
-        conData = formatClusterStats(g, conName)
-        createConPage(os.path.join(outdir, 'Contrast_Displays'), conName.replace(".nii.gz", ""), conData)
+for row in excNiftiNames:
+        excName = "%s" % row
+        excData = formatClusterStats(g, excName)
+        generateExcPage(os.path.join(outdir, 'Cluster_Data'), excName.replace(".nii.gz", ""), excData)
 
 
 

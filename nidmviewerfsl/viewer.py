@@ -7,7 +7,7 @@ import rdflib
 import zipfile
 import glob
 from dominate import document
-from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style
+from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style, br
 from dominate.util import raw
 import errno
 from nidmviewerfsl.pageStyling import *
@@ -295,19 +295,25 @@ def queryContrastName(graph): #Selects contrast name of statistic map
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
 
-def queryStatisticImage(graph): #Selects statistic map image URI
+def queryExcursionSetNifti(graph): #Selects excursoion set NIFTI URI
 
-	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+        query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
                prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
 			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
                prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
                prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+               prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
 			   prefix dc: <http://purl.org/dc/elements/1.1/>
+			   prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+			   prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
+               SELECT ?image
 
-               SELECT ?image WHERE {?x a nidm_Inference: . ?x prov:used ?y . ?y a nidm_ExcursionSetMap: . ?y prov:atLocation ?image .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
+               WHERE {{?x a nidm_Inference:} UNION {?x a nidm_ConjunctionInference:} UNION {?x a spm_PartialConjunctionInference:}.
+                       ?y prov:wasGeneratedBy ?x . ?y a nidm_ExcursionSetMap: . ?y prov:atLocation ?image}"""
+
+        queryResult = graph.query(query)
+        return(queryResult)
 
 def queryExcursionSetMap(graph): #Selects excursion images
 
@@ -384,7 +390,163 @@ def statisticImageString(statImage):
 	
 		return("Z (Gaussianised T/F)")
 
-	
+def formatClusterStats(g, excName):
+
+        #---------------------------------------------------------------------------------------------------------
+        #First we gather data for peaks table.
+        #---------------------------------------------------------------------------------------------------------
+
+        peak_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
+               prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
+               prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
+               prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
+               prefix prov: <http://www.w3.org/ns/prov#>
+               
+               SELECT ?peakStat ?clus_index ?loc
+
+               WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . ?clus a nidm_SupraThresholdCluster: .
+                       ?exc prov:atLocation ?conMap . ?clus nidm_clusterLabelID: ?clus_index .
+                       ?peak prov:wasDerivedFrom ?clus . ?peak nidm_equivalentZStatistic: ?peakStat .
+                       ?peak prov:atLocation ?locObj . ?locObj nidm_coordinateVector: ?loc}
+
+               FILTER(STR(?conMap) = '""" + excName + """'^^xsd:string)}"""
+
+        #Run the peak query
+        peakQueryResult = g.query(peak_query)
+
+        #Retrieve query results.
+        clusterIndicesForPeaks = [int("%0.0s %s %0.0s" % row) for row in peakQueryResult]
+        peakZstats = [float("%s %0.0s %0.0s" % row) for row in peakQueryResult]
+        locations = ["%0.0s %0.0s %s" % row for row in peakQueryResult]
+
+        #Obtain permutation used to sort the results in order of descending cluster index and then descending peak statistic size.
+        peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)), reverse = True, key=lambda k: (clusterIndicesForPeaks[k], peakZstats[k]))
+
+        #Sort all peak data using this permutation.
+        sortedPeaksZstatsArray = [peakZstats[i] for i in peaksSortPermutation]
+        sortedClusIndicesForPeaks = [clusterIndicesForPeaks[i] for i in peaksSortPermutation]
+        sortedPeakLocations = [locations[i] for i in peaksSortPermutation]
+
+        #---------------------------------------------------------------------------------------------------------
+        #Second we gather data for cluster table.
+        #---------------------------------------------------------------------------------------------------------
+
+        clus_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
+               prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
+               prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
+               prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
+               prefix prov: <http://www.w3.org/ns/prov#>
+               
+               SELECT ?clus_index ?clus_size
+
+               WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . ?clus a nidm_SupraThresholdCluster: .
+                       ?exc prov:atLocation ?conMap . ?clus a nidm_SupraThresholdCluster: .
+                       ?clus nidm_clusterLabelID: ?clus_index . ?clus nidm_clusterSizeInVoxels: ?clus_size}
+
+               FILTER(STR(?conMap) = '""" + excName + """'^^xsd:string)}"""
+        
+        #Run the cluster query
+        clusQueryResult = g.query(clus_query)
+
+        #Retrieve query results.
+        clusterIndices = [int("%s %0.0s" % row) for row in clusQueryResult]
+        clusterSizes = [int("%0.0s %s" % row) for row in clusQueryResult]
+
+        #Create an array for the highest peaks.
+        highestPeakZArray = [0]*len(clusterIndices)
+        highestPeakLocations = [0]*len(clusterIndices)
+        for i in list(range(0, len(peakZstats))):
+                if highestPeakZArray[clusterIndicesForPeaks[i]-1] < peakZstats[i]:
+                        highestPeakZArray[clusterIndicesForPeaks[i]-1] = peakZstats[i]
+                        highestPeakLocations[clusterIndicesForPeaks[i]-1] = locations[i]
+
+        #Obtain permutation used to sort the results in order of descending cluster index and then for each cluster by peak statistic size.
+        clusterSortPermutation = sorted(range(len(clusterIndices)), reverse = True, key=lambda k: clusterIndices[k])
+
+        #Sorted cluster arrays
+        sortedClusSizeArray = [clusterSizes[i] for i in clusterSortPermutation]
+        sortedClusIndicesArray = [clusterIndices[i] for i in clusterSortPermutation]
+
+        #Sort the highest peaks
+        sortedMaxPeakZstats = [highestPeakZArray[sortedClusIndicesArray[i]-1] for i in list(range(0, len(clusterIndices)))]
+        sortedMaxPeakLocations = [highestPeakLocations[sortedClusIndicesArray[i]-1] for i in list(range(0, len(clusterIndices)))]
+
+        return({'clusSizes':sortedClusSizeArray,
+                'clusIndices':sortedClusIndicesArray,
+                'clusPeakZstats':sortedMaxPeakZstats,
+                'clusPeakLocations':sortedMaxPeakLocations,
+                'peakZstats':sortedPeaksZstatsArray,
+                'peakClusIndices':sortedClusIndicesForPeaks,
+                'peakLocations':sortedPeakLocations})
+
+def generateExcPage(outdir, excName, conData):
+
+        #Create new document.
+        excPage = document(title="Cluster List") #Creates initial HTML page
+        with excPage.head:
+                style(raw(getRawCSS()))
+        excPage += raw("<center>")
+        excPage += hr()
+        excPage += raw("Co-ordinate information for " + excName + " - ")
+        excPage += raw("<a href='../main.html'>back</a>")
+        excPage += raw(" to main page")
+        excPage += hr()
+
+        #Cluster statistics section.
+        excPage += h1("Cluster List")
+
+        #Make the cluster statistics table.
+        excPage += raw("<table cellspacing='3' border='3'><tbody>")
+        excPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
+        
+        #Add the cluster statistics data into the table.
+        for cluster in range(0, len(conData['clusSizes'])):
+                #New row
+                excPage += raw("<tr>")
+                excPage += raw("<td>" + str(conData['clusIndices'][cluster]) + "</td>")
+                excPage += raw("<td>" + str(conData['clusSizes'][cluster]) + "</td>")
+                excPage += raw("<td>" + str(float('%.2f' % float(conData['clusPeakZstats'][cluster]))) + "</td>")
+
+                #Peak location
+                formattedLoc = conData['clusPeakLocations'][cluster].replace(" ", "").replace("[", "").replace("]","").split(",")
+                excPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
+                excPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
+                excPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
+                excPage += raw("</tr>")
+
+        #Close table
+        excPage += raw("</tbody></table>")
+
+        excPage += br()
+        excPage += br()
+        excPage += h1("Local Maxima")
+        
+        #Make the peak statistics table.
+        excPage += raw("<table cellspacing='3' border='3'><tbody>")
+        excPage += raw("<tr><th>Cluster Index</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
+
+        #Add the peak statistics data into the table.
+        for peak in range(0, len(conData['peakZstats'])):
+                #New row
+                excPage += raw("<tr>")
+                excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) + "</td>")
+                excPage += raw("<td>" + str(float('%.2f' % float(conData['peakZstats'][peak]))) + "</td>")
+
+                #Peak location
+                formattedLoc = conData['peakLocations'][peak].replace(" ", "").replace("[", "").replace("]","").split(",")
+                excPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
+                excPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
+                excPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
+                excPage += raw("</tr>")
+
+        #Close table
+        excPage += raw("</tbody></table>")
+        
+        excPage += raw("</center>")
+        excFile = open(os.path.join(outdir, excName + ".html"), "x")
+        print(excPage, file = excFile) #Prints html page to a file
+        excFile.close()  
+
 def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
 
 	main = document(title="FSL Viewer")
@@ -437,9 +599,6 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	statsFile = open(statsFilePath, "x")
 	print(stats, file = statsFile) #Prints html page to a file
 	statsFile.close()
-		
-	
-		
 	
 def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "postStats.html"): #Generates Post-Stats page
 	voxelWise = checkHeightThreshold(graph)
@@ -537,8 +696,8 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	print(postStats, file = postStatsFile)
 	postStatsFile.close()
 	
-		
-def createOutputDirectory(outputFolder): #Attempts to create folder for HTML files, quits program if folder already exists
+#Attempts to create folder for HTML files, quits program if folder already exists
+def createOutputDirectory(outputFolder): 
 	
 	try:
 	
@@ -548,6 +707,29 @@ def createOutputDirectory(outputFolder): #Attempts to create folder for HTML fil
 	
 		print("Error - %s directory already exists" % outputFolder)
 		exit()
+
+#This function generates all pages for display.
+def pageGenerate(g, outdir):
+
+        #Specify path names for main pages.
+	mainFileName = os.path.join(outdir, "main.html")
+	statsFileName = os.path.join(outdir, "stats.html")
+	postStatsFileName = os.path.join(outdir, "postStats.html")
+
+	#Create main pages.
+	generateStatsHTML(g,statsFileName,postStatsFileName)
+	generatePostStatsHTML(g,statsFileName,postStatsFileName)
+	generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+
+	#Make cluster pages
+	os.mkdir(os.path.join(outdir, 'Cluster_Data'))
+	excNiftiNames = queryExcursionSetNifti(g)
+
+	for row in excNiftiNames:
+	
+		excName = "%s" % row
+		excData = formatClusterStats(g, excName)
+		generateExcPage(os.path.join(outdir, 'Cluster_Data'), excName.replace(".nii.gz", ""), excData)
 
 def main(nidmFile, htmlFolder, overwrite=False): #Main program
 	
@@ -574,13 +756,8 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 				turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
 				print(turtleFile)
 				g.parse(turtleFile[0], format = "turtle")
-				mainFileName = os.path.join(htmlFolder, "main.html")
-				statsFileName = os.path.join(htmlFolder, "stats.html")
-				postStatsFileName = os.path.join(htmlFolder, "postStats.html")
-				generateStatsHTML(g,statsFileName,postStatsFileName)
-				generatePostStatsHTML(g,statsFileName,postStatsFileName)
-				generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
-				
+
+				pageGenerate(g, htmlFolder)				
 				
 			else:
 			
@@ -593,12 +770,8 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 			turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
 			print(turtleFile)
 			g.parse(turtleFile[0], format = rdflib.util.guess_format(turtleFile[0]))
-			mainFileName = os.path.join(htmlFolder, "main.html")
-			statsFileName = os.path.join(htmlFolder, "stats.html")
-			postStatsFileName = os.path.join(htmlFolder, "postStats.html")
-			generateStatsHTML(g,statsFileName,postStatsFileName)
-			generatePostStatsHTML(g,statsFileName,postStatsFileName)
-			generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+
+			pageGenerate(g, htmlFolder)
 			
 		
 	
@@ -621,17 +794,10 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 			
 		createOutputDirectory(htmlFolder) #Create the html folder
 	
-	
-	
-	
 		currentDir = os.getcwd()
 		dirLocation = os.path.join(currentDir, destinationFolder)
-		mainFileName = os.path.join(dirLocation, "main.html")
-		statsFileName = os.path.join(dirLocation, "stats.html")
-		postStatsFileName = os.path.join(dirLocation, "postStats.html")
-		generateStatsHTML(g,statsFileName,postStatsFileName)
-		generatePostStatsHTML(g,statsFileName,postStatsFileName)
-		generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+
+		pageGenerate(g, dirLocation)
 	
 	return(destinationFolder) #Return the html/zip-extraction folder
 
