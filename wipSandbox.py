@@ -5,10 +5,11 @@ import rdflib
 import zipfile
 import glob
 from dominate import document
-from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style
+from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style, br
 from dominate.util import raw
 import errno
 import time
+from nidmviewerfsl.pageStyling import *
 
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 	i = 0
@@ -91,6 +92,10 @@ def formatPeakStats(g, conName):
 
 def formatClusterStats(g, conName):
 
+        #---------------------------------------------------------------------------------------------------------
+        #First we gather data for peaks table.
+        #---------------------------------------------------------------------------------------------------------
+
         peak_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
                prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
                prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
@@ -110,17 +115,21 @@ def formatClusterStats(g, conName):
         peakQueryResult = g.query(peak_query)
 
         #Retrieve query results.
-        clusterIndices = [int("%0.0s %s %0.0s" % row) for row in peakQueryResult]
+        clusterIndicesForPeaks = [int("%0.0s %s %0.0s" % row) for row in peakQueryResult]
         peakZstats = [float("%s %0.0s %0.0s" % row) for row in peakQueryResult]
         locations = ["%0.0s %0.0s %s" % row for row in peakQueryResult]
 
-        #Create an array for the highest peaks
-        highestPeakZArray = [0]*len(set(clusterIndices))
-        highestPeakLocations = [0]*len(set(clusterIndices))
-        for i in list(range(0, len(peakZstats))):
-                if highestPeakZArray[clusterIndices[i]-1] < peakZstats[i]:
-                        highestPeakZArray[clusterIndices[i]-1] = peakZstats[i]
-                        highestPeakLocations[clusterIndices[i]-1] = locations[i]
+        #Obtain permutation used to sort the results in order of descending cluster index and then descending peak statistic size.
+        peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)), reverse = True, key=lambda k: (clusterIndicesForPeaks[k], peakZstats[k]))
+
+        #Sort all peak data using this permutation.
+        sortedPeaksZstatsArray = [peakZstats[i] for i in peaksSortPermutation]
+        sortedClusIndicesForPeaks = [clusterIndicesForPeaks[i] for i in peaksSortPermutation]
+        sortedPeakLocations = [locations[i] for i in peaksSortPermutation]
+
+        #---------------------------------------------------------------------------------------------------------
+        #Second we gather data for cluster table.
+        #---------------------------------------------------------------------------------------------------------
 
         clus_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
                prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
@@ -135,7 +144,7 @@ def formatClusterStats(g, conName):
                        ?clus nidm_clusterLabelID: ?clus_index . ?clus nidm_clusterSizeInVoxels: ?clus_size}
 
                FILTER(STR(?conMap) = '""" + conName + """'^^xsd:string)}"""
-
+        
         #Run the cluster query
         clusQueryResult = g.query(clus_query)
 
@@ -143,36 +152,110 @@ def formatClusterStats(g, conName):
         clusterIndices = [int("%s %0.0s" % row) for row in clusQueryResult]
         clusterSizes = [int("%0.0s %s" % row) for row in clusQueryResult]
 
+        #Create an array for the highest peaks.
+        highestPeakZArray = [0]*len(clusterIndices)
+        highestPeakLocations = [0]*len(clusterIndices)
+        for i in list(range(0, len(peakZstats))):
+                if highestPeakZArray[clusterIndicesForPeaks[i]-1] < peakZstats[i]:
+                        highestPeakZArray[clusterIndicesForPeaks[i]-1] = peakZstats[i]
+                        highestPeakLocations[clusterIndicesForPeaks[i]-1] = locations[i]
+
         #Obtain permutation used to sort the results in order of descending cluster index and then for each cluster by peak statistic size.
-        clusterSortPermutation = sorted(range(len(clusterIndices)), reverse = True, key=lambda k: clusterSizes[k])
+        clusterSortPermutation = sorted(range(len(clusterIndices)), reverse = True, key=lambda k: clusterIndices[k])
 
         #Sorted cluster arrays
         sortedClusSizeArray = [clusterSizes[i] for i in clusterSortPermutation]
         sortedClusIndicesArray = [clusterIndices[i] for i in clusterSortPermutation]
 
         #Sort the highest peaks
-        sortedPeakZstats = [highestPeakZArray[sortedClusIndicesArray[i]-1] for i in list(range(0, len(clusterIndices)))]
-        sortedPeakLocations = [highestPeakLocations[sortedClusIndicesArray[i]-1] for i in list(range(0, len(clusterIndices)))]
+        sortedMaxPeakZstats = [highestPeakZArray[sortedClusIndicesArray[i]-1] for i in list(range(0, len(clusterIndices)))]
+        sortedMaxPeakLocations = [highestPeakLocations[sortedClusIndicesArray[i]-1] for i in list(range(0, len(clusterIndices)))]
+        
         
         print(sortedClusSizeArray)
         print(sortedClusIndicesArray)
-        print(sortedPeakZstats)
-        print(sortedPeakLocations)
+        print(sortedMaxPeakZstats)
+        print(sortedMaxPeakLocations)
 
         return({'clusSizes':sortedClusSizeArray,
                 'clusIndices':sortedClusIndicesArray,
-                'peakZstats':sortedPeakZstats,
+                'clusPeakZstats':sortedMaxPeakZstats,
+                'clusPeakLocations':sortedMaxPeakLocations,
+                'peakZstats':sortedPeaksZstatsArray,
+                'peakClusIndices':sortedClusIndicesForPeaks,
                 'peakLocations':sortedPeakLocations})
 
 def createConPage(conName, conData):
         
-        print(conData['clusSizes'])
+        print(conData['clusSizes'][0])
         print(conData['clusIndices'])
-        print(conData['peakZstats'])
-        print(conData['peakLocations'])
+        print(conData['clusPeakZstats'])
+        print(conData['clusPeakLocations'])
 
         #Create new document.
-        conPage = document(title=conName) #Creates initial HTML page (Post Stats)
+        conPage = document(title="Cluster List") #Creates initial HTML page (Post Stats)
+        with conPage.head:
+                style(raw(getRawCSS()))
+        conPage += raw("<center>")
+        conPage += hr()
+        conPage += raw("Co-ordinate information for " + conName + " - ")
+        conPage += raw("<a href='../main.html'>back</a>")
+        conPage += raw(" to main page")
+        conPage += hr()
+
+        #Cluster statistics section.
+        conPage += h1("Cluster List")
+
+        #Make the cluster statistics table.
+        conPage += raw("<table cellspacing='3' border='3'><tbody>")
+        conPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
+        
+        #Add the cluster statistics data into the table.
+        for cluster in range(0, len(conData['clusSizes'])):
+                #New row
+                conPage += raw("<tr>")
+                conPage += raw("<td>" + str(conData['clusIndices'][cluster]) + "</td>")
+                conPage += raw("<td>" + str(conData['clusSizes'][cluster]) + "</td>")
+                conPage += raw("<td>" + str(conData['clusPeakZstats'][cluster]) + "</td>")
+
+                #Peak location
+                formattedLoc = conData['clusPeakLocations'][cluster].replace(" ", "").replace("[", "").replace("]","").split(",")
+                conPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
+                conPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
+                conPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
+                conPage += raw("</tr>")
+
+        conPage += raw("</tbody></table>")
+
+        conPage += br()
+        conPage += br()
+        conPage += h1("Local Maxima")
+        
+        #Make the peak statistics table.
+        conPage += raw("<table cellspacing='3' border='3'><tbody>")
+        conPage += raw("<tr><th>Cluster Index</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
+
+        #Add the peak statistics data into the table.
+        for peak in range(0, len(conData['peakZstats'])):
+                #New row
+                conPage += raw("<tr>")
+                conPage += raw("<td>" + str(conData['peakClusIndices'][peak]) + "</td>")
+                conPage += raw("<td>" + str(conData['peakZstats'][peak]) + "</td>")
+
+                #Peak location
+                formattedLoc = conData['peakLocations'][peak].replace(" ", "").replace("[", "").replace("]","").split(",")
+                conPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
+                conPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
+                conPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
+                conPage += raw("</tr>")
+        
+        conPage += raw("</tbody></table>")
+        
+        conPage += raw("</center>")
+        conFile = open(os.path.join("/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/Contrast_Displays", conName + ".html"), "x")
+        print(conPage, file = conFile) #Prints html page to a file
+        conFile.close()
+        
 
         
 
@@ -187,7 +270,7 @@ turtleFile = glob.glob('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data
 g.parse(turtleFile[0], format = "turtle")
 
 #For now using nifti name... want to use proper contrast name field.
-conName = "ExcursionSet_T004.nii.gz"
+conName = "ExcursionSet_F002.nii.gz"
 formatPeakStats(g, conName)
 print('')
 print('')
@@ -204,8 +287,8 @@ t2 = time.time() - t -  t1
 print(t1)
 print(t2)
 
-os.mkdir('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/Contrast_Displays')
+#os.mkdir('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/Contrast_Displays')
 
-createConPage("ExcursionSet_T004", conData)
+createConPage("ExcursionSet_F002", conData)
 
 #shutil.rmtree('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/Contrast_Displays')
