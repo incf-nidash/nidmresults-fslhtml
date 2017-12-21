@@ -17,21 +17,21 @@ def printQuery(query): #Generic function for printing the results of a query - u
 
 	#STARTFOR
 		i = i+1
-		if len(row) == 1:
+		#if len(row) == 1:
 			
-			print("%s" % row)
+		print("%s" % row)
 		
-		elif len(row) == 2:
+		#elif len(row) == 2:
 		
-			print("%s, %s" % row)
+		#	print("%s, %s" % row)
 		
-		elif len(row) == 3:
+		#elif len(row) == 3:
 			
-			print("%s, %s, %s" % row)
+		#	print("%s, %s, %s" % row)
 			
-		else:
+		#else:
 			
-			print("Error, not a suitable length")
+		#	print("Error, not a suitable length")
 
 	print('length: ' + str(i))
 	#ENDFOR
@@ -213,25 +213,38 @@ def queryExcursionSetNifti(graph): #Selects excursoion set NIFTI URI
         queryResult = graph.query(query)
         return(queryResult)
 
+def checkExtentThreshold(graph): #checks for corrected extent threshold
+
+	query = """prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
+               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
+               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
+
+               ASK {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .}}"""
+			   
+	queryResult = graph.query(query)
+		
+	return(queryResult)
+
 ##################################################################################################################################################
-shutil.rmtree('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/Cluster_Data')
+#shutil.rmtree('/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/Cluster_Data')
 outdir = '/home/tom/Documents/Repos/nidmresults-fslhtml/Tests/data/fsl_gamma_basis_130_test/'
-os.mkdir(os.path.join(outdir, 'Cluster_Data'))
-t = time.time()
+#os.mkdir(os.path.join(outdir, 'Cluster_Data'))
+#t = time.time()
 g = rdflib.Graph()
 turtleFile = glob.glob(os.path.join(outdir, 'nidm.ttl'))
 #turtleFile = glob.glob('C:/Users/owner/Documents/NISOx/Peters_Viewer/nidmresults-fslhtml/Tests/data/ex_spm_partial_conjunction_test/nidm.ttl')
 g.parse(turtleFile[0], format = "turtle")
 ##################################################################################################################################################
 
-excNiftiNames = queryExcursionSetNifti(g)
+#excNiftiNames = queryExcursionSetNifti(g)
+#
+#for row in excNiftiNames:
+#        excName = "%s" % row
+#        excData = formatClusterStats(g, excName)
+#        generateExcPage(os.path.join(outdir, 'Cluster_Data'), excName.replace(".nii.gz", ""), excData)
 
-for row in excNiftiNames:
-        excName = "%s" % row
-        excData = formatClusterStats(g, excName)
-        generateExcPage(os.path.join(outdir, 'Cluster_Data'), excName.replace(".nii.gz", ""), excData)
-
-
-
-t2 = time.time() - t
-print(t2)
+printQuery(checkExtentThreshold(g))
+#t2 = time.time() - t
+#print(t2)
