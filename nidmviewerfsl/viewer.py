@@ -395,6 +395,7 @@ def formatClusterStats(g, excName):
                prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
                prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
                prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_coordinateVector: <http://purl.org/nidash/nidm#NIDM_0000086>
                
                SELECT ?peakStat ?clus_index ?loc
 
