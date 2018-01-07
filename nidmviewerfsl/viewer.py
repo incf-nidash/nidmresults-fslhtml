@@ -7,7 +7,7 @@ import rdflib
 import zipfile
 import glob
 from dominate import document
-from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style
+from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style, br
 from dominate.util import raw
 import errno
 from nidmviewerfsl.pageStyling import *
@@ -529,8 +529,10 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	
 		while i < len(contrastName):
 		
-			postStats += p("%s" % contrastName[i])
+			postStats += raw("%s" % contrastName[i] + "&nbsp" + "<img src = '" + encodeColorBar() + "'><br><br>")
 			postStats += img(src = statisticMapImage[i])
+			postStats += br()
+			postStats += br()
 			i = i + 1
 	
 	postStatsFile = open(postStatsFilePath, "x")

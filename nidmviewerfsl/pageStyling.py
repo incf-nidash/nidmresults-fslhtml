@@ -38,6 +38,14 @@ def encodeLogo():
 
     return('data:image/jpg;base64,' + encoded_string.decode())
 
+#Find the FSL color bar and get it's encoding for embedding in the HTML page.
+def encodeColorBar():
+    
+    imageLink = os.path.join(obtainFSLdir(), 'etc', 'luts', 'ramp.gif')
+    encoded_string = encodeImage(imageLink)
+
+    return('data:image/jpg;base64,' + encoded_string.decode())
+
 #Find the FSL background and get it's encoding for embedding in the CSS style sheet.
 def encodeBG():
     
