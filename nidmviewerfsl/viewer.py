@@ -281,21 +281,7 @@ def queryUHeightThresholdValue(graph): #Select value of uncorrected height thres
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
 	
-def queryContrastName(graph): #Selects contrast name of statistic map
-
-	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
-               prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
-               prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
-               prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
-
-               SELECT ?contrastName WHERE {{?x a nidm_Inference:} UNION {?x a nidm_ConjunctionInference:} UNION {?x a spm_PartialConjunctionInference:}. ?x prov:used ?y . ?y a nidm_StatisticMap: . ?y nidm_contrastName: ?contrastName .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
-
-def queryExcursionSetNifti(graph): #Selects excursoion set NIFTI URI
+def queryExcursionSetDetails(graph): #Selects details of all excursion sets.
 
         query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
                prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
@@ -308,24 +294,19 @@ def queryExcursionSetNifti(graph): #Selects excursoion set NIFTI URI
 			   prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
 			   prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
 
-               SELECT ?image WHERE {{?x a nidm_Inference:} UNION {?x a nidm_ConjunctionInference:} UNION {?x a spm_PartialConjunctionInference:}. ?y prov:wasGeneratedBy ?x . ?y a nidm_ExcursionSetMap: . ?y prov:atLocation ?image}"""
+               SELECT ?nifti ?image ?contrastName
+
+               WHERE {{?infer a nidm_Inference:} UNION {?infer a nidm_ConjunctionInference:} UNION
+                      {?infer a spm_PartialConjunctionInference:}. ?exc prov:wasGeneratedBy ?infer .
+                       ?exc a nidm_ExcursionSetMap: . ?exc prov:atLocation ?nifti .
+                       ?infer prov:used ?statMap . ?statMap a nidm_StatisticMap: .
+                       ?statMap nidm_contrastName: ?contrastName .
+
+               OPTIONAL {?exc dc:description ?des . ?des prov:atLocation ?image .}}"""
 
         queryResult = graph.query(query)
+        
         return(addQueryToList(queryResult))
-
-def queryExcursionSetImage(graph): #Selects excursion images
-
-	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
-			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
-               prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
-               prefix prov: <http://www.w3.org/ns/prov#>
-			   prefix dc: <http://purl.org/dc/elements/1.1/>
-
-               SELECT ?image WHERE {?x a nidm_Inference: . ?y prov:wasGeneratedBy ?x . ?y a nidm_ExcursionSetMap: . ?y dc:description ?z . ?z prov:atLocation ?image .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
 	
 def checkVoxelOrClusterThreshold(graph):
 
@@ -443,10 +424,11 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	statisticType = queryStatisticType(graph)
 	statisticType = statisticImage(statisticType[0])
 	statisticTypeString = statisticImageString(statisticType)
-	contrastName = queryContrastName(graph)
-	excursionSetImage = queryExcursionSetImage(graph)
-	excursionSetNifti = queryExcursionSetNifti(graph)
-	
+	excDetails = queryExcursionSetDetails(graph)
+	excursionSetNifti = [excDetails[i] for i in list(range(0, len(excDetails), 3))]
+	excursionSetSliceImage = [excDetails[i] for i in list(range(1, len(excDetails), 3))]
+	contrastName = [excDetails[i] for i in list(range(2, len(excDetails), 3))]
+
 	postStats = document(title="FSL Viewer") #Creates initial HTML page (Post Stats)
 	postStats += h1("Sample FSL Viewer")
 	postStats += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
@@ -520,7 +502,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		while i < len(contrastName):
 		
 			postStats += p("%s" % contrastName[i])
-			postStats += img(src = excursionSetImage[i])
+			postStats += img(src = excursionSetSliceImage[i])
 			i = i + 1
 
 	if askSpm(graph) == True and len(excursionSetNifti) == len(contrastName):
