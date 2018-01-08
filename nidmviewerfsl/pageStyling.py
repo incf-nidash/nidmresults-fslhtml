@@ -5,7 +5,6 @@
 #
 # Author: Tom Maullin (04/12/2017)
 #======================================================================
-import subprocess
 import os
 import shutil
 import random
