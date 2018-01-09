@@ -1,7 +1,6 @@
 #======================================================================
 # This file contains a collection of small functions for reading in and
-# encoding images as well as the CSS styling for FSL output pages. It
-# assumes FSL is installed.
+# encoding images as well as the CSS styling for FSL output pages. 
 #
 # Author: Tom Maullin (04/12/2017)
 #======================================================================
