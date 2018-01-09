@@ -1,0 +1,13 @@
+#===================================================================================
+# This query checks if this is a subject level analysis.
+#
+# Authors: Peter Williams, Tom Maullin, Camille Maumet (09/01/2018)
+#===================================================================================
+
+prefix nidm_DesignMatrix: <http://purl.org/nidash/nidm#NIDM_0000019>
+prefix nidm_regressorNames: <http://purl.org/nidash/nidm#NIDM_0000021>
+prefix nidm_hasDriftModel: <http://purl.org/nidash/nidm#NIDM_0000088>
+
+ASK {?x a nidm_DesignMatrix: . {?x nidm_regressorNames: ?y .} UNION 
+     {?x nidm_hasDriftModel: ?y .}}
+			

@@ -13,6 +13,18 @@ import errno
 from nidmviewerfsl.pageStyling import *
 from nidmviewerfsl.callSlicer import *
 
+def addQueryToList(query):
+    
+    queryList = []
+
+    for i in query:
+
+        for j in i:
+
+            queryList.append("%s" % j)
+
+    return(queryList)
+
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
 	for row in query: 
@@ -38,115 +50,26 @@ def printQuery(query): #Generic function for printing the results of a query - u
 		
 	#ENDFOR
 
-def addQueryToList(query): #Adds the query results to a list 
+def runQuery(graph, queryFile, queryType):
 
-	queryList = []
-	for i in query:
-		
-		for j in i:
-		
-			queryList.append("%s" % j)
-		
-	return(queryList)
+	queryFile = open(queryFile)
+	queryText = queryFile.read()
+	queryFile.close()
+	queryOutput = graph.query(queryText)
+
+	if queryType == 'Ask':
+		           
+		for row in queryOutput:
+			queryResult = row
 	
-def askSpm(graph): #Checks if SPM was used
+		if queryResult == True:
+			return(True)
+		else:
+			return(False)
 
-	querySpm = graph.query("""prefix nidm_NeuroimagingAnalysisSoftware: <http://purl.org/nidash/nidm#NIDM_0000164>
-                              prefix prov: <http://www.w3.org/ns/prov#>
-                              prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                              prefix src_SPM: <http://scicrunch.org/resolver/SCR_007037>
-
-                              ASK {?a a src_SPM:}""")
-				  
-	for row in querySpm:
-		querySpmResult = row
-	
-	if querySpmResult == True:
+	if queryType == 'Select':
 		
-		return(True)
-	
-	else:
-		
-		return(False)
-		
-def askFsl(graph): #Checks is FSL was used
-
-	queryFsl = graph.query("""prefix nidm_NeuroimagingAnalysisSoftware: <http://purl.org/nidash/nidm#NIDM_0000164>
-                              prefix prov: <http://www.w3.org/ns/prov#>
-                              prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                              prefix src_FSL: <http://scicrunch.org/resolver/SCR_002823>
-
-                              ASK {?a a src_FSL:}""")
-				  
-	for row in queryFsl:
-		queryFslResult = row
-	
-	if queryFslResult == True:
-		
-		return(True)
-	
-	else:
-		
-		return(False)	
-	
-def queryVersionNum(graph): #Selects Neuroimaging software version number and name
-
-	query = """prefix nidm: <http://purl.org/nidash/nidm#>
-			   prefix prov: <http://www.w3.org/ns/prov#>
-               prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-               prefix src: <http://scicrunch.org/resolver/>
-
-               SELECT ?label ?versionNum WHERE {?a nidm:NIDM_0000122 ?versionNum . {?a a src:SCR_007037} UNION {?a a src:SCR_002823} OPTIONAL {?a rdfs:label ?label}}"""
-			   
-	queryResult = graph.query(query)
-	
-	return(queryResult)
-
-def queryNidmVersionNum(graph): #Selects NIDM exporter version number and name
-
-	query = """prefix nidm: <http://purl.org/nidash/nidm#>
-               prefix prov: <http://www.w3.org/ns/prov#>
-               prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-               prefix src: <http://scicrunch.org/resolver/>
-
-               SELECT ?label ?versionNum WHERE { {?a a nidm:NIDM_0000167 .} UNION {?a a nidm:NIDM_0000168 .} ?a nidm:NIDM_0000122 ?versionNum . OPTIONAL {?a rdfs:label ?label .}} """
-			   
-	queryResult = graph.query(query)
-	return(queryResult)
-
-def queryFslFeatVersion(graph): #Selects FSL FEAT Version Number
-
-	query = """prefix fsl_featVersion: <http://purl.org/nidash/fsl#FSL_0000005>
-               prefix src_FSL: <http://scicrunch.org/resolver/SCR_002823>
-
-               SELECT ?featVersion WHERE {?x a src_FSL: . ?x fsl_featVersion: ?featVersion .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
-	
-def queryExtentThreshold(graph): #Selects Extent Threshold cluster size values
-
-	query = """prefix nidm: <http://purl.org/nidash/nidm#>
-			   prefix prov: <http://www.w3.org/ns/prov#>
-               prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-               prefix src: <http://scicrunch.org/resolver/>
-
-               SELECT ?clusterSize WHERE {?extentThreshold a nidm:NIDM_0000026 . OPTIONAL {?extentThreshold nidm:NIDM_0000084 ?clusterSize}} ORDER BY ?clusterSize"""
-			   
-	queryResult = graph.query(query)
-	return(queryResult)
-
-def queryDesignMatrixLocation(graph): #Selects location of design matrix
-
-	query = """prefix nidm_DesignMatrix:<http://purl.org/nidash/nidm#NIDM_0000019>
-               prefix dc: <http://purl.org/dc/elements/1.1/>
-               prefix prov: <http://www.w3.org/ns/prov#>
-			   prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-               SELECT ?csv ?location WHERE {?x a nidm_DesignMatrix: . ?x dc:description ?y . ?y prov:atLocation ?location . ?x prov:atLocation ?csv .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
+		return(addQueryToList(queryOutput))
 
 def queryStatisticType(graph): #Checks Statistic Map Type
 
@@ -183,93 +106,6 @@ def statisticImage(stat): #Returns type of statistic image
 	else:
 		
 		return(None)
-def checkHeightThreshold(graph): #checks for corrected height threshold
-
-	query = """prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
-               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
-               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
-
-               ASK {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_HeightThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_HeightThreshold: . ?x a obo_FWERadjustedpvalue: .}}"""
-			   
-	queryResult = graph.query(query)
-	for row in queryResult:
-		
-		answer = row
-		
-	return(answer)
-
-def checkExtentThreshold(graph): #checks for corrected extent threshold
-
-	query = """prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
-               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
-               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
-
-               ASK {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .}}"""
-			   
-	queryResult = graph.query(query)
-	for row in queryResult:
-		
-		answer = row
-		
-	return(answer)
-	
-def selectExtentThreshValue(graph): #selects the value of the extent threshold used by nidm_Inference
-
-	query = """prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
-               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
-               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
-
-               SELECT ?thresholdValue WHERE {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .} ?x prov:value ?thresholdValue .}"""
-	
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
-
-def checkFirstLevel(graph): #Checks if first-level analysis
-	answer = True
-	query = """prefix nidm_DesignMatrix: <http://purl.org/nidash/nidm#NIDM_0000019>
-               prefix nidm_regressorNames: <http://purl.org/nidash/nidm#NIDM_0000021>
-               prefix nidm_hasDriftModel: <http://purl.org/nidash/nidm#NIDM_0000088>
-
-               ASK {?x a nidm_DesignMatrix: . {?x nidm_regressorNames: ?y .} UNION {?x nidm_hasDriftModel: ?y .} }"""
-			   
-	queryResult = graph.query(query)
-	for row in queryResult:
-	
-		answer = row
-
-	return(answer)
-
-def queryClusterThresholdValue(graph): #Selects the value of the main threshold if cluster-wise
-
-	query = """prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
-               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
-               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
-
-              SELECT ?thresholdValue WHERE {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .} ?x prov:value ?thresholdValue .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
-
-def queryHeightThresholdValue(graph): #Selects the value of the main threshold if voxel-wise
-
-	query = """prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
-               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
-               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
-
-               SELECT ?value WHERE {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_HeightThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_HeightThreshold: . ?x a obo_FWERadjustedpvalue: .} ?x prov:value ?value .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
 
 def queryUHeightThresholdValue(graph): #Select value of uncorrected height threshold
 
@@ -283,77 +119,14 @@ def queryUHeightThresholdValue(graph): #Select value of uncorrected height thres
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
-	
-def queryExcursionSetDetails(graph): #Selects details of all excursion sets.
-
-        query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
-			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
-               prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
-               prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
-               prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
-			   prefix dc: <http://purl.org/dc/elements/1.1/>
-			   prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
-			   prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
-
-               SELECT ?nifti ?image ?contrastName
-
-               WHERE {{?infer a nidm_Inference:} UNION {?infer a nidm_ConjunctionInference:} UNION
-                      {?infer a spm_PartialConjunctionInference:}. ?exc prov:wasGeneratedBy ?infer .
-                       ?exc a nidm_ExcursionSetMap: . ?exc prov:atLocation ?nifti .
-                       ?infer prov:used ?statMap . ?statMap a nidm_StatisticMap: .
-                       ?statMap nidm_contrastName: ?contrastName .
-
-               OPTIONAL {?exc dc:description ?des . ?des prov:atLocation ?image .}}"""
-
-        queryResult = graph.query(query)
-        
-        return(addQueryToList(queryResult))
-	
-def checkVoxelOrClusterThreshold(graph):
-
-	print("Test")
-
-def askIfOboStatistic(graph): #Checks if threshold is an obo_statistic
-	answer = False
-	query = """prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
-               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix obo_statistic: <http://purl.obolibrary.org/obo/STATO_0000039>
-
-               ASK {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_HeightThreshold: . ?x a obo_statistic: .}"""
-			   
-	queryResult = graph.query(query)
-	for row in queryResult:
-	
-		answer = row
-	
-	return(answer)
-
-def askIfPValueUncorrected(graph): #Checks if threshold is a PValueUncorrected
-	answer = False
-	query = """prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
-               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix nidm_PValueUncorrected: <http://purl.org/nidash/nidm#NIDM_0000160>
-
-               ASK {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_HeightThreshold: . ?x a nidm_PValueUncorrected: .}"""
-			   
-	queryResult = graph.query(query)
-	for row in queryResult:
-	
-		answer = row
-		
-	return(answer)
 
 def clusterFormingThreshType(graph, image):
 
-	if askIfOboStatistic(graph) == True:
+	if runQuery(graph, os.path.join('..','Queries','askIfOboStatistic.txt'), 'Ask') == True:
 	
 		return(image)
 		
-	elif askIfPValueUncorrected(graph) == True:
+	elif runQuery(graph, os.path.join('..','Queries','askIfPValueUncorrected.txt'), 'Ask') == True:
 	
 		return("P")
 			   
@@ -547,9 +320,8 @@ def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.ht
 	
 def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "postStats.html"): #Generates the Stats HTML section
 
-	firstLevel = checkFirstLevel(graph)
-	softwareLabelNum = queryVersionNum(graph)
-	softwareLabelNumList = addQueryToList(softwareLabelNum)
+	firstLevel = runQuery(graph, os.path.join('..','Queries','askFirstLevel.txt'), 'Ask')
+	softwareLabelNum = runQuery(graph, os.path.join('..','Queries','selectVersionNum.txt'), 'Select')
 	
 	stats = document(title="FSL Viewer") #Creates initial html page (stats)
 	with stats.head:
@@ -563,19 +335,19 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	stats += hr()
 	stats += h3("Analysis Methods")
 	
-	if askSpm(graph) == True: #Checks if SPM was used
+	if runQuery(graph, os.path.join('..','Queries','askSPM.txt'), 'Ask') == True: #Checks if SPM was used
 		
-		stats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNumList[1])
+		stats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % softwareLabelNum[1])
 		
-	elif askFsl(graph) == True: #Checks if FSL was used
+	elif runQuery(graph, os.path.join('..','Queries','askFSL.txt'), 'Ask') == True: #Checks if FSL was used
 		
-		fslFeatVersion = queryFslFeatVersion(graph)
-		stats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % (fslFeatVersion[0], softwareLabelNumList[1]))
+		fslFeatVersion = runQuery(graph, os.path.join('..','Queries','selectFslFeatVersion.txt'), 'Select')
+		stats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)." % (fslFeatVersion[0], softwareLabelNum[1]))
 		
 	stats += hr()
 	stats += h3("Design Matrix")
 	
-	designMatrixLocation = queryDesignMatrixLocation(graph)
+	designMatrixLocation = runQuery(graph, os.path.join('..','Queries','selectDesignMatrixLocation.txt'), 'Select')
 	
 	stats += a(img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0, width = 250), href = designMatrixLocation[0]) #Adds design matrix image (as a link) to html page
 	
@@ -584,14 +356,13 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	statsFile.close()
 	
 def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "postStats.html"): #Generates Post-Stats page
-	voxelWise = checkHeightThreshold(graph)
-	clusterWise = checkExtentThreshold(graph)
-	softwareLabelNum = queryVersionNum(graph)
-	softwareLabelNumList = addQueryToList(softwareLabelNum)
+	voxelWise = runQuery(graph, os.path.join('..','Queries','askCHeightThreshold.txt'), 'Ask')
+	clusterWise = runQuery(graph, os.path.join('..','Queries','askCExtentThreshold.txt'), 'Ask')
+	softwareLabelNum = runQuery(graph, os.path.join('..','Queries','selectVersionNum.txt'), 'Select')
 	statisticType = queryStatisticType(graph)
 	statisticType = statisticImage(statisticType[0])
 	statisticTypeString = statisticImageString(statisticType)
-	excDetails = queryExcursionSetDetails(graph)
+	excDetails = runQuery(graph, os.path.join('..','Queries','selectExcursionSetDetails.txt'), 'Select')
 	excursionSetNifti = list(set([excDetails[i] for i in list(range(0, len(excDetails), 3))]))
 	excursionSetSliceImage = [excDetails[i] for i in list(range(1, len(excDetails), 3))]
 	contrastName = [excDetails[i] for i in list(range(2, len(excDetails), 3))]
@@ -609,58 +380,58 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	postStats += h3("Analysis Methods")
 	
 	if voxelWise == True: #If main threshold is Height Threshold
-		mainThreshValue = queryHeightThresholdValue(graph)
-		if askSpm(graph) == True:
+		mainThreshValue = runQuery(graph, os.path.join('..','Queries','selectCHeightThreshold.txt'), 'Select')
+		if runQuery(graph, os.path.join('..','Queries','askSPM.txt'), 'Ask') == True:
 			
-			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (corrected)" % (softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (corrected)" % (softwareLabelNum[1], statisticTypeString, mainThreshValue[0]))
 	
-		elif askFsl(graph) == True:
-			fslFeatVersion = queryFslFeatVersion(graph)
+		elif runQuery(graph, os.path.join('..','Queries','askFSL.txt'), 'Ask') == True:
+			fslFeatVersion = runQuery(graph, os.path.join('..','Queries','selectFslFeatVersion.txt'), 'Select')
 			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
 			"%s statistic images were thresholded at P = %s (corrected)" 
-			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			%(fslFeatVersion[0], softwareLabelNum[1], statisticTypeString, mainThreshValue[0]))
 	
 	elif clusterWise == True: #If main threshold is extent threshold
 		
-		mainThreshValue = queryClusterThresholdValue(graph)
+		mainThreshValue = runQuery(graph, os.path.join('..','Queries','selectCExtentThreshold.txt'), 'Select')
 		heightThreshValue = queryUHeightThresholdValue(graph)
 		clusterThreshType = clusterFormingThreshType(graph, statisticType)
 		
-		if askSpm(graph) == True:
+		if runQuery(graph, os.path.join('..','Queries','askSPM.txt'), 'Ask') == True:
 			
 			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by %s > %s and a (corrected) "
 			"cluster significance of P = %s " 
 			% (softwareLabelNumList[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
 	
-		elif askFsl(graph) == True:
-			fslFeatVersion = queryFslFeatVersion(graph)
+		elif runQuery(graph, os.path.join('..','Queries','askFSL.txt'), 'Ask') == True:
+			fslFeatVersion = runQuery(graph, os.path.join('..','Queries','selectFslFeatVersion.txt'), 'Select')
 			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded "
 			"using clusters determined by %s > %s and a (corrected) cluster significance of P = %s" 
-			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
+			%(fslFeatVersion[0], softwareLabelNum[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
 		
 	
 	else: #If there is no corrected threshold - assume voxel wise
 		mainThreshValue = queryUHeightThresholdValue(graph)
-		if askSpm(graph) == True and askIfPValueUncorrected(graph) == True: #SPM used and threshold type is nidm_PValueUncorrected
-			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, float('%.2g' % float(mainThreshValue[0]))))
+		if runQuery(graph, os.path.join('..','Queries','askSPM.txt'), 'Ask') == True and runQuery(graph, os.path.join('..','Queries','askIfPValueUncorrected.txt'), 'Ask') == True: #SPM used and threshold type is nidm_PValueUncorrected
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNum[1], statisticTypeString, float('%.2g' % float(mainThreshValue[0]))))
 			
 		
-		elif askSpm(graph) == True and askIfOboStatistic(graph) == True: #SPM used and threshold type is obo_statistic
-			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at %s = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, statisticType, float('%.2g' % float(mainThreshValue[0]))))
+		elif runQuery(graph, os.path.join('..','Queries','askSPM.txt'), 'Ask') == True and runQuery(graph, os.path.join('..','Queries','askIfOboStatistic.txt'), 'Ask') == True: #SPM used and threshold type is obo_statistic
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at %s = %s (uncorrected)" % (softwareLabelNum[1], statisticTypeString, statisticType, float('%.2g' % float(mainThreshValue[0]))))
 			
 		
-		elif askFsl(graph) == True and askIfPValueUncorrected(graph) == True:
+		elif runQuery(graph, os.path.join('..','Queries','askFSL.txt'), 'Ask') == True and runQuery(graph, os.path.join('..','Queries','askIfPValueUncorrected.txt'), 'Ask') == True:
 			
-			fslFeatVersion = queryFslFeatVersion(graph)
+			fslFeatVersion = runQuery(graph, os.path.join('..','Queries','selectFslFeatVersion.txt'), 'Select')
 			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
-			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNum[1], statisticTypeString, mainThreshValue[0]))
 			
 			
-		elif askFsl(graph) == True and askIfOboStatistic(graph) == True:
+		elif runQuery(graph, os.path.join('..','Queries','askFSL.txt'), 'Ask') == True and runQuery(graph, os.path.join('..','Queries','askIfOboStatistic.txt'), 'Ask') == True:
 			
-			fslFeatVersion = queryFslFeatVersion(graph)
+			fslFeatVersion = runQuery(graph, os.path.join('..','Queries','selectFslFeatVersion.txt'), 'Select')
 			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
-			"%s statistic images were thresholded at %s = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, statisticType, mainThreshValue[0]))
+			"%s statistic images were thresholded at %s = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNum[1], statisticTypeString, statisticType, mainThreshValue[0]))
 			
 		
 	
@@ -669,7 +440,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	postStats += hr()
 	i = 0
 	
-	if askFsl(graph) == True:
+	if runQuery(graph, os.path.join('..','Queries','askFSL.txt'), 'Ask') == True:
 	
 		while i < len(contrastName):
 		
@@ -688,7 +459,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 			postStats += br()
 			i = i + 1
 
-	if askSpm(graph) == True and len(excursionSetNifti) == len(contrastName):
+	if runQuery(graph, os.path.join('..','Queries','askSPM.txt'), 'Ask') == True and len(excursionSetNifti) == len(contrastName):
 	
 		while i < len(excursionSetNifti):
 		
@@ -705,7 +476,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 			postStats += raw("</a>")
 			i = i + 1
 
-	if askSpm(graph) == True and len(excursionSetNifti) < len(contrastName):
+	if runQuery(graph, os.path.join('..','Queries','askSPM.txt'), 'Ask') == True and len(excursionSetNifti) < len(contrastName):
 		
 		conString = 'Conjunction : '
 		
@@ -759,7 +530,7 @@ def pageGenerate(g, outdir):
 
 	#Make cluster pages
 	os.mkdir(os.path.join(outdir, 'Cluster_Data'))
-	excDetails = queryExcursionSetDetails(g)
+	excDetails = runQuery(g, os.path.join('..','Queries','selectExcursionSetDetails.txt'), 'Select')
 	excNiftiNames = set([excDetails[i] for i in list(range(0, len(excDetails), 3))])
 
 	for excName in excNiftiNames:
@@ -834,8 +605,3 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 		pageGenerate(g, dirLocation)
 	
 	return(destinationFolder) #Return the html/zip-extraction folder
-
-	
-
-		
-	
