@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 import os
 import shutil
+import time
 import sys
 import rdflib
 import zipfile
 import glob
 from dominate import document
-from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
+from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style, br
+from dominate.util import raw
 import errno
+from nidmviewerfsl.pageStyling import *
 from nidmviewerfsl.callSlicer import *
 
 def printQuery(query): #Generic function for printing the results of a query - used for testing
@@ -373,8 +376,13 @@ def statisticImageString(statImage):
 def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
 
 	main = document(title="FSL Viewer")
-	main += h1("Sample FSL Viewer")
-	main += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
+	with main.head:
+		style(raw(getRawCSS()))
+	main += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src ="' + encodeLogo() + '" align="right"></a>')
+	main += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
+	main += raw(os.path.dirname(mainFilePath)+'<br>')
+	main += raw('NIDM-Results display generated on '+time.strftime("%c")+'<br>')
+	main += raw('<a href="stats.html" target="_top"> Stats </a> - <a href="postStats.html" target="_top"> Post-stats </a></div>')
 	mainFile = open(mainFilePath, "x")
 	print(main, file = mainFile)
 	mainFile.close()
@@ -387,8 +395,13 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	softwareLabelNumList = addQueryToList(softwareLabelNum)
 	
 	stats = document(title="FSL Viewer") #Creates initial html page (stats)
-	stats += h1("Sample FSL Viewer")
-	stats += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
+	with stats.head:
+		style(raw(getRawCSS()))
+	stats += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src ="' + encodeLogo() + '" align="right"></a>')
+	stats += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
+	stats += raw(os.path.dirname(statsFilePath)+'<br>')
+	stats += raw('NIDM-Results display generated on '+time.strftime("%c")+'<br>')
+	stats += raw('<a href="main.html" target="_top"> Up to main page </a> - <a href="stats.html" target="_top"> Stats </a> - <a href="postStats.html" target="_top"> Post-stats </a></div>')
 	stats += h2("Stats")
 	stats += hr()
 	stats += h3("Analysis Methods")
@@ -407,7 +420,7 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = "po
 	
 	designMatrixLocation = queryDesignMatrixLocation(graph)
 	
-	stats += a(img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0), href = designMatrixLocation[0]) #Adds design matrix image (as a link) to html page
+	stats += a(img(src = designMatrixLocation[1], style = "border:5px solid black", border = 0, width = 250), href = designMatrixLocation[0]) #Adds design matrix image (as a link) to html page
 	
 	statsFile = open(statsFilePath, "x")
 	print(stats, file = statsFile) #Prints html page to a file
@@ -430,8 +443,13 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	contrastName = [excDetails[i] for i in list(range(2, len(excDetails), 3))]
 
 	postStats = document(title="FSL Viewer") #Creates initial HTML page (Post Stats)
-	postStats += h1("Sample FSL Viewer")
-	postStats += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
+	with postStats.head:
+		style(raw(getRawCSS()))
+	postStats += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src ="' + encodeLogo() + '" align="right"></a>')
+	postStats += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
+	postStats += raw(os.path.dirname(postStatsFilePath)+'<br>')
+	postStats += raw('NIDM-Results display generated on '+time.strftime("%c")+'<br>')
+	postStats += raw('<a href="main.html" target="_top"> Up to main page </a> - <a href="stats.html" target="_top"> Stats </a> - <a href="postStats.html" target="_top"> Post-stats </a></div>')
 	postStats += h2("Post-stats")
 	postStats += hr()
 	postStats += h3("Analysis Methods")
@@ -501,16 +519,32 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	
 		while i < len(contrastName):
 		
-			postStats += p("%s" % contrastName[i])
+			#Colorbar and colorbar limits.
+			postStats += raw("%s" % contrastName[i] + "&nbsp &nbsp" +
+                                         "%0.3g" % float(getVal(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i]), 'min')) +
+                                         " &nbsp " +
+                                         "<img src = '" + encodeColorBar() + "'>" +
+                                         " &nbsp " +
+                                         "%0.3g" % float(getVal(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i]), 'max')) +
+                                         "<br><br>")
 			postStats += img(src = excursionSetSliceImage[i])
+			postStats += br()
+			postStats += br()
 			i = i + 1
 
 	if askSpm(graph) == True and len(excursionSetNifti) == len(contrastName):
 	
 		while i < len(excursionSetNifti):
 		
-			postStats += p("%s" % contrastName[i])
-			postStats += img(src = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i])))
+			postStats += raw("%s" % contrastName[i] + "&nbsp &nbsp" +
+                                         "%0.3g" % float(getVal(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i]), 'min')) +
+                                         " &nbsp " +
+                                         "<img src = '" + encodeColorBar() + "'>" +
+                                         " &nbsp " +
+                                         "%0.3g" % float(getVal(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i]), 'max')) +
+                                         "<br><br>")
+			sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i]))
+			postStats += img(src = 'data:image/jpg;base64,' + encodeImage(sliceImage).decode())
 			i = i + 1
 
 	if askSpm(graph) == True and len(excursionSetNifti) < len(contrastName):
@@ -524,9 +558,13 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 				conString += '/'
 			i = i + 1
 
-		postStats += p('%s' % conString)
-		postStats += img(src = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[0])))
-
+		postStats += raw("%s" % conString + "&nbsp &nbsp" +
+                                 "%0.3g" % float(getVal(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[0]), 'min')) +
+                                 "<img src = '" + encodeColorBar() + "'>" +
+                                 "%0.3g" % float(getVal(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[0]), 'max')) +
+                                 "<br><br>")
+		sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[0]))
+		postStats += img(src = 'data:image/jpg;base64,' + encodeImage(sliceImage).decode())
 			
 	postStatsFile = open(postStatsFilePath, "x")
 	print(postStats, file = postStatsFile)

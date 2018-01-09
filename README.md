@@ -1,5 +1,11 @@
 Create HTML output of NIDM-Results files (In an FSL-like format).
 
+##### Requirements
+
+As the viewer requires the CSS styling for FSL output pages and recreates FSL displays, it assumes FSL (version 5.0 or above) is installed. Full installation details for fsl are found here:
+
+https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
+
 ##### Usage
 
 ```
