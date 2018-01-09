@@ -93,6 +93,10 @@ def nifDim(niftiFilename, k):
     process_1 = subprocess.Popen(getDimString1, shell=False, stdout=subprocess.PIPE)
     process_2 = subprocess.Popen(getDimString2, shell=False, stdin=process_1.stdout, stdout=subprocess.PIPE)
     process_3 = subprocess.Popen(getDimString3, shell=False, stdin=process_2.stdout, stdout=subprocess.PIPE)
+
+    #Close all streams and retreive output.
+    process_1.stdout.close()
+    process_2.stdout.close()
     output = process_3.communicate()
 
     dimension = int(float(output[0].decode('utf-8').rstrip('\r|\n').replace(arg, '').replace(' ', '')))
@@ -145,6 +149,9 @@ def getVal(niftiFilename, minOrMax):
     #Process the command to obtain the value
     process_1 = subprocess.Popen(shlex.split(getValString1), shell=False, stdout=subprocess.PIPE)
     process_2 = subprocess.Popen(shlex.split(getValString2), shell=False, stdin=process_1.stdout, stdout=subprocess.PIPE)
+
+    #Close all streams and retrieve output.
+    process_1.stdout.close()
     output = process_2.communicate()
 
     #Return value.
