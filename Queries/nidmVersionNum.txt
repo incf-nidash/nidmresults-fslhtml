@@ -1,6 +1,0 @@
-prefix nidm: <http://purl.org/nidash/nidm#>
-prefix prov: <http://www.w3.org/ns/prov#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix src: <http://scicrunch.org/resolver/>
-
-SELECT ?label ?versionNum WHERE { {?a a nidm:NIDM_0000167 .} UNION {?a a nidm:NIDM_0000168 .} ?a nidm:NIDM_0000122 ?versionNum . OPTIONAL {?a rdfs:label ?label .}}
