@@ -1,11 +1,9 @@
 #======================================================================
 # This file contains a collection of small functions for reading in and
-# encoding images as well as the CSS styling for FSL output pages. It
-# assumes FSL is installed.
+# encoding images as well as the CSS styling for FSL output pages. 
 #
 # Author: Tom Maullin (04/12/2017)
 #======================================================================
-import subprocess
 import os
 import shutil
 import random
@@ -14,10 +12,7 @@ import base64
 #Obtain the FSL directory.
 def obtainFSLdir():
     
-    fsldirCommand = "echo $FSLDIR"
-    process = subprocess.Popen(fsldirCommand, shell=True, stdout=subprocess.PIPE)
-    output = process.communicate()
-    return(output[0].decode('utf-8').rstrip('\r|\n'))
+    return(os.environ['FSLDIR'])
 
 #Obtain the FSL style sheet.
 def findCSS():
@@ -37,6 +32,14 @@ def encodeImage(image):
 def encodeLogo():
     
     imageLink = os.path.join(obtainFSLdir(), 'doc', 'images', 'fsl-logo.jpg')
+    encoded_string = encodeImage(imageLink)
+
+    return('data:image/jpg;base64,' + encoded_string.decode())
+
+#Find the FSL color bar and get it's encoding for embedding in the HTML page.
+def encodeColorBar():
+    
+    imageLink = os.path.join(obtainFSLdir(), 'etc', 'luts', 'ramp.gif')
     encoded_string = encodeImage(imageLink)
 
     return('data:image/jpg;base64,' + encoded_string.decode())
