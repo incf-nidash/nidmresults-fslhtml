@@ -8,6 +8,7 @@ import glob
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr
 import errno
+from nidmviewerfsl.callSlicer import *
 
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
@@ -280,45 +281,32 @@ def queryUHeightThresholdValue(graph): #Select value of uncorrected height thres
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
 	
-def queryContrastName(graph): #Selects contrast name of statistic map
+def queryExcursionSetDetails(graph): #Selects details of all excursion sets.
 
-	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
-               prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
-               prefix prov: <http://www.w3.org/ns/prov#>
-
-               SELECT ?contrastName WHERE {?x a nidm_Inference: . ?x prov:used ?y . ?y a nidm_StatisticMap: . ?y nidm_contrastName: ?contrastName .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
-
-def queryStatisticImage(graph): #Selects statistic map image URI
-
-	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+        query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
                prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
 			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
                prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
                prefix prov: <http://www.w3.org/ns/prov#>
+               prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+               prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
 			   prefix dc: <http://purl.org/dc/elements/1.1/>
+			   prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+			   prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
 
-               SELECT ?image WHERE {?x a nidm_Inference: . ?x prov:used ?y . ?y a nidm_ExcursionSetMap: . ?y prov:atLocation ?image .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
+               SELECT ?nifti ?image ?contrastName
 
-def queryExcursionSetMap(graph): #Selects excursion images
+               WHERE {{?infer a nidm_Inference:} UNION {?infer a nidm_ConjunctionInference:} UNION
+                      {?infer a spm_PartialConjunctionInference:}. ?exc prov:wasGeneratedBy ?infer .
+                       ?exc a nidm_ExcursionSetMap: . ?exc prov:atLocation ?nifti .
+                       ?infer prov:used ?statMap . ?statMap a nidm_StatisticMap: .
+                       ?statMap nidm_contrastName: ?contrastName .
 
-	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
-			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
-               prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
-               prefix prov: <http://www.w3.org/ns/prov#>
-			   prefix dc: <http://purl.org/dc/elements/1.1/>
+               OPTIONAL {?exc dc:description ?des . ?des prov:atLocation ?image .}}"""
 
-               SELECT ?image WHERE {?x a nidm_Inference: . ?y prov:wasGeneratedBy ?x . ?y a nidm_ExcursionSetMap: . ?y dc:description ?z . ?z prov:atLocation ?image .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
+        queryResult = graph.query(query)
+        
+        return(addQueryToList(queryResult))
 	
 def checkVoxelOrClusterThreshold(graph):
 
@@ -436,9 +424,11 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	statisticType = queryStatisticType(graph)
 	statisticType = statisticImage(statisticType[0])
 	statisticTypeString = statisticImageString(statisticType)
-	contrastName = queryContrastName(graph)
-	statisticMapImage = queryExcursionSetMap(graph)
-	
+	excDetails = queryExcursionSetDetails(graph)
+	excursionSetNifti = [excDetails[i] for i in list(range(0, len(excDetails), 3))]
+	excursionSetSliceImage = [excDetails[i] for i in list(range(1, len(excDetails), 3))]
+	contrastName = [excDetails[i] for i in list(range(2, len(excDetails), 3))]
+
 	postStats = document(title="FSL Viewer") #Creates initial HTML page (Post Stats)
 	postStats += h1("Sample FSL Viewer")
 	postStats += ul(li(a("Stats", href="stats.html")), li("-"),li(a("Post Stats", href = "postStats.html")))
@@ -512,9 +502,32 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		while i < len(contrastName):
 		
 			postStats += p("%s" % contrastName[i])
-			postStats += img(src = statisticMapImage[i])
+			postStats += img(src = excursionSetSliceImage[i])
 			i = i + 1
+
+	if askSpm(graph) == True and len(excursionSetNifti) == len(contrastName):
 	
+		while i < len(excursionSetNifti):
+		
+			postStats += p("%s" % contrastName[i])
+			postStats += img(src = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i])))
+			i = i + 1
+
+	if askSpm(graph) == True and len(excursionSetNifti) < len(contrastName):
+		
+		conString = 'Conjunction : '
+		
+		while i < len(contrastName):
+		
+			conString += contrastName[i]
+			if i < len(contrastName) - 1:
+				conString += '/'
+			i = i + 1
+
+		postStats += p('%s' % conString)
+		postStats += img(src = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[0])))
+
+			
 	postStatsFile = open(postStatsFilePath, "x")
 	print(postStats, file = postStatsFile)
 	postStatsFile.close()
@@ -548,13 +561,11 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 				overwrite = (reply == "y")
 
 			if overwrite: #User wants to overwrite folder
-			
-				print("Overwriting")
+                                
 				shutil.rmtree(htmlFolder) #Removes folder
 				zip = zipfile.ZipFile(filepath, "r")
 				zip.extractall(htmlFolder) #Extract zip file to destination folder
 				turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
-				print(turtleFile)
 				g.parse(turtleFile[0], format = "turtle")
 				mainFileName = os.path.join(htmlFolder, "main.html")
 				statsFileName = os.path.join(htmlFolder, "stats.html")

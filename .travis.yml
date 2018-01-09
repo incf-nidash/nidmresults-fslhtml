@@ -7,6 +7,13 @@ python:
 install:
  - pip install -r requirements.txt
  - python setup.py install # install package from sources
+ # Install FSL using neurodebian
+ - bash <(wget -q -O- http://neuro.debian.net/_files/neurodebian-travis.sh)
+ - sudo apt-get -y update
+ - sudo apt-get -y install fsl-complete
+ - source /etc/fsl/fsl.sh;
+ - export FSLOUTPUTTYPE=NIFTI_GZ
+ - cwd=`pwd`
 script:
  - ./Tests/testError.py
  - ./Tests/test_fslViewer.py
