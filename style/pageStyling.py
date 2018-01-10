@@ -44,13 +44,15 @@ def encodeColorBar():
 
     return('data:image/jpg;base64,' + encoded_string.decode())
 
-#Find the FSL background and get it's encoding for embedding in the CSS style sheet.
+#Find the FSL background and get it's encoding for embedding in the CSS
+#style sheet.
 def encodeBG():
     
     imageLink = os.path.join(obtainFSLdir(), 'doc', 'images', 'fsl-bg.jpg')
     encoded_string = encodeImage(imageLink)
 
-    return('background-image: url(data:image/jpg;base64,' + encoded_string.decode() + ');')
+    return('background-image: url(data:image/jpg;base64,' + 
+           encoded_string.decode() + ');')
 
 #Gets the raw stylesheet as a string in order to embed.
 def getRawCSS():
@@ -62,6 +64,8 @@ def getRawCSS():
     cssStyleSheet = file.read()
 
     #Replace the link to the logo with the embedded logo itself.
-    cssStyleSheet = cssStyleSheet.replace('background-image: url("images/fsl-bg.jpg");', encodeBG())
+    cssStyleSheet = cssStyleSheet.replace(
+                        'background-image: url("images/fsl-bg.jpg");', 
+                        encodeBG())
     
     return(cssStyleSheet)
