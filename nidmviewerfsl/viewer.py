@@ -50,11 +50,16 @@ def printQuery(query): #Generic function for printing the results of a query - u
 		
 	#ENDFOR
 
-def runQuery(graph, queryFile, queryType):
+def runQuery(graph, queryFile, queryType, filters={}):
 
 	queryFile = open(queryFile)
 	queryText = queryFile.read()
 	queryFile.close()
+
+	for fil in filters:
+
+		queryText = queryText.replace('{{{' + fil + '}}}', filters[fil])
+	
 	queryOutput = graph.query(queryText)
 
 	if queryType == 'Ask':
@@ -70,24 +75,6 @@ def runQuery(graph, queryFile, queryType):
 	if queryType == 'Select':
 		
 		return(addQueryToList(queryOutput))
-
-def queryStatisticType(graph): #Checks Statistic Map Type
-
-	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-	           prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
-			   prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
-               prefix nidm_statisticType: <http://purl.org/nidash/nidm#NIDM_0000123>
-			   prefix nidm_statisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
-               prefix prov: <http://www.w3.org/ns/prov#>
-               prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-               prefix obo_tstatistic: <http://purl.obolibrary.org/obo/STATO_0000176>
-               prefix obo_Fstatistic: <http://purl.obolibrary.org/obo/STATO_0000282>
-               prefix obo_Zstatistic: <http://purl.obolibrary.org/obo/STATO_0000376>
-
-               SELECT ?statType WHERE { {?y a nidm_ConjunctionInference: .} UNION { ?y a nidm_Inference: .} UNION {?y a spm_PartialConjunctionInference: .} ?y prov:used ?x . ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
 
 def statisticImage(stat): #Returns type of statistic image
 
@@ -106,19 +93,6 @@ def statisticImage(stat): #Returns type of statistic image
 	else:
 		
 		return(None)
-
-def queryUHeightThresholdValue(graph): #Select value of uncorrected height threshold
-
-	query = """prefix prov: <http://www.w3.org/ns/prov#>
-			   prefix nidm_HeightThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
-			   prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-			   prefix nidm_PValueUncorrected: <http://purl.org/nidash/nidm#NIDM_0000160>
-			   prefix obo_statistic: <http://purl.obolibrary.org/obo/STATO_0000039>
-
-			   SELECT ?thresholdValue WHERE {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_HeightThreshold: . {?x a obo_statistic: . } UNION {?x a nidm_PValueUncorrected: .} ?x prov:value ?thresholdValue}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
 
 def clusterFormingThreshType(graph, image):
 
@@ -146,34 +120,19 @@ def statisticImageString(statImage):
 		return("Z (Gaussianised T/F)")
 
 def formatClusterStats(g, excName):
-
+        
         #---------------------------------------------------------------------------------------------------------
         #First we gather data for peaks table.
         #---------------------------------------------------------------------------------------------------------
 
-        peak_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
-               prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
-               prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
-               prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
-               prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_coordinateVector: <http://purl.org/nidash/nidm#NIDM_0000086>
-               
-               SELECT ?peakStat ?clus_index ?loc
-
-               WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . ?clus a nidm_SupraThresholdCluster: .
-                       ?exc prov:atLocation ?conMap . ?clus nidm_clusterLabelID: ?clus_index .
-                       ?peak prov:wasDerivedFrom ?clus . ?peak nidm_equivalentZStatistic: ?peakStat .
-                       ?peak prov:atLocation ?locObj . ?locObj nidm_coordinateVector: ?loc}
-
-               FILTER(STR(?conMap) = '""" + excName + """'^^xsd:string)}"""
-
         #Run the peak query
-        peakQueryResult = g.query(peak_query)
+        peakQueryResult = runQuery(g, os.path.join('..','Queries','selectPeakData.txt'), 'Select', {'EXC_NAME': excName})
 
         #Retrieve query results.
-        clusterIndicesForPeaks = [int("%0.0s %s %0.0s" % row) for row in peakQueryResult]
-        peakZstats = [float("%s %0.0s %0.0s" % row) for row in peakQueryResult]
-        locations = ["%0.0s %0.0s %s" % row for row in peakQueryResult]
+
+        peakZstats = [float(peakQueryResult[i]) for i in list(range(0, len(peakQueryResult), 3))]
+        clusterIndicesForPeaks = [int(peakQueryResult[i]) for i in list(range(1, len(peakQueryResult), 3))]
+        locations = [peakQueryResult[i] for i in list(range(2, len(peakQueryResult), 3))]
 
         #Obtain permutation used to sort the results in order of descending cluster index and then descending peak statistic size.
         peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)), reverse = True, key=lambda k: (clusterIndicesForPeaks[k], peakZstats[k]))
@@ -187,27 +146,12 @@ def formatClusterStats(g, excName):
         #Second we gather data for cluster table.
         #---------------------------------------------------------------------------------------------------------
 
-        clus_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
-               prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
-               prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
-               prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
-               prefix prov: <http://www.w3.org/ns/prov#>
-               
-               SELECT ?clus_index ?clus_size
-
-               WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . ?clus a nidm_SupraThresholdCluster: .
-                       ?exc prov:atLocation ?conMap . ?clus a nidm_SupraThresholdCluster: .
-                       ?clus nidm_clusterLabelID: ?clus_index . ?clus nidm_clusterSizeInVoxels: ?clus_size}
-
-               FILTER(STR(?conMap) = '""" + excName + """'^^xsd:string)}"""
-        
         #Run the cluster query
-        clusQueryResult = g.query(clus_query)
+        clusQueryResult = runQuery(g, os.path.join('..','Queries','selectClusterData.txt'), 'Select', {'EXC_NAME': excName})
 
-        #Retrieve query results.
-        clusterIndices = [int("%s %0.0s" % row) for row in clusQueryResult]
-        clusterSizes = [int("%0.0s %s" % row) for row in clusQueryResult]
-
+        clusterIndices = [int(clusQueryResult[i]) for i in list(range(0, len(clusQueryResult), 2))]
+        clusterSizes = [int(clusQueryResult[i]) for i in list(range(1, len(clusQueryResult), 2))]
+        
         #Create an array for the highest peaks.
         highestPeakZArray = [0]*len(clusterIndices)
         highestPeakLocations = [0]*len(clusterIndices)
@@ -359,7 +303,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	voxelWise = runQuery(graph, os.path.join('..','Queries','askCHeightThreshold.txt'), 'Ask')
 	clusterWise = runQuery(graph, os.path.join('..','Queries','askCExtentThreshold.txt'), 'Ask')
 	softwareLabelNum = runQuery(graph, os.path.join('..','Queries','selectVersionNum.txt'), 'Select')
-	statisticType = queryStatisticType(graph)
+	statisticType = runQuery(graph, os.path.join('..','Queries','selectStatisticType.txt'), 'Select')
 	statisticType = statisticImage(statisticType[0])
 	statisticTypeString = statisticImageString(statisticType)
 	excDetails = runQuery(graph, os.path.join('..','Queries','selectExcursionSetDetails.txt'), 'Select')
@@ -394,7 +338,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	elif clusterWise == True: #If main threshold is extent threshold
 		
 		mainThreshValue = runQuery(graph, os.path.join('..','Queries','selectCExtentThreshold.txt'), 'Select')
-		heightThreshValue = queryUHeightThresholdValue(graph)
+		heightThreshValue = runQuery(graph, os.path.join('..','Queries','selectUHeightThreshold.txt'), 'Select')
 		clusterThreshType = clusterFormingThreshType(graph, statisticType)
 		
 		if runQuery(graph, os.path.join('..','Queries','askSPM.txt'), 'Ask') == True:
@@ -411,7 +355,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		
 	
 	else: #If there is no corrected threshold - assume voxel wise
-		mainThreshValue = queryUHeightThresholdValue(graph)
+		mainThreshValue = runQuery(graph, os.path.join('..','Queries','selectUHeightThreshold.txt'), 'Select')
 		if runQuery(graph, os.path.join('..','Queries','askSPM.txt'), 'Ask') == True and runQuery(graph, os.path.join('..','Queries','askIfPValueUncorrected.txt'), 'Ask') == True: #SPM used and threshold type is nidm_PValueUncorrected
 			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNum[1], statisticTypeString, float('%.2g' % float(mainThreshValue[0]))))
 			

@@ -14,5 +14,5 @@ SELECT ?thresholdValue
 
 WHERE {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_HeightThreshold: . 
        {?x a obo_statistic: . } UNION {?x a nidm_PValueUncorrected: .} 
-       ?x prov:value ?thresholdValue}"""
+       ?x prov:value ?thresholdValue}
 			   
