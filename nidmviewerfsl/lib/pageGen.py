@@ -12,9 +12,13 @@ from queries.queryTools import runQuery
 def generateExcPage(outdir, excName, conData):
 
     #Create new document.
-    excPage = document(title="Cluster List") #Creates initial HTML page
+    excPage = document(title="Cluster List") 
+
+    #Add CSS stylesheet.
     with excPage.head:
         style(raw(getRawCSS()))
+
+    #Add header and link to main page.
     excPage += raw("<center>")
     excPage += hr()
     excPage += raw("Co-ordinate information for " + excName + " - ")
@@ -33,7 +37,8 @@ def generateExcPage(outdir, excName, conData):
     
     #Add the cluster statistics data into the table.
     for cluster in range(0, len(conData['clusSizes'])):
-        #New row
+
+        #New row of cluster data.
         excPage += raw("<tr>")
         excPage += raw("<td>" + str(conData['clusIndices'][cluster]) + 
                        "</td>")
@@ -56,8 +61,11 @@ def generateExcPage(outdir, excName, conData):
     #Close table
     excPage += raw("</tbody></table>")
 
+    #Formatting
     excPage += br()
     excPage += br()
+
+    #Header
     excPage += h1("Local Maxima")
     
     #Make the peak statistics table.
@@ -68,7 +76,8 @@ def generateExcPage(outdir, excName, conData):
 
     #Add the peak statistics data into the table.
     for peak in range(0, len(conData['peakZstats'])):
-        #New row
+
+        #New row of peak data
         excPage += raw("<tr>")
         excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) +
                        "</td>")
@@ -89,61 +98,94 @@ def generateExcPage(outdir, excName, conData):
 
     #Close table
     excPage += raw("</tbody></table>")
-    
+
+    #End of page.
     excPage += raw("</center>")
+
+    #Write excPage to a html file.
     excFile = open(os.path.join(outdir, excName + ".html"), "x")
-    print(excPage, file = excFile) #Prints html page to a file
+    print(excPage, file = excFile) 
     excFile.close()  
 
 #Generates the main HTML page
 def generateMainHTML(graph, mainFilePath = "Main.html", statsFilePath = 
                      "stats.html", postStatsFilePath = "postStats.html"): 
-
+    
+    #Create new document.
     main = document(title="FSL Viewer")
+
+    #Add CSS stylesheet.
     with main.head:
         style(raw(getRawCSS()))
+
+    #Add the logo to the page.
     main += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src' \
                 '="' + encodeLogo() + '" align="right"></a>')
+
+    #Viewer title.
     main += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
+
+    #Description of where and when the display was generated
     main += raw(os.path.dirname(mainFilePath)+'<br>')
     main += raw('NIDM-Results display generated on '+time.strftime("%c") +
                 '<br>')
+
+    #Links to other pages.
     main += raw('<a href="stats.html" target="_top"> Stats </a> - <' \
                 'a href="postStats.html" target="_top"> Post-stats </a></div>')
+
+    #Write main page to a HTML file.
     mainFile = open(mainFilePath, "x")
     print(main, file = mainFile)
     mainFile.close()
 
 #Generates the Stats HTML section
 def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = 
-                      "postStats.html"): #Generates the Stats HTML section
-
-    firstLevel = runQuery(graph, 'askFirstLevel', 'Ask')
+                      "postStats.html"):
+    
+    #Obtain version number.
     softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
     
-    stats = document(title="FSL Viewer") #Creates initial html page (stats)
+    #Create new document.
+    stats = document(title="FSL Viewer") 
+
+    #Add CSS stylesheet.
     with stats.head:
         style(raw(getRawCSS()))
+
+    #Add the logo to the page.
     stats += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src' +
                  '="' + encodeLogo() + '" align="right"></a>')
+
+    #Viewer title.
     stats += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
+
+    #Description of where and when the display was generated
     stats += raw(os.path.dirname(statsFilePath)+'<br>')
     stats += raw('NIDM-Results display generated on '+time.strftime("%c")+
                  '<br>')
+
+    #Links to other pages.
     stats += raw('<a href="main.html" target="_top"> Up to main page </a> -' \
                  ' <a href="stats.html" target="_top"> Stats </a> - <a ' \
                  'href="postStats.html" target="_top"> Post-stats </a></div>')
+
+    #Page title.
     stats += h2("Stats")
     stats += hr()
+
+    #Section header.
     stats += h3("Analysis Methods")
     
-    if runQuery(graph, 'askSPM', 'Ask') == True: #Checks if SPM was used
+    #If SPM was used we should display a string of SPM version number.
+    if runQuery(graph, 'askSPM', 'Ask') == True: 
         
         stats += p("FMRI data processing was carried out using SPM Version " \
                    "%s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." % 
                    softwareLabelNum[1])
-        
-    elif runQuery(graph, 'askFSL', 'Ask') == True: #Checks if FSL was used
+    
+    #Otherwise we should display fsl Feat version and software label.
+    elif runQuery(graph, 'askFSL', 'Ask') == True: 
         
         fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
         stats += p("FMRI data processing was carried out using FEAT (FMRI " \
@@ -152,8 +194,11 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
                    % (fslFeatVersion[0], softwareLabelNum[1]))
         
     stats += hr()
+
+    #Section header.
     stats += h3("Design Matrix")
     
+    #Work out where the design matrix is stored.
     designMatrixLocation = runQuery(graph, 'selectDesignMatrixLocation', 
                                     'Select')
     
@@ -162,10 +207,12 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
                    "border:5px solid black", border = 0, width = 250), href = 
                    designMatrixLocation[0]) 
     
+    #Write stats page to HTML file.
     statsFile = open(statsFilePath, "x")
-    print(stats, file = statsFile) #Prints html page to a file
+    print(stats, file = statsFile) 
     statsFile.close()
-    
+
+#Generates the PostStats HTML page
 def generatePostStatsHTML(graph,statsFilePath = "stats.html", postStatsFilePath
                           = "postStats.html"): #Generates Post-Stats page
     voxelWise = runQuery(graph, 'askCHeightThreshold', 'Ask')
