@@ -114,8 +114,7 @@ def generateExcPage(outdir, excName, conData):
     excFile.close()  
 
 #Generates the main HTML page
-def generateMainHTML(graph, mainFilePath = "Main.html", statsFilePath = 
-                     "stats.html", postStatsFilePath = "postStats.html"): 
+def generateMainHTML(graph, mainFilePath = "Main.html"): 
     
     #Create new document.
     main = document(title="FSL Viewer")
@@ -146,8 +145,7 @@ def generateMainHTML(graph, mainFilePath = "Main.html", statsFilePath =
     mainFile.close()
 
 #Generates the Stats HTML section
-def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath = 
-                      "postStats.html"):
+def generateStatsHTML(graph,statsFilePath = "stats.html"):
     
     #Obtain version number.
     softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
@@ -219,8 +217,7 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
     statsFile.close()
 
 #Generates the PostStats HTML page
-def generatePostStatsHTML(graph,statsFilePath = "stats.html", postStatsFilePath
-                          = "postStats.html"): 
+def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"): 
 
     #Work out if there are voxelwise or clusterwise thresholds.
     voxelWise = runQuery(graph, 'askCHeightThreshold', 'Ask')
@@ -484,9 +481,9 @@ def pageGenerate(g, outdir):
     postStatsFileName = os.path.join(outdir, "postStats.html")
 
     #Create main pages.
-    generateStatsHTML(g,statsFileName,postStatsFileName)
-    generatePostStatsHTML(g,statsFileName,postStatsFileName)
-    generateMainHTML(g,mainFileName,statsFileName,postStatsFileName)
+    generateStatsHTML(g,statsFileName)
+    generatePostStatsHTML(g,postStatsFileName)
+    generateMainHTML(g,mainFileName)
 
     #Make cluster pages
     os.mkdir(os.path.join(outdir, 'Cluster_Data'))
