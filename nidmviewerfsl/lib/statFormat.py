@@ -9,7 +9,8 @@
 #======================================================================
 from queries.queryTools import runQuery
 
-def statisticImage(stat): #Returns type of statistic image
+#This function converts obo statistic types into the corresponding statistic.
+def statisticImage(stat): 
 
     if stat == "http://purl.obolibrary.org/obo/STATO_0000376":
     
@@ -27,17 +28,18 @@ def statisticImage(stat): #Returns type of statistic image
         
         return(None)
 
-def clusterFormingThreshType(graph, image):
+#This function returns the cluster forming threshold type of an image.
+def clusterFormingThreshType(graph, imageType):
 
     if runQuery(graph, 'askIfOboStatistic', 'Ask') == True:
     
-        return(image)
+        return(imageType)
         
     elif runQuery(graph, 'askIfPValueUncorrected', 'Ask') == True:
     
         return("P")
                
-    
+#This function returns the statistic type of a statistic    
 def statisticImageString(statImage):
 
     if statImage == "T":

@@ -10,7 +10,7 @@ prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
 prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
 prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
 
-ASK {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_HeightThreshold: . 
-     ?x a obo_qvalue: .} UNION {?x a nidm_HeightThreshold: . 
-     ?x a obo_FWERadjustedpvalue: .}}
+ASK {?infer a nidm_Inference: . ?infer prov:used ?thresh . {?thresh a nidm_HeightThreshold: . 
+     ?thresh a obo_qvalue: .} UNION {?thresh a nidm_HeightThreshold: . 
+     ?thresh a obo_FWERadjustedpvalue: .}}
 		

@@ -6,7 +6,8 @@ import zipfile
 import glob
 from nidmviewerfsl.lib.pageGen import pageGenerate
     
-# This function attempts to create folder for HTML files, quits program if #folder already exists
+# This function attempts to create folder for HTML files, quits program if 
+#folder already exists
 def createOutputDirectory(outputFolder): 
     
     try:

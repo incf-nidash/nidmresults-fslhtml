@@ -12,8 +12,8 @@ prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
 
 SELECT ?thresholdValue 
 
-WHERE {?y a nidm_Inference: . ?y prov:used ?x . 
-       {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION 
-       {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .} 
-       ?x prov:value ?thresholdValue .}
+WHERE {?infer a nidm_Inference: . ?infer prov:used ?thresh . 
+       {?thresh a nidm_ExtentThreshold: . ?thresh a obo_qvalue: .} UNION 
+       {?thresh a nidm_ExtentThreshold: . ?thresh a obo_FWERadjustedpvalue: .} 
+       ?thresh prov:value ?thresholdValue .}
 	

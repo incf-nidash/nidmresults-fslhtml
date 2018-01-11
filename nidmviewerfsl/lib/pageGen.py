@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+#==============================================================================
+# This file contains functions used to create the HTML output of the viewer. 
+#
+# Authors: Peter Williams, Tom Maullin, Camille Maumet
+#==============================================================================
 import os
 import time
 from dominate import document
@@ -9,6 +14,7 @@ from nidmviewerfsl.lib.slicerTools import getVal, generateSliceImage_SPM
 from nidmviewerfsl.lib.statFormat import *
 from queries.queryTools import runQuery
 
+#Generate a page of excursion set peak and cluster statistics
 def generateExcPage(outdir, excName, conData):
 
     #Create new document.
@@ -214,13 +220,21 @@ def generateStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 
 #Generates the PostStats HTML page
 def generatePostStatsHTML(graph,statsFilePath = "stats.html", postStatsFilePath
-                          = "postStats.html"): #Generates Post-Stats page
+                          = "postStats.html"): 
+
+    #Work out if there are voxelwise or clusterwise thresholds.
     voxelWise = runQuery(graph, 'askCHeightThreshold', 'Ask')
     clusterWise = runQuery(graph, 'askCExtentThreshold', 'Ask')
+
+    #Retrieve the software label.
     softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
+
+    #Retrieve and format statistic type.
     statisticType = runQuery(graph, 'selectStatisticType', 'Select')
     statisticType = statisticImage(statisticType[0])
     statisticTypeString = statisticImageString(statisticType)
+
+    #Retrieve excursion set details and format them.
     excDetails = runQuery(graph, 'selectExcursionSetDetails', 'Select')
     excursionSetNifti = list(set([excDetails[i] for i in list(range(0, 
                              len(excDetails), 3))]))
@@ -231,24 +245,43 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html", postStatsFilePath
     #Creates initial HTML page (Post Stats)
     postStats = document(title="FSL Viewer") 
 
+    #Add CSS stylesheet.
     with postStats.head:
         style(raw(getRawCSS()))
+
+    #Add the logo to the page.
     postStats += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki">' \
                      '<img src ="' + encodeLogo() + '" align="right"></a>')
+
+    #Viewer title.
     postStats += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
+
+    #Description of where and when the display was generated
     postStats += raw(os.path.dirname(postStatsFilePath)+'<br>')
     postStats += raw('NIDM-Results display generated on '+time.strftime("%c")
                      +'<br>')
+
+    #Links to other pages.
     postStats += raw('<a href="main.html" target="_top"> Up to main page </a' \
                      '> - <a href="stats.html" target="_top"> Stats </a> - <' \
                      'a href="postStats.html" target="_top"> Post-stats </a>' \
                      '</div>')
+
+    #Page title.
     postStats += h2("Post-stats")
     postStats += hr()
+
+    #Section header.
     postStats += h3("Analysis Methods")
     
-    if voxelWise == True: #If main threshold is Height Threshold
+    #If there is a Height Threshold display it.
+    if voxelWise == True: 
+
+        #Retrieve threshold value. 
         mainThreshValue = runQuery(graph, 'selectCHeightThreshold', 'Select')
+
+        #If the data was generated using SPM display a string detailing which 
+        #version of spm was used.
         if runQuery(graph, 'askSPM', 'Ask') == True:
             
             postStats += p("FMRI data processing was carried out using SPM" \
@@ -256,9 +289,14 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html", postStatsFilePath
                            "spm/). %s statistic images were thresholded at P" \
                            " = %s (corrected)" % (softwareLabelNum[1], 
                            statisticTypeString, mainThreshValue[0]))
-    
+        
+        #If the data was generated using FSL display a string detailing which 
+        #version of spm was used.
         elif runQuery(graph, 'askFSL', 'Ask') == True:
+
+            #Work out which FEAT version was used.
             fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
+
             postStats += p("FMRI data processing was carried out using FEAT" \
                            " (FMRI Expert Analysis Tool) Version %s, part of" \
                            " FSL %s (FMRIB's Software Library," \
@@ -267,7 +305,9 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html", postStatsFilePath
                            %(fslFeatVersion[0], softwareLabelNum[1], 
                             statisticTypeString, mainThreshValue[0]))
     
-    elif clusterWise == True: #If main threshold is extent threshold
+    #If is an extent threshold display it. 
+    elif clusterWise == True: 
+
         
         mainThreshValue = runQuery(graph, 'selectCExtentThreshold', 'Select')
         heightThreshValue = runQuery(graph, 'selectUHeightThreshold', 'Select')

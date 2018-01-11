@@ -12,7 +12,7 @@ prefix obo_statistic: <http://purl.obolibrary.org/obo/STATO_0000039>
 
 SELECT ?thresholdValue 
 
-WHERE {?y a nidm_Inference: . ?y prov:used ?x . ?x a nidm_HeightThreshold: . 
-       {?x a obo_statistic: . } UNION {?x a nidm_PValueUncorrected: .} 
-       ?x prov:value ?thresholdValue}
+WHERE {?infer a nidm_Inference: . ?infer prov:used ?thresh . ?thresh a nidm_HeightThreshold: . 
+       {?thresh a obo_statistic: . } UNION {?thresh a nidm_PValueUncorrected: .} 
+       ?thresh prov:value ?thresholdValue}
 			   

@@ -12,5 +12,5 @@ prefix src: <http://scicrunch.org/resolver/>
 
 SELECT ?label ?versionNum 
 
-WHERE {?a nidm:NIDM_0000122 ?versionNum . {?a a src:SCR_007037} UNION 
-       {?a a src:SCR_002823} OPTIONAL {?a rdfs:label ?label}}
+WHERE {?sofware nidm:NIDM_0000122 ?versionNum . {?sofware a src:SCR_007037} UNION 
+       {?sofware a src:SCR_002823} OPTIONAL {?sofware rdfs:label ?label}}

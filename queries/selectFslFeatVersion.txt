@@ -10,4 +10,4 @@ prefix src_FSL: <http://scicrunch.org/resolver/SCR_002823>
 
 SELECT ?featVersion 
 
-WHERE {?x a src_FSL: . ?x fsl_featVersion: ?featVersion .}
+WHERE {?software a src_FSL: . ?software fsl_featVersion: ?featVersion .}

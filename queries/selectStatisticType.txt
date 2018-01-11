@@ -17,6 +17,6 @@ prefix obo_Zstatistic: <http://purl.obolibrary.org/obo/STATO_0000376>
 
 SELECT ?statType 
 
-WHERE {{?y a nidm_ConjunctionInference: .} UNION { ?y a nidm_Inference: .} UNION 
-       {?y a spm_PartialConjunctionInference: .} ?y prov:used ?x . 
-       ?x a nidm_statisticMap: . ?x nidm_statisticType: ?statType .}
+WHERE {{?infer a nidm_ConjunctionInference: .} UNION { ?infer a nidm_Inference: .} UNION 
+       {?infer a spm_PartialConjunctionInference: .} ?infer prov:used ?statMap . 
+       ?statMap a nidm_statisticMap: . ?statMap nidm_statisticType: ?statType .}

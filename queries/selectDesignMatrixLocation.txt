@@ -11,5 +11,5 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?csv ?location 
 
-WHERE {?x a nidm_DesignMatrix: . ?x dc:description ?y . ?y prov:atLocation 
-       ?location . ?x prov:atLocation ?csv .}
+WHERE {?desMat a nidm_DesignMatrix: . ?desMat dc:description ?image . ?image prov:atLocation 
+       ?location . ?desMat prov:atLocation ?csv .}
