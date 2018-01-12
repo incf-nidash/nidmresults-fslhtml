@@ -12,6 +12,7 @@ from dominate.util import raw
 import errno
 from nidmviewerfsl.pageStyling import *
 from nidmviewerfsl.callSlicer import *
+import math
 
 def printQuery(query): #Generic function for printing the results of a query - used for testing
 
@@ -203,12 +204,17 @@ def checkHeightThreshold(graph): #checks for corrected height threshold
 def checkExtentThreshold(graph): #checks for corrected extent threshold
 
 	query = """prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
-               prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
-               prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
+                   prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
+                   prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+                   prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
+                   prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
 
-               ASK {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .}}"""
+                   ASK {{?thresh a nidm_ExtentThreshold: . ?thresh a obo_qvalue: .}
+                   
+                   UNION {?thresh a nidm_ExtentThreshold: . ?thresh a 
+                          obo_FWERadjustedpvalue: .} . ?thresh prov:value ?val
+
+                   FILTER(STR(?val) != "1.0"^^xsd:string)}"""
 			   
 	queryResult = graph.query(query)
 	for row in queryResult:
@@ -253,7 +259,10 @@ def queryClusterThresholdValue(graph): #Selects the value of the main threshold 
                prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
                prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
 
-              SELECT ?thresholdValue WHERE {?y a nidm_Inference: . ?y prov:used ?x . {?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .} ?x prov:value ?thresholdValue .}"""
+              SELECT ?thresholdValue 
+
+              WHERE {{?x a nidm_ExtentThreshold: . ?x a obo_qvalue: .} UNION {?x a nidm_ExtentThreshold: . ?x a obo_FWERadjustedpvalue: .} 
+              		  ?x prov:value ?thresholdValue .}"""
 			   
 	queryResult = graph.query(query)
 	return(addQueryToList(queryResult))
@@ -386,26 +395,34 @@ def statisticImageString(statImage):
 
 def formatClusterStats(g, excName):
 
+        
+        clusterData = {}
+        
         #---------------------------------------------------------------------------------------------------------
         #First we gather data for peaks table.
         #---------------------------------------------------------------------------------------------------------
 
+        #We must include cluster p values in the query.
         peak_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
-               prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
-               prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
-               prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
-               prefix prov: <http://www.w3.org/ns/prov#>
-               prefix nidm_coordinateVector: <http://purl.org/nidash/nidm#NIDM_0000086>
-               
-               SELECT ?peakStat ?clus_index ?loc
+                       prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
+                       prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
+                       prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
+                       prefix prov: <http://www.w3.org/ns/prov#>
+                       prefix nidm_coordinateVector: <http://purl.org/nidash/nidm#NIDM_0000086>
+                       prefix nidm_pValueUncorrected: <http://purl.org/nidash/nidm#NIDM_0000116> 
+                       prefix nidm_pValueFWER: <http://purl.org/nidash/nidm#NIDM_0000115> 
+                       prefix nidm_qValueFDR: <http://purl.org/nidash/nidm#NIDM_0000119>
+                       
+                       
+                       SELECT ?peakStat ?clus_index ?loc
 
-               WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . ?clus a nidm_SupraThresholdCluster: .
-                       ?exc prov:atLocation ?conMap . ?clus nidm_clusterLabelID: ?clus_index .
-                       ?peak prov:wasDerivedFrom ?clus . ?peak nidm_equivalentZStatistic: ?peakStat .
-                       ?peak prov:atLocation ?locObj . ?locObj nidm_coordinateVector: ?loc}
+                       WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . ?clus a nidm_SupraThresholdCluster: .
+                               ?exc prov:atLocation ?conMap . ?clus nidm_clusterLabelID: ?clus_index .
+                               ?peak prov:wasDerivedFrom ?clus . ?peak nidm_equivalentZStatistic: ?peakStat .
+                               ?peak prov:atLocation ?locObj . ?locObj nidm_coordinateVector: ?loc .}
 
-               FILTER(STR(?conMap) = '""" + excName + """'^^xsd:string)}"""
-
+                       FILTER(STR(?conMap) = '""" + excName + """'^^xsd:string)}"""
+                
         #Run the peak query
         peakQueryResult = g.query(peak_query)
 
@@ -415,37 +432,51 @@ def formatClusterStats(g, excName):
         locations = ["%0.0s %0.0s %s" % row for row in peakQueryResult]
 
         #Obtain permutation used to sort the results in order of descending cluster index and then descending peak statistic size.
-        peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)), reverse = True, key=lambda k: (clusterIndicesForPeaks[k], peakZstats[k]))
+        peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)), reverse = True, key=lambda k: (-clusterIndicesForPeaks[k], peakZstats[k]))
 
         #Sort all peak data using this permutation.
         sortedPeaksZstatsArray = [peakZstats[i] for i in peaksSortPermutation]
         sortedClusIndicesForPeaks = [clusterIndicesForPeaks[i] for i in peaksSortPermutation]
         sortedPeakLocations = [locations[i] for i in peaksSortPermutation]
 
+        clusterData['peakZstats'] = sortedPeaksZstatsArray
+        clusterData['peakClusIndices'] = sortedClusIndicesForPeaks
+        clusterData['peakLocations'] = sortedPeakLocations
+
         #---------------------------------------------------------------------------------------------------------
         #Second we gather data for cluster table.
         #---------------------------------------------------------------------------------------------------------
-
+                
         clus_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
-               prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
-               prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
-               prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
-               prefix prov: <http://www.w3.org/ns/prov#>
+                       prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
+                       prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
+                       prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
+                       prefix prov: <http://www.w3.org/ns/prov#>
+                       prefix nidm_pValueFWER: <http://purl.org/nidash/nidm#NIDM_0000115> 
+                       prefix nidm_qValueFDR: <http://purl.org/nidash/nidm#NIDM_0000119>
                
-               SELECT ?clus_index ?clus_size
+                       SELECT ?clus_index ?clus_size ?pVal
 
-               WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . ?clus a nidm_SupraThresholdCluster: .
-                       ?exc prov:atLocation ?conMap . ?clus a nidm_SupraThresholdCluster: .
-                       ?clus nidm_clusterLabelID: ?clus_index . ?clus nidm_clusterSizeInVoxels: ?clus_size}
+                       WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . ?clus a nidm_SupraThresholdCluster: .
+                               ?exc prov:atLocation ?conMap . ?clus a nidm_SupraThresholdCluster: .
+                               ?clus nidm_clusterLabelID: ?clus_index . ?clus nidm_clusterSizeInVoxels: ?clus_size .
 
-               FILTER(STR(?conMap) = '""" + excName + """'^^xsd:string)}"""
-        
+                       OPTIONAL {?clus nidm_pValueFWER: ?pVal .}
+                       OPTIONAL {?clus nidm_qValueFDR: ?pVal .}}
+
+                       FILTER(STR(?conMap) = '""" + excName + """'^^xsd:string)}"""
+
+                
         #Run the cluster query
         clusQueryResult = g.query(clus_query)
 
         #Retrieve query results.
-        clusterIndices = [int("%s %0.0s" % row) for row in clusQueryResult]
-        clusterSizes = [int("%0.0s %s" % row) for row in clusQueryResult]
+        clusterIndices = [int("%s %0.0s %0.0s" % row) for row in clusQueryResult]
+        clusterSizes = [int("%0.0s %s %0.0s" % row) for row in clusQueryResult]
+        clusterPVals = ["%0.0s %0.0s %s" % row for row in clusQueryResult]
+
+        #Remove any spaces from P vals
+        clusterPVals = [float(pval.replace(" ", "")) for pval in clusterPVals]
 
         #Create an array for the highest peaks.
         highestPeakZArray = [0]*len(clusterIndices)
@@ -456,23 +487,37 @@ def formatClusterStats(g, excName):
                         highestPeakLocations[clusterIndicesForPeaks[i]-1] = locations[i]
 
         #Obtain permutation used to sort the results in order of descending cluster index and then for each cluster by peak statistic size.
-        clusterSortPermutation = sorted(range(len(clusterIndices)), reverse = True, key=lambda k: clusterIndices[k])
+        clusterSortPermutation = sorted(range(len(clusterIndices)), reverse = True, key=lambda k: (clusterSizes[k], clusterIndices[k]))
 
         #Sorted cluster arrays
         sortedClusSizeArray = [clusterSizes[i] for i in clusterSortPermutation]
         sortedClusIndicesArray = [clusterIndices[i] for i in clusterSortPermutation]
+        sortedClusPVals = [clusterPVals[i] for i in clusterSortPermutation]
 
         #Sort the highest peaks
         sortedMaxPeakZstats = [highestPeakZArray[sortedClusIndicesArray[i]-1] for i in list(range(0, len(clusterIndices)))]
         sortedMaxPeakLocations = [highestPeakLocations[sortedClusIndicesArray[i]-1] for i in list(range(0, len(clusterIndices)))]
 
-        return({'clusSizes':sortedClusSizeArray,
-                'clusIndices':sortedClusIndicesArray,
-                'clusPeakZstats':sortedMaxPeakZstats,
-                'clusPeakLocations':sortedMaxPeakLocations,
-                'peakZstats':sortedPeaksZstatsArray,
-                'peakClusIndices':sortedClusIndicesForPeaks,
-                'peakLocations':sortedPeakLocations})
+        #Deal with inf issues.
+        logClusPVals = [0]*len(sortedClusPVals)
+        for i in list(range(0, len(sortedClusPVals))):
+                if sortedClusPVals[i] == 0:
+                        logClusPVals[i] = math.inf
+                else:
+                        logClusPVals[i] = -math.log(sortedClusPVals[i], 10)
+
+        #A corrected cluster threshold has been applied so we should display cluster P values.
+        if checkExtentThreshold(g):
+                                
+                clusterData['clusterPValues'] = sortedClusPVals
+                clusterData['logClusterPValues'] = logClusPVals
+
+        clusterData['clusSizes'] = sortedClusSizeArray
+        clusterData['clusIndices'] = sortedClusIndicesArray
+        clusterData['clusPeakZstats'] = sortedMaxPeakZstats
+        clusterData['clusPeakLocations'] = sortedMaxPeakLocations
+        
+        return(clusterData)
 
 def generateExcPage(outdir, excName, conData):
 
@@ -490,9 +535,18 @@ def generateExcPage(outdir, excName, conData):
         #Cluster statistics section.
         excPage += h1("Cluster List")
 
+        #Work out if we have cluster p value data.
+        pDataAvailable = 'clusterPValues' in conData
+        
+
         #Make the cluster statistics table.
         excPage += raw("<table cellspacing='3' border='3'><tbody>")
-        excPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
+
+        #If we have pvalues for clusters include them.
+        if pDataAvailable:
+                excPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>P</th><th>-log10(P)</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
+        else:
+                excPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
         
         #Add the cluster statistics data into the table.
         for cluster in range(0, len(conData['clusSizes'])):
@@ -500,7 +554,13 @@ def generateExcPage(outdir, excName, conData):
                 excPage += raw("<tr>")
                 excPage += raw("<td>" + str(conData['clusIndices'][cluster]) + "</td>")
                 excPage += raw("<td>" + str(conData['clusSizes'][cluster]) + "</td>")
-                excPage += raw("<td>" + str(float('%.2f' % float(conData['clusPeakZstats'][cluster]))) + "</td>")
+                
+                #If cluster p data is available
+                if pDataAvailable:
+                        excPage += raw("<td>" + ("%.4g" % conData['clusterPValues'][cluster]) + "</td>")
+                        excPage += raw("<td>" + ("%.4f" % conData['logClusterPValues'][cluster]) + "</td>")
+                
+                excPage += raw("<td>" + '%.2f' % float(conData['clusPeakZstats'][cluster]) + "</td>")
 
                 #Peak location
                 formattedLoc = conData['clusPeakLocations'][cluster].replace(" ", "").replace("[", "").replace("]","").split(",")
@@ -525,7 +585,7 @@ def generateExcPage(outdir, excName, conData):
                 #New row
                 excPage += raw("<tr>")
                 excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) + "</td>")
-                excPage += raw("<td>" + str(float('%.2f' % float(conData['peakZstats'][peak]))) + "</td>")
+                excPage += raw("<td>" + '%.2f' % float(conData['peakZstats'][peak]) + "</td>")
 
                 #Peak location
                 formattedLoc = conData['peakLocations'][peak].replace(" ", "").replace("[", "").replace("]","").split(",")
@@ -540,7 +600,7 @@ def generateExcPage(outdir, excName, conData):
         excPage += raw("</center>")
         excFile = open(os.path.join(outdir, excName + ".html"), "x")
         print(excPage, file = excFile) #Prints html page to a file
-        excFile.close()  
+        excFile.close()
 
 def generateMainHTML(graph,mainFilePath = "Main.html", statsFilePath = "stats.html", postStatsFilePath = "postStats.html"): #Generates the main HTML page
 
@@ -624,13 +684,13 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		mainThreshValue = queryHeightThresholdValue(graph)
 		if askSpm(graph) == True:
 			
-			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (corrected)" % (softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %.3f (corrected)" % (softwareLabelNumList[1], statisticTypeString, float(mainThreshValue[0])))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
 			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
-			"%s statistic images were thresholded at P = %s (corrected)" 
-			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			"%s statistic images were thresholded at P = %.3f (corrected)" 
+			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, float(mainThreshValue[0])))
 	
 	elif clusterWise == True: #If main threshold is extent threshold
 		
@@ -640,39 +700,39 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 		
 		if askSpm(graph) == True:
 			
-			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by %s > %s and a (corrected) "
-			"cluster significance of P = %s " 
-			% (softwareLabelNumList[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded using clusters determined by %s > %.3f and a (corrected) "
+			"cluster significance of P = %.3f " 
+			% (softwareLabelNumList[1], statisticTypeString, clusterThreshType, float(heightThreshValue[0]), float(mainThreshValue[0])))
 	
 		elif askFsl(graph) == True:
 			fslFeatVersion = queryFslFeatVersion(graph)
 			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl). %s statistic images were thresholded "
-			"using clusters determined by %s > %s and a (corrected) cluster significance of P = %s" 
-			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, clusterThreshType, heightThreshValue[0], mainThreshValue[0]))
+			"using clusters determined by %s > %.3f and a (corrected) cluster significance of P = %.3f" 
+			%(fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, clusterThreshType, float(heightThreshValue[0]), float(mainThreshValue[0])))
 		
 	
 	else: #If there is no corrected threshold - assume voxel wise
 		mainThreshValue = queryUHeightThresholdValue(graph)
 		if askSpm(graph) == True and askIfPValueUncorrected(graph) == True: #SPM used and threshold type is nidm_PValueUncorrected
-			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, float('%.2g' % float(mainThreshValue[0]))))
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at P = %.3f (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, float('%.2g' % float(float(mainThreshValue[0])))))
 			
 		
 		elif askSpm(graph) == True and askIfOboStatistic(graph) == True: #SPM used and threshold type is obo_statistic
-			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at %s = %s (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, statisticType, float('%.2g' % float(mainThreshValue[0]))))
+			postStats += p("FMRI data processing was carried out using SPM Version %s (SPM, http://www.fil.ion.ucl.ac.uk/spm/). %s statistic images were thresholded at %s = %.1f (uncorrected)" % (softwareLabelNumList[1], statisticTypeString, statisticType, float('%.2g' % float(float(mainThreshValue[0])))))
 			
 		
 		elif askFsl(graph) == True and askIfPValueUncorrected(graph) == True:
 			
 			fslFeatVersion = queryFslFeatVersion(graph)
 			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
-			"%s statistic images were thresholded at P = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, mainThreshValue[0]))
+			"%s statistic images were thresholded at P = %.3f (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, float(mainThreshValue[0])))
 			
 			
 		elif askFsl(graph) == True and askIfOboStatistic(graph) == True:
 			
 			fslFeatVersion = queryFslFeatVersion(graph)
 			postStats += p("FMRI data processing was carried out using FEAT (FMRI Expert Analysis Tool) Version %s, part of FSL %s (FMRIB's Software Library, www.fmrib.ox.ac.uk/fsl)."
-			"%s statistic images were thresholded at %s = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, statisticType, mainThreshValue[0]))
+			"%s statistic images were thresholded at %s = %s (uncorrected)." % (fslFeatVersion[0], softwareLabelNumList[1], statisticTypeString, statisticType, float(mainThreshValue[0])))
 			
 		
 	
