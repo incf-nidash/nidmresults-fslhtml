@@ -26,16 +26,16 @@ def statisticImage(stat):
         
     else:
         
-        return(None)
+        return("P")
 
 #This function returns the cluster forming threshold type of an image.
-def clusterFormingThreshType(graph, imageType):
+def heightThreshType(graph, imageType):
 
     if runQuery(graph, 'askIfOboStatistic', 'Ask') == True:
     
         return(imageType)
         
-    elif runQuery(graph, 'askIfPValueUncorrected', 'Ask') == True:
+    else:
     
         return("P")
                

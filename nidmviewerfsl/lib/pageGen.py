@@ -219,14 +219,15 @@ def generateStatsHTML(graph,statsFilePath = "stats.html"):
 #Generates the PostStats HTML page
 def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"): 
 
-    #Work out if there are voxelwise or clusterwise thresholds.
-    voxelWise = runQuery(graph, 'askCHeightThreshold', 'Ask')
-    clusterWise = runQuery(graph, 'askCExtentThreshold', 'Ask')
+    #Work out if there are voxelwise or clusterwise_corrected thresholds.
+    voxelWise_corrected = runQuery(graph, 'askCHeightThreshold', 'Ask')
+    clusterWise_corrected = runQuery(graph, 'askCExtentThreshold', 'Ask')
+    clusterWise_uncorrected = runQuery(graph, 'askUExtentThreshold', 'Ask')
 
     #Retrieve the software label.
     softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
 
-    #Retrieve and format statistic type.
+    #Retrieve and format height threshold statistic type.
     statisticType = runQuery(graph, 'selectStatisticType', 'Select')
     statisticType = statisticImage(statisticType[0])
     statisticTypeString = statisticImageString(statisticType)
@@ -270,9 +271,90 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
 
     #Section header.
     postStats += h3("Analysis Methods")
+
+    #==========================================================================
+    #WIP
+    postStats += raw('<p>')
+
+    print(postStatsFilePath)
+    print("voxelwise_corrected")
+    print(voxelWise_corrected)
+    print("clusterwise_corrected")
+    print(clusterWise_corrected)
+
+    #If there is no extent threshold set this to 0.
+    extentCorrected = 0
+
+    #Retrieve the extent threshold.
+    extentThreshValue = runQuery(graph, 'selectUExtentThreshold', 'Select')
+    print("uncorrected extent")
+    print(extentThreshValue)
+    if extentThreshValue == []:
+        extentThreshValue = runQuery(graph, 'selectCExtentThreshold', 'Select')
+
+    print(clusterWise_corrected or clusterWise_uncorrected)
+    print("extentThreshValue")
+    print(extentThreshValue)
+
+    #Retrieve the height threshold.
+    heightThreshValue = runQuery(graph, 'selectUHeightThreshold', 'Select')   
+    if heightThreshValue == []:
+        heightThreshValue = runQuery(graph, 'selectCHeightThreshold', 
+            'Select')
+
+    #Check if the data was generated using SPM or FSL.
+    if runQuery(graph, 'askSPM', 'Ask') == True:
+            
+        postStats += raw("FMRI data processing was carried out using SPM" \
+                         " Version %s (SPM, http://www.fil.ion.ucl.ac.uk/" \
+                         "spm/). " % (softwareLabelNum[1]))
+
+    elif runQuery(graph, 'askFSL', 'Ask') == True:
+
+        #Work out which FEAT version was used.
+        fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
+
+        postStats += raw("FMRI data processing was carried out using FEAT" \
+                       " (FMRI Expert Analysis Tool) Version %s, part of" \
+                       " FSL %s (FMRIB's Software Library," \
+                       " www.fmrib.ox.ac.uk/fsl). " %(fslFeatVersion[0], 
+                        softwareLabelNum[1]))
     
+    #Now display thresholding details.
+    postStats += raw("%s statistic images were thresholded " % (
+                     statisticTypeString))
+
+    #If is a corrected extent threshold display it. 
+    if clusterWise_corrected or clusterWise_uncorrected: 
+
+        #Check to see if corrected.
+        corrStr = ''
+        if clusterWise_corrected:
+            corrStr = '(corrected)'
+
+        postStats += raw("using clusters determined by %s < %s and a" \
+                       " %s cluster significance of P = %s " % (
+                        statisticType, heightThreshValue[0], 
+                        corrStr, extentThreshValue[0]))
+
+    #Othewise we only have a height threshold to display.
+    else:
+
+        #Check to see if corrected.
+        corrStr = '(uncorrected)'
+        if voxelWise_corrected:
+            corrStr = '(corrected)'
+
+        postStats += raw("at %s = %s %s" % (statisticType, float('%.2g' 
+                         % float(heightThreshValue[0])), corrStr))
+
+
+    postStats += raw('</p>')
+
+    #=====================================================================
+
     #If there is a Height Threshold display it.
-    if voxelWise == True: 
+    if voxelWise_corrected == True: 
 
         #Retrieve threshold value. 
         mainThreshValue = runQuery(graph, 'selectCHeightThreshold', 'Select')
@@ -301,40 +383,7 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
                            "re thresholded at P = %s (corrected)" 
                            %(fslFeatVersion[0], softwareLabelNum[1], 
                             statisticTypeString, mainThreshValue[0]))
-    
-    #If is an extent threshold display it. 
-    elif clusterWise == True: 
 
-        
-        mainThreshValue = runQuery(graph, 'selectCExtentThreshold', 'Select')
-        heightThreshValue = runQuery(graph, 'selectUHeightThreshold', 'Select')
-        clusterThreshType = clusterFormingThreshType(graph, statisticType)
-        
-        if runQuery(graph, 'askSPM', 'Ask') == True:
-            
-            postStats += p("FMRI data processing was carried out using SPM" \
-                           " Version %s (SPM, http://www.fil.ion.ucl.ac.uk/" \
-                           "spm/). %s statistic images were thresholded usin" \
-                           "g clusters determined by %s > %s and a (correcte" \
-                           "d) cluster significance of P = %s " % (
-                            softwareLabelNumList[1], statisticTypeString, 
-                            clusterThreshType, heightThreshValue[0], 
-                            mainThreshValue[0]))
-    
-        elif runQuery(graph, 'askFSL', 'Ask') == True:
-            fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
-            postStats += p("FMRI data processing was carried out using FEAT" \
-                           " (FMRI Expert Analysis Tool) Version %s, part of" \
-                           " FSL %s (FMRIB's Software Library, " \
-                           "www.fmrib.ox.ac.uk/fsl). %s statistic images" \
-                           " were thresholded using clusters determined by" \
-                           " %s > %s and a (corrected) cluster significance" \
-                           "of P = %s" 
-                           %(fslFeatVersion[0], softwareLabelNum[1], 
-                             statisticTypeString, clusterThreshType, 
-                             heightThreshValue[0], mainThreshValue[0]))
-        
-    
     else: #If there is no corrected threshold - assume voxel wise
         mainThreshValue = runQuery(graph, 'selectUHeightThreshold', 'Select')
         #SPM used and threshold type is nidm_PValueUncorrected
@@ -378,6 +427,40 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
                            "ed at %s = %s (uncorrected)." % (fslFeatVersion[0],
                            softwareLabelNum[1], statisticTypeString, 
                            statisticType, mainThreshValue[0]))
+    
+    #If is an extent threshold display it. 
+    if clusterWise_corrected == True: 
+
+        
+        mainThreshValue = runQuery(graph, 'selectCExtentThreshold', 'Select')
+        heightThreshValue = runQuery(graph, 'selectUHeightThreshold', 'Select')
+        if heightThreshValue == []:
+            heightThreshValue = runQuery(graph, 'selectCHeightThreshold', 'Select')
+        clusterThreshType = heightThreshType(graph, statisticType)
+        
+        if runQuery(graph, 'askSPM', 'Ask') == True:
+            
+            postStats += p("FMRI data processing was carried out using SPM" \
+                           " Version %s (SPM, http://www.fil.ion.ucl.ac.uk/" \
+                           "spm/). %s statistic images were thresholded usin" \
+                           "g clusters determined by %s > %s and a (correcte" \
+                           "d) cluster significance of P = %s " % (
+                            softwareLabelNum[1], statisticTypeString, 
+                            clusterThreshType, heightThreshValue[0], 
+                            mainThreshValue[0]))
+    
+        elif runQuery(graph, 'askFSL', 'Ask') == True:
+            fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
+            postStats += p("FMRI data processing was carried out using FEAT" \
+                           " (FMRI Expert Analysis Tool) Version %s, part of" \
+                           " FSL %s (FMRIB's Software Library, " \
+                           "www.fmrib.ox.ac.uk/fsl). %s statistic images" \
+                           " were thresholded using clusters determined by" \
+                           " %s > %s and a (corrected) cluster significance" \
+                           "of P = %s" 
+                           %(fslFeatVersion[0], softwareLabelNum[1], 
+                             statisticTypeString, clusterThreshType, 
+                             heightThreshValue[0], mainThreshValue[0]))
             
         
     
