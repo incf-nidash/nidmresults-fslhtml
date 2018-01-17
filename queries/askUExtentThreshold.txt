@@ -5,15 +5,17 @@
 #===================================================================================
 
 prefix prov: <http://www.w3.org/ns/prov#>
-prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000034>
+prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
 prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
 prefix nidm_PValueUncorrected: <http://purl.org/nidash/nidm#NIDM_0000160>
 prefix obo_statistic: <http://purl.obolibrary.org/obo/STATO_0000039>
+prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
 
-ASK {?thresh a nidm_ExtentThreshold: . 
-    {?thresh a obo_statistic: . } UNION {?thresh a nidm_PValueUncorrected: .} 
-    ?thresh prov:value ?val .
+ASK {?infer a nidm_Inference: . ?infer prov:used ?thresh .
+     ?thresh a nidm_ExtentThreshold: . 
+     {?thresh a obo_statistic: . } UNION {?thresh a obo_statistic: .} 
+     ?thresh nidm_clusterSizeInVoxels: ?val .
 
-    FILTER(STR(?val) != "0.0"^^xsd:string)
-    FILTER(STR(?val) != "1.0"^^xsd:string)}
+     FILTER(STR(?val) != "0"^^xsd:string)
+     FILTER(STR(?val) != "1"^^xsd:string)}
 			   
