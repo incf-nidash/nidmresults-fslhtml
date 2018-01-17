@@ -209,10 +209,10 @@ def checkExtentThreshold(graph): #checks for corrected extent threshold
                    prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
                    prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
 
-                   ASK {{?thresh a nidm_ExtentThreshold: . ?thresh a obo_qvalue: .}
-                   
-                   UNION {?thresh a nidm_ExtentThreshold: . ?thresh a 
-                          obo_FWERadjustedpvalue: .} . ?thresh prov:value ?val
+                   ASK {?infer a nidm_Inference: . ?infer prov:used ?thresh .
+                        {?thresh a nidm_ExtentThreshold: . ?thresh a obo_qvalue: .}
+                        UNION {?thresh a nidm_ExtentThreshold: . ?thresh a 
+                        obo_FWERadjustedpvalue: .} . ?thresh prov:value ?val
 
                    FILTER(STR(?val) != "1.0"^^xsd:string)}"""
 			   
@@ -506,7 +506,7 @@ def formatClusterStats(g, excName):
                 else:
                         logClusPVals[i] = -math.log(sortedClusPVals[i], 10)
 
-        #A corrected cluster threshold has been applied so we should display cluster P values.
+        #If a corrected cluster threshold has been applied we should display cluster P values.
         if checkExtentThreshold(g):
                                 
                 clusterData['clusterPValues'] = sortedClusPVals
