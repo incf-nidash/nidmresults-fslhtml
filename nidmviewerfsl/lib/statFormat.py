@@ -111,7 +111,7 @@ def formatClusterStats(g, excName):
     #cluster index and then for each cluster by peak statistic size.
     clusterSortPermutation = sorted(range(len(clusterIndices)), 
                                     reverse = True, 
-                                    key=lambda k: clusterIndices[k])
+                                    key=lambda k: (clusterSizes[k], clusterIndices[k]))
 
     #Sorted cluster arrays
     sortedClusSizeArray = [clusterSizes[i] for i in clusterSortPermutation]
