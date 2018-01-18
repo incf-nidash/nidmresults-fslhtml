@@ -73,7 +73,8 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 
         shutil.rmtree(htmlFolder) 
 
-    if nidmFile.endswith(".nidm.zip"): #Nidm Zip file specified         
+    #Nidm Zip file specified 
+    if nidmFile.endswith(".nidm.zip"):         
             
             extractZip(htmlFolder, nidmFile)  
     
@@ -81,8 +82,9 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
         
         g = rdflib.Graph()
         g.parse(nidmFile, format = rdflib.util.guess_format(nidmFile))
-    
-        if overwrite == True: #User wants to overwite folder
+        
+        #User wants to overwite folder
+        if overwrite == True: 
             print("Overwrite")
             #Check if directory already exists
             if os.path.isdir(htmlFolder) == True: 
@@ -90,13 +92,16 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
                 print("Removing %r" % htmlFolder)
             
                 if os.path.isdir(htmlFolder + "Backup") == False:
-            
+                    
+                    #Backup the folder
                     shutil.copytree(htmlFolder, htmlFolder + \
-                                    "Backup") #Backup the folder
+                                    "Backup") 
                 
-                shutil.rmtree(htmlFolder) #Remove the folder
-            
-        createOutputDirectory(htmlFolder) #Create the html folder
+                #Remove the folder
+                shutil.rmtree(htmlFolder) 
+        
+        #Create the html folder
+        createOutputDirectory(htmlFolder) 
     
         currentDir = os.getcwd()
         dirLocation = os.path.join(currentDir, htmlFolder)

@@ -362,15 +362,11 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
     if askConjunction:
         conString = ''
 
-    print(postStatsFilePath)
-    print('askConjunction')
-    print(askConjunction)
     for i in range(0, len(contrastName)):
 
         #If this isn't a conjunction pack display each image with a contrast name.
         if not askConjunction:
 
-            print(i)
             #Add the colorbar and it's limits.
             postStats += raw("%s" % contrastName[i] + "&nbsp &nbsp" +
                              "%0.3g" % float(getVal(os.path.join(os.path.split(
