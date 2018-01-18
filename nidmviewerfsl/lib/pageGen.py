@@ -224,8 +224,10 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
     clusterWise_corrected = runQuery(graph, 'askCExtentThreshold', 'Ask')
     clusterWise_uncorrected = runQuery(graph, 'askUExtentThreshold', 'Ask')
 
-    #Retrieve the software label.
+    #Retrieve the software label and name.
     softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
+    askSPM = runQuery(graph, 'askSPM', 'Ask')
+    askFSL = runQuery(graph, 'askFSL', 'Ask')
 
     #Retrieve and format height threshold statistic type.
     statisticType = runQuery(graph, 'selectStatisticType', 'Select')
@@ -233,7 +235,7 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
     statisticTypeString = statisticImageString(statisticType)
 
     #Check if the statistic or P value was used.
-    if runQuery(graph, 'askIfPValueUncorrected', 'Ask'):
+    if runQuery(graph, 'askIfPValueUncorrected', 'Ask') or voxelWise_corrected:
         statisticType = "P"
 
     #Retrieve excursion set details and format them.
@@ -296,13 +298,13 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
             'Select')
 
     #Check if the data was generated using SPM or FSL.
-    if runQuery(graph, 'askSPM', 'Ask'):
+    if askSPM:
             
         postStats += raw("FMRI data processing was carried out using SPM" \
                          " Version %s (SPM, http://www.fil.ion.ucl.ac.uk/" \
                          "spm/). " % (softwareLabelNum[1]))
 
-    elif runQuery(graph, 'askFSL', 'Ask'):
+    elif askFSL:
 
         #Work out which FEAT version was used.
         fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
@@ -320,14 +322,20 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
     #If is a corrected extent threshold display it. 
     if clusterWise_corrected or clusterWise_uncorrected: 
 
+        #If we are using a P value the threshold is equals. e.g. P=0.05. If it's
+        #a statistic value then we use greater than. e.g. Z>1.6.
+        ineq = '='
+        if statisticType != 'p' and statisticType != 'P':
+            ineq = '>'
+
         #Check to see if corrected.
         corrStr = ' (uncorrected)'
         if clusterWise_corrected:
             corrStr = ' (corrected)'
 
-        postStats += raw("using clusters determined by %s < %.2g and a" \
+        postStats += raw("using clusters determined by %s %s %.2g and a" \
                        "%s cluster significance of P = %.2g " % (
-                        statisticType, float(heightThreshValue[0]), 
+                        statisticType, ineq, float(heightThreshValue[0]), 
                         corrStr, float(extentThreshValue[0])))
 
     #Othewise we only have a height threshold to display.
@@ -338,136 +346,32 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
         if voxelWise_corrected:
             corrStr = '(corrected)'
 
-        postStats += raw("at %s = %.2g %s" % (statisticType, 
-                                              float(heightThreshValue[0]), 
+        postStats += raw("at %s = %s %s" % (statisticType, float('%.2g'
+                                              %float(heightThreshValue[0])), 
                                               corrStr))
 
 
-    postStats += raw('</p>')
-
-    #=====================================================================
-
-    #If there is a Height Threshold display it.
-    if voxelWise_corrected == True: 
-
-        #Retrieve threshold value. 
-        mainThreshValue = runQuery(graph, 'selectCHeightThreshold', 'Select')
-
-        #If the data was generated using SPM display a string detailing which 
-        #version of spm was used.
-        if runQuery(graph, 'askSPM', 'Ask') == True:
-            
-            postStats += p("FMRI data processing was carried out using SPM" \
-                           " Version %s (SPM, http://www.fil.ion.ucl.ac.uk/" \
-                           "spm/). %s statistic images were thresholded at P" \
-                           " = %s (corrected)" % (softwareLabelNum[1], 
-                           statisticTypeString, mainThreshValue[0]))
-        
-        #If the data was generated using FSL display a string detailing which 
-        #version of spm was used.
-        elif runQuery(graph, 'askFSL', 'Ask') == True:
-
-            #Work out which FEAT version was used.
-            fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
-
-            postStats += p("FMRI data processing was carried out using FEAT" \
-                           " (FMRI Expert Analysis Tool) Version %s, part of" \
-                           " FSL %s (FMRIB's Software Library," \
-                           " www.fmrib.ox.ac.uk/fsl). %s statistic images we" \
-                           "re thresholded at P = %s (corrected)" 
-                           %(fslFeatVersion[0], softwareLabelNum[1], 
-                            statisticTypeString, mainThreshValue[0]))
-
-    else: #If there is no corrected threshold - assume voxel wise
-        mainThreshValue = runQuery(graph, 'selectUHeightThreshold', 'Select')
-        #SPM used and threshold type is nidm_PValueUncorrected
-        if runQuery(graph, 'askSPM', 'Ask') == True and runQuery(graph, 'askIfPValueUncorrected', 'Ask') == True: 
-            postStats += p("FMRI data processing was carried out using SPM" \
-                           " Version %s (SPM, http://www.fil.ion.ucl.ac.uk/" \
-                           "spm/). %s statistic images were thresholded at P" \
-                           " = %s (uncorrected)" % (softwareLabelNum[1], 
-                            statisticTypeString, float('%.2g' % float(
-                            mainThreshValue[0]))))
-            
-        #SPM used and threshold type is obo_statistic
-        elif runQuery(graph, 'askSPM', 'Ask') == True and runQuery(graph, 'askIfOboStatistic', 'Ask') == True: 
-            postStats += p("FMRI data processing was carried out using SPM " \
-                           "Version %s (SPM, http://www.fil.ion.ucl.ac.uk/" \
-                           "spm/). %s statistic images were thresholded at" \
-                           " %s = %s (uncorrected)" % (softwareLabelNum[1],
-                           statisticTypeString, statisticType, float('%.2g' 
-                           % float(mainThreshValue[0]))))
-            
-        
-        elif runQuery(graph, 'askFSL', 'Ask') == True and runQuery(graph, 'askIfPValueUncorrected', 'Ask') == True:
-            
-            fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
-            postStats += p("FMRI data processing was carried out using FEAT " \
-                           "(FMRI Expert Analysis Tool) Version %s, part of " \
-                           "FSL %s (FMRIB's Software Library, www.fmrib.ox" \
-                           ".ac.uk/fsl). %s statistic images were thresholde" \
-                           "d at P = %s (uncorrected)." % (fslFeatVersion[0], 
-                            softwareLabelNum[1], statisticTypeString, 
-                            mainThreshValue[0]))
-            
-            
-        elif runQuery(graph, 'askFSL', 'Ask') == True and runQuery(graph, 'askIfOboStatistic', 'Ask') == True:
-            
-            fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
-            postStats += p("FMRI data processing was carried out using FEAT" \
-                           " (FMRI Expert Analysis Tool) Version %s, part " \
-                           "of FSL %s (FMRIB's Software Library, www.fmrib.o" \
-                           "x.ac.uk/fsl). %s statistic images were threshold" \
-                           "ed at %s = %s (uncorrected)." % (fslFeatVersion[0],
-                           softwareLabelNum[1], statisticTypeString, 
-                           statisticType, mainThreshValue[0]))
-    
-    #If is an extent threshold display it. 
-    if clusterWise_corrected == True: 
-
-        
-        mainThreshValue = runQuery(graph, 'selectCExtentThreshold', 'Select')
-        heightThreshValue = runQuery(graph, 'selectUHeightThreshold', 'Select')
-        if heightThreshValue == []:
-            heightThreshValue = runQuery(graph, 'selectCHeightThreshold', 'Select')
-        clusterThreshType = heightThreshType(graph, statisticType)
-        
-        if runQuery(graph, 'askSPM', 'Ask') == True:
-            
-            postStats += p("FMRI data processing was carried out using SPM" \
-                           " Version %s (SPM, http://www.fil.ion.ucl.ac.uk/" \
-                           "spm/). %s statistic images were thresholded usin" \
-                           "g clusters determined by %s > %s and a (correcte" \
-                           "d) cluster significance of P = %s " % (
-                            softwareLabelNum[1], statisticTypeString, 
-                            clusterThreshType, heightThreshValue[0], 
-                            mainThreshValue[0]))
-    
-        elif runQuery(graph, 'askFSL', 'Ask') == True:
-            fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
-            postStats += p("FMRI data processing was carried out using FEAT" \
-                           " (FMRI Expert Analysis Tool) Version %s, part of" \
-                           " FSL %s (FMRIB's Software Library, " \
-                           "www.fmrib.ox.ac.uk/fsl). %s statistic images" \
-                           " were thresholded using clusters determined by" \
-                           " %s > %s and a (corrected) cluster significance" \
-                           "of P = %s" 
-                           %(fslFeatVersion[0], softwareLabelNum[1], 
-                             statisticTypeString, clusterThreshType, 
-                             heightThreshValue[0], mainThreshValue[0]))
-            
-        
-    
-    postStats += hr()
+    postStats += raw('</p><hr>')
     postStats += h3("Thresholded Activation Images")
     postStats += hr()
-    i = 0
-    
-    if runQuery(graph, 'askFSL', 'Ask') == True:
-    
-        while i < len(contrastName):
-        
-            #Colorbar and colorbar limits.
+
+    #Work out if we are looking at a conjunction datapack or not.
+    askConjunction = len(excursionSetNifti) != len(contrastName)
+
+    #If this is a conjunction we need to initialise an empty string to store contrast names.
+    if askConjunction:
+        conString = ''
+
+    print(postStatsFilePath)
+    print('askConjunction')
+    print(askConjunction)
+    for i in range(0, len(contrastName)):
+
+        #If this isn't a conjunction pack display each image with a contrast name.
+        if not askConjunction:
+
+            print(i)
+            #Add the colorbar and it's limits.
             postStats += raw("%s" % contrastName[i] + "&nbsp &nbsp" +
                              "%0.3g" % float(getVal(os.path.join(os.path.split(
                              postStatsFilePath)[0], excursionSetNifti[i]), 
@@ -479,55 +383,43 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
                              postStatsFilePath)[0], excursionSetNifti[i]), 
                              'max')) +
                              "<br><br>")
+
+            #Add a link to the clusterData page.
             postStats += raw("<a href = '" + 
                              os.path.join('.', 'Cluster_Data', 
                                 excursionSetNifti[i].replace('.nii.gz', '.html'
                              )) 
                              + "'>")
-            postStats += img(src = 'data:image/jpg;base64,' + 
+
+            #Add the image. If we have FSL the image was found in the pack.
+            if askFSL:
+                postStats += img(src = 'data:image/jpg;base64,' + 
                              encodeImage(os.path.join(os.path.split(
                                 postStatsFilePath)[0],excursionSetSliceImage[i]
                              )).decode())
-            postStats += raw("</a>")
-            postStats += br()
-            postStats += br()
-            i = i + 1
+            #Add the image. If we have SPM the image was regenerated.
+            if askSPM:
+                sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
+                                                    postStatsFilePath)[0], 
+                                                    excursionSetNifti[i]))
+                postStats += img(src = 'data:image/jpg;base64,' + encodeImage(
+                                 sliceImage).decode())
 
-    if runQuery(graph, 'askSPM', 'Ask') == True and len(excursionSetNifti) == len(contrastName):
-    
-        while i < len(excursionSetNifti):
-        
-            postStats += raw("%s" % contrastName[i] + "&nbsp &nbsp" +
-                             "%0.3g" % float(getVal(os.path.join(os.path.split(
-                             postStatsFilePath)[0], excursionSetNifti[i]), 
-                             'min')) +
-                             " &nbsp " +
-                             "<img src = '" + encodeColorBar() + "'>" +
-                             " &nbsp " +
-                             "%0.3g" % float(getVal(os.path.join(os.path.split(
-                             postStatsFilePath)[0], excursionSetNifti[i]), 
-                             'max')) +
-                             "<br><br>")
-            sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
-                postStatsFilePath)[0], excursionSetNifti[i]))
-            postStats += raw("<a href = '" + os.path.join('.', 'Cluster_Data', 
-                excursionSetNifti[i].replace('.nii.gz', '.html')) + "'>")
-            postStats += img(src = 'data:image/jpg;base64,' + encodeImage(
-                sliceImage).decode())
-            postStats += raw("</a>")
-            i = i + 1
+            postStats += raw("</a><br><br>")
 
-    if runQuery(graph, 'askSPM', 'Ask') == True and len(excursionSetNifti) < len(contrastName):
-        
-        conString = 'Conjunction : '
-        
-        while i < len(contrastName):
-        
+        #If this is a conjunction retrieve all the contrast names at once.
+        if askConjunction:
+
             conString += contrastName[i]
+
+            #Add a slash between each contrast name.
             if i < len(contrastName) - 1:
                 conString += '/'
-            i = i + 1
 
+    #If we have a conjunction all names are added to one slice image.
+    if askConjunction:
+
+        #Add the contrast names and colorbar.
         postStats += raw("%s" % conString + "&nbsp &nbsp" +
                          "%0.3g" % float(getVal(os.path.join(os.path.split(
                          postStatsFilePath)[0], excursionSetNifti[0]), 'min'))+
@@ -537,14 +429,22 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
                          "%0.3g" % float(getVal(os.path.join(os.path.split(
                          postStatsFilePath)[0], excursionSetNifti[0]), 'max'))+
                          "<br><br>")
+
+        #Make the slice image.
         sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
-            postStatsFilePath)[0], excursionSetNifti[0]))
+                                            postStatsFilePath)[0], 
+                                            excursionSetNifti[0]))
+
+        #Add the link to the cluster data page.
         postStats += raw("<a href = '" + os.path.join('.', 'Cluster_Data', 
             excursionSetNifti[0].replace('.nii.gz', '.html')) + "'>")
+
+        #Add the slice image.
         postStats += img(src = 'data:image/jpg;base64,' + encodeImage(
-            sliceImage).decode())
+                                                        sliceImage).decode())
         postStats += raw("</a>")
-            
+
+    #Write to the file.        
     postStatsFile = open(postStatsFilePath, "x")
     print(postStats, file = postStatsFile)
     postStatsFile.close()
