@@ -295,18 +295,6 @@ def queryUHeightThresholdValue(graph): #Select value of uncorrected height thres
 	
 def queryExcursionSetDetails(graph): #Selects details of all excursion sets.
 
-	query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-               prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
-               prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
-               prefix prov: <http://www.w3.org/ns/prov#>
-
-               SELECT ?contrastName WHERE {?x a nidm_Inference: . ?x prov:used ?y . ?y a nidm_StatisticMap: . ?y nidm_contrastName: ?contrastName .}"""
-			   
-	queryResult = graph.query(query)
-	return(addQueryToList(queryResult))
-
-def queryExcursionSetNifti(graph): #Selects excursoion set NIFTI URI
-
         query = """prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
                prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
 			   prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
@@ -664,7 +652,7 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 	statisticType = statisticImage(statisticType[0])
 	statisticTypeString = statisticImageString(statisticType)
 	excDetails = queryExcursionSetDetails(graph)
-	excursionSetNifti = [excDetails[i] for i in list(range(0, len(excDetails), 3))]
+	excursionSetNifti = list(set([excDetails[i] for i in list(range(0, len(excDetails), 3))]))
 	excursionSetSliceImage = [excDetails[i] for i in list(range(1, len(excDetails), 3))]
 	contrastName = [excDetails[i] for i in list(range(2, len(excDetails), 3))]
 
@@ -753,7 +741,9 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
                                          " &nbsp " +
                                          "%0.3g" % float(getVal(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i]), 'max')) +
                                          "<br><br>")
-			postStats += img(src = excursionSetSliceImage[i])
+			postStats += raw("<a href = '" + os.path.join('.', 'Cluster_Data', excursionSetNifti[i].replace('.nii.gz', '.html')) + "'>")
+			postStats += img(src = 'data:image/jpg;base64,' + encodeImage(os.path.join(os.path.split(postStatsFilePath)[0],excursionSetSliceImage[i])).decode())
+			postStats += raw("</a>")
 			postStats += br()
 			postStats += br()
 			i = i + 1
@@ -770,7 +760,9 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
                                          "%0.3g" % float(getVal(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i]), 'max')) +
                                          "<br><br>")
 			sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[i]))
+			postStats += raw("<a href = '" + os.path.join('.', 'Cluster_Data', excursionSetNifti[i].replace('.nii.gz', '.html')) + "'>")
 			postStats += img(src = 'data:image/jpg;base64,' + encodeImage(sliceImage).decode())
+			postStats += raw("</a>")
 			i = i + 1
 
 	if askSpm(graph) == True and len(excursionSetNifti) < len(contrastName):
@@ -786,11 +778,15 @@ def generatePostStatsHTML(graph,statsFilePath = "stats.html",postStatsFilePath =
 
 		postStats += raw("%s" % conString + "&nbsp &nbsp" +
                                  "%0.3g" % float(getVal(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[0]), 'min')) +
+                                 " &nbsp " +
                                  "<img src = '" + encodeColorBar() + "'>" +
+                                 " &nbsp " +
                                  "%0.3g" % float(getVal(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[0]), 'max')) +
                                  "<br><br>")
 		sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(postStatsFilePath)[0], excursionSetNifti[0]))
+		postStats += raw("<a href = '" + os.path.join('.', 'Cluster_Data', excursionSetNifti[0].replace('.nii.gz', '.html')) + "'>")
 		postStats += img(src = 'data:image/jpg;base64,' + encodeImage(sliceImage).decode())
+		postStats += raw("</a>")
 			
 	postStatsFile = open(postStatsFilePath, "x")
 	print(postStats, file = postStatsFile)
@@ -823,16 +819,16 @@ def pageGenerate(g, outdir):
 
 	#Make cluster pages
 	os.mkdir(os.path.join(outdir, 'Cluster_Data'))
-	excNiftiNames = queryExcursionSetNifti(g)
+	excDetails = queryExcursionSetDetails(g)
+	excNiftiNames = set([excDetails[i] for i in list(range(0, len(excDetails), 3))])
 
-	for row in excNiftiNames:
+	for excName in excNiftiNames:
 	
-		excName = "%s" % row
 		excData = formatClusterStats(g, excName)
 		generateExcPage(os.path.join(outdir, 'Cluster_Data'), excName.replace(".nii.gz", ""), excData)
 
 def main(nidmFile, htmlFolder, overwrite=False): #Main program
-	
+
 	g = rdflib.Graph()
 	filepath = nidmFile
 	
@@ -898,8 +894,3 @@ def main(nidmFile, htmlFolder, overwrite=False): #Main program
 		pageGenerate(g, dirLocation)
 	
 	return(destinationFolder) #Return the html/zip-extraction folder
-
-	
-
-		
-	
