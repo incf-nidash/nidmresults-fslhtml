@@ -26,7 +26,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
     ],
-    package_data={['queries/selectVersionNum.txt']},
+    package_data={'':
+                  ['queries/*.txt']},
     include_package_data=True,
     install_requires=requirements
 )
