@@ -67,5 +67,8 @@ def getRawCSS():
     cssStyleSheet = cssStyleSheet.replace(
                         'background-image: url("images/fsl-bg.jpg");', 
                         encodeBG())
+
+    #Close the file.
+    file.close()
     
     return(cssStyleSheet)
