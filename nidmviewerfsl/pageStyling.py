@@ -63,5 +63,8 @@ def getRawCSS():
 
     #Replace the link to the logo with the embedded logo itself.
     cssStyleSheet = cssStyleSheet.replace('background-image: url("images/fsl-bg.jpg");', encodeBG())
+
+    #Close the file
+    file.close()
     
     return(cssStyleSheet)
