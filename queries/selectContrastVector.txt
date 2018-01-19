@@ -1,0 +1,14 @@
+#===================================================================================
+# This query selects the name and value of all contrast vectors.
+#
+# Authors: Peter Williams, Tom Maullin, Camille Maumet (09/01/2018)
+#===================================================================================
+
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix obo_contrastweightmatrix: <http://purl.obolibrary.org/obo/STATO_0000323> 
+prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
+
+SELECT ?conName ?conVec
+
+WHERE {?con a obo_contrastweightmatrix: . ?con nidm_contrastName: ?conName . 
+	   ?con prov:value ?conVec .}
