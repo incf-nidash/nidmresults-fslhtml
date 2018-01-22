@@ -277,9 +277,6 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
 
     #Section header.
     postStats += h3("Analysis Methods")
-
-    #==========================================================================
-    #WIP
     postStats += raw('<p>')
 
     #If there is no extent threshold set this to 0.
