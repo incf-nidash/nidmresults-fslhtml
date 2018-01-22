@@ -14,5 +14,6 @@ g.parse(turtleFile[0], format = "turtle")
 t = runQuery(g, 'selectContrastVector', 'Select')
 print(runQuery(g, 'selectContrastVector', 'Select'))
 
-data = float(t[2])
-toimage(data).show()
+conVec = t[1].replace('[', '').replace(']', '').replace(',', '').split()
+conVec = [float(conVec[i]) for i in range(0, len(conVec))]
+print(conVec)
