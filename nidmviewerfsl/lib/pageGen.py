@@ -267,8 +267,7 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
 
     stats += br()
     stats += br()
-
-    # Write stats page to HTML file.
+    
     statsFile = open(statsFilePath, "x")
     print(stats, file=statsFile)
     statsFile.close()
