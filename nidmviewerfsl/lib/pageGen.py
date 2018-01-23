@@ -205,20 +205,20 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
 
     # Section header.
     stats += h3("Design Matrix")
-
-    # Work out where the design matrix is stored.
-    designMatrixLocation = runQuery(graph, 'selectDesignMatrixLocation',
+    
+    #Work out where the design matrix is stored.
+    designMatrixLocation = runQuery(graph, 'selectDesignMatrixLocation', 
                                     'Select')
-
-    # Adds design matrix image (as a link) to html page
-    stats += a(
-        img(src='data:image/jpg;base64,' +
-            encodeImage(os.path.join(os.path.split(statsFilePath)[0],
-                        designMatrixLocation[1])).decode(),
-            style="border:5px solid black",
-            border=0,
-            width=250),
-        href=designMatrixLocation[0])
+    
+    #Adds design matrix image (as a link) to html page
+    stats += a(img(src = 'data:image/jpg;base64,' + 
+                         encodeImage(os.path.join(os.path.split(
+                         statsFilePath)[0],designMatrixLocation[1]
+                         )).decode(), 
+                   style =  "border:5px solid black", 
+                   border = 0, 
+                   width = 250), 
+                   href = designMatrixLocation[0]) 
 
     # If we are looking at SPM data the contrast vectors are not given in the
     # design matrix image.
