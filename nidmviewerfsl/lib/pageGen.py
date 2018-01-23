@@ -194,7 +194,7 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
 
     # Otherwise we should display fsl Feat version and software label.
     elif runQuery(graph, 'askFSL', 'Ask'):
-
+        
         fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
         stats += p("FMRI data processing was carried out using FEAT (FMRI "
                    "Expert Analysis Tool) Version %s, part of FSL %s (FMRIB'"
@@ -209,14 +209,49 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
     # Work out where the design matrix is stored.
     designMatrixLocation = runQuery(graph, 'selectDesignMatrixLocation',
                                     'Select')
+    
+    #Adds design matrix image (as a link) to html page
+    stats += a(img(src = designMatrixLocation[1], style = 
+                   "border:5px solid black", border = 0, width = 250), href = 
+                   designMatrixLocation[0]) 
 
-    # Adds design matrix image (as a link) to html page
-    stats += a(
-        img(src=designMatrixLocation[1], style="border:5px solid black",
-            border=0, width=250),
-        href=designMatrixLocation[0])
+    #If we are looking at SPM data the contrast vectors are not given in the
+    #design matrix image.
+    if runQuery(graph, 'askSPM', 'Ask'): 
 
-    # Write stats page to HTML file.
+        #Add a contrast vector section.
+        stats += h3("Contrast Vectors")
+
+        #Get the data
+        conData = runQuery(graph, 'selectContrastVector', 'Select')
+        conNames = list(set([conData[i] for i in range(0, len(conData), 2)]))
+        conVal = list(set([conData[i] for i in range(1, len(conData), 2)]))
+
+        for i in range(0, len(conNames)):
+
+            #Read an individual contrast vector
+            conVec = conVal[i].replace('[', '').replace(']', ''
+                                              ).replace(',', '').split()
+            conVec = [float(conVec[i]) for i in range(0, len(conVec))]
+
+            #Display an image of the contrast vector.
+            stats += img(src = contrastVec(conVec),
+                         style="float:left;margin-right:1em;padding-top:4px;",
+                         width="120",
+                         height="30")
+
+            #Add contrast name and values
+            stats += conNames[i]
+            stats += br()
+            stats += conVal[i]
+            stats += raw("<br><br><br>")
+            #stats += 
+            
+    stats += br()
+    stats += br()
+
+    
+    #Write stats page to HTML file.
     statsFile = open(statsFilePath, "x")
     print(stats, file=statsFile)
     statsFile.close()

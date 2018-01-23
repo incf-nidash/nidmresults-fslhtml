@@ -9,6 +9,11 @@
 # ======================================================================
 from queries.queryTools import runQuery
 import math
+from style.pageStyling import encodeImage
+from matplotlib import pyplot as plt
+import numpy as np
+import random
+import os
 
 
 # This function converts obo statistic types into the corresponding statistic.
@@ -164,3 +169,42 @@ def formatClusterStats(g, excName):
             'peakClusIndices': sortedClusIndicesForPeaks,
             'peakLocations': sortedPeakLocations,
             'peakPVals': sortedPeakPVals})
+
+def contrastVec(data):
+
+    conLength = len(data)
+
+    #Make the contrast vector larger so we can make an image.
+    data = np.kron(data, np.ones((10,30)))
+
+    #Add border to data.
+    data[:, 0] = np.ones(10)
+    data[:, 30*conLength-1] = np.ones(10)
+    data[0, :] = np.ones(30*conLength)
+    data[10-1, :] = np.ones(30*conLength)
+
+    #Create figure.
+    fig=plt.figure(figsize = (len(data),1))
+
+    #Remove axis
+    ax=fig.add_subplot(1,1,1)
+    plt.axis('off')
+
+    #Add contrast vector to figure
+    plt.imshow(data, aspect = 'auto', cmap='Greys')
+
+    #Check for bording box.
+    extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+
+    #Save figure (without bording box)
+    tempFile = 'tempCon'+ str(random.randint(0, 999999)) + '.png'
+    plt.savefig(tempFile, bbox_inches=extent)
+
+    #Encode the figure.
+    encodedIm = encodeImage(tempFile)
+
+    #Remove the image.
+    os.remove(tempFile)
+
+    #Return the image
+    return('data:image/jpg;base64,' + encodedIm.decode())
