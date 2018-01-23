@@ -244,7 +244,7 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
             stats += conNames[i]
             stats += br()
             stats += conVal[i]
-            stats += raw("<br><br><br>")
+            stats += raw("<br><br>")
             #stats += 
             
     stats += br()
