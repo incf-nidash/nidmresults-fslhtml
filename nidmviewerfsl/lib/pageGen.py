@@ -404,8 +404,9 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         if voxelWise_corrected:
             corrStr = '(corrected)'
 
-        postStats += raw("at %s = %s %s" % (statisticType, float(
-            '%.2g' % float(heightThreshValue[0])), corrStr))
+        postStats += raw("at %s = %s %s." % (statisticType, float('%.2g'
+                                              %float(heightThreshValue[0])), 
+                                              corrStr))
 
     postStats += raw('</p><hr>')
     postStats += h3("Thresholded Activation Images")
