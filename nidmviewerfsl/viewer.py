@@ -212,9 +212,7 @@ def checkExtentThreshold(graph): #checks for corrected extent threshold
                    ASK {?infer a nidm_Inference: . ?infer prov:used ?thresh .
                         {?thresh a nidm_ExtentThreshold: . ?thresh a obo_qvalue: .}
                         UNION {?thresh a nidm_ExtentThreshold: . ?thresh a 
-                        obo_FWERadjustedpvalue: .} . ?thresh prov:value ?val
-
-                   FILTER(STR(?val) != "1.0"^^xsd:string)}"""
+                        obo_FWERadjustedpvalue: .} . ?thresh prov:value ?val}"""
 			   
 	queryResult = graph.query(query)
 	for row in queryResult:
@@ -390,7 +388,7 @@ def formatClusterStats(g, excName):
         #First we gather data for peaks table.
         #---------------------------------------------------------------------------------------------------------
 
-        #We must include cluster p values in the query.
+        #We must include cluster indices in the query.
         peak_query = """prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
                        prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
                        prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
