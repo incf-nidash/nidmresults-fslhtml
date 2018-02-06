@@ -86,8 +86,8 @@ def formatClusterStats(g, excName):
 
     # Sort all peak data using this permutation.
     sortedPeaksZstatsArray = [peakZstats[i] for i in peaksSortPermutation]
-    sortedClusIndicesForPeaks = [clusterIndicesForPeaks[i] for i in
-                                                     peaksSortPermutation]
+    sortedClusIndicesForPeaks = [
+        clusterIndicesForPeaks[i] for i in peaksSortPermutation]
     sortedPeakLocations = [locations[i] for i in peaksSortPermutation]
 
     # ----------------------------------------------------------------------
@@ -98,10 +98,12 @@ def formatClusterStats(g, excName):
     clusQueryResult = runQuery(g, 'selectClusterData', 'Select',
                                {'EXC_NAME': excName})
 
-    clusterIndices = [int(clusQueryResult[i]) for i in list(range(0,
-                                            len(clusQueryResult), 2))]
-    clusterSizes = [int(clusQueryResult[i]) for i in list(range(1,
-                                            len(clusQueryResult), 2))]
+    clusterIndices = [
+        int(clusQueryResult[i]) for i in list(
+            range(0, len(clusQueryResult), 2))]
+    clusterSizes = [
+        int(clusQueryResult[i]) for i in list(
+            range(1, len(clusQueryResult), 2))]
 
     # Create an array for the highest peaks.
     highestPeakZArray = [0]*len(clusterIndices)
