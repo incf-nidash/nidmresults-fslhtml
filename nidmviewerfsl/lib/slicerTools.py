@@ -79,9 +79,10 @@ import shutil
 import random
 import shlex
 
+
 def nifDim(niftiFilename, k):
     # Retrieve the k dimension of a nifti given it's filename using FSL.
-    
+
     if k == 'x':
         arg = 'dim1'
     elif k == 'y':
@@ -97,7 +98,7 @@ def nifDim(niftiFilename, k):
     getDimString1 = ["fslhd", niftiFilename]
     getDimString2 = ["cat", "-v"]
     getDimString3 = ["grep", "^" + arg]
-    
+
     # Run the command
     process_1 = subprocess.Popen(getDimString1, shell=False,
                                  stdout=subprocess.PIPE)
@@ -114,8 +115,9 @@ def nifDim(niftiFilename, k):
     dimension = int(float(output[0].decode('utf-8').rstrip('\r|\n'
                                                   ).replace(arg, ''
                                                   ).replace(' ', '')))
-    
+
     return(dimension)
+
 
 def createResizeMatrix(niftiFilename1, niftiFilename2, scalefactor, tempDir):
     # This creates the resize matrix for the resizing of the niftis and saves
@@ -136,6 +138,7 @@ def createResizeMatrix(niftiFilename1, niftiFilename2, scalefactor, tempDir):
     # Close the matrix file.
     matrixFile.close()
 
+
 def resizeSPMtoFSL(exc_set, template, scalefactor, tempDir):
     # This function resizes an SPM excursion set to a FSL template if
     # necessary, assuming the volume of the brain in both the template and
@@ -143,7 +146,7 @@ def resizeSPMtoFSL(exc_set, template, scalefactor, tempDir):
 
     # Create necessary tranformation.
     createResizeMatrix(exc_set, template, scalefactor, tempDir)
-    
+
     # Run the command  if necessary.
     resizeCommand = "flirt -init " + \
                     os.path.join(tempDir, "resizeMatrix.mat") + \
@@ -152,7 +155,7 @@ def resizeSPMtoFSL(exc_set, template, scalefactor, tempDir):
     subprocess.check_call(shlex.split(resizeCommand), shell=False)
     process = subprocess.Popen(shlex.split(resizeCommand), shell=False)
     process.wait()
-    
+
 
 def getVal(niftiFilename, minOrMax):
     # Retrieve the min or max values of the image.
@@ -178,13 +181,14 @@ def getVal(niftiFilename, minOrMax):
     # Return value.
     return(output[0].decode('utf-8').rstrip('\r|\n'))
 
+
 def overlay(exc_set, template, tempDir):
     # Overlay exc_set onto template. The output is saved as outputTemp
 
     # Get min and max values of the excursion set.
     minZ = getVal(exc_set, 'min')
     maxZ = getVal(exc_set, 'max')
-    
+
     # Place the template onto the excursion set using overlay
     overlayCommand = "overlay 1 1 " + template + " -a " + exc_set + " " + \
                      minZ + " " + maxZ + " " + \
@@ -193,17 +197,19 @@ def overlay(exc_set, template, tempDir):
     process = subprocess.Popen(shlex.split(overlayCommand), shell=False)
     process.wait()
 
+
 def getSliceImageFromNifti(tempDir, outputName):
     # Get Slices. Slices are saved as slices.png.
-    
+
     slicerCommand = "slicer '" + os.path.join(tempDir, "outputTemp.nii.gz") + \
                     "' -s 0.72 -S 2 750 '"+ outputName + "'"
     subprocess.check_call(shlex.split(slicerCommand), shell=False)
     process = subprocess.Popen(shlex.split(slicerCommand), shell=False)
     process.wait()
 
+
 def generateSliceImage_SPM(exc_set):
-    
+
     tempFolder = 'temp_NIDM_viewer' + str(random.randint(0, 999999))
     os.mkdir(tempFolder)
     FSLDIR = os.environ['FSLDIR']
