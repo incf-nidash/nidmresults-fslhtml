@@ -48,8 +48,8 @@ def printQuery(query):
 def runQuery(graph, queryFile, queryType, filters={}):
 
     # Open the file and read it in.
-    queryFile = open(os.path.join(os.path.dirname(os.path.realpath(__file__))
-                                  , queryFile + '.txt'))
+    queryFile = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                  queryFile + '.txt'))
     queryText = queryFile.read()
     queryFile.close()
 
