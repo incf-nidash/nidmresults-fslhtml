@@ -59,7 +59,7 @@ def generateExcPage(outdir, excName, conData):
         formattedLoc = conData['clusPeakLocations'][cluster].replace(
                                                     " ", "").replace(
                                                     "[", "").replace(
-                                                    "]","").split(",")
+                                                    "]", "").split(",")
         excPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
         excPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
         excPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
@@ -96,7 +96,7 @@ def generateExcPage(outdir, excName, conData):
         # Peak location
         formattedLoc = conData['peakLocations'][peak].replace(" ", ""
                                                     ).replace("[", ""
-                                                    ).replace("]",""
+                                                    ).replace("]", ""
                                                     ).split(",")
         excPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
         excPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
@@ -146,7 +146,7 @@ def generateMainHTML(graph, mainFilePath="Main.html"):
     mainFile.close()
 
 # Generates the Stats HTML section
-def generateStatsHTML(graph,statsFilePath="stats.html"):
+def generateStatsHTML(graph, statsFilePath="stats.html"):
 
     # Obtain version number.
     softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
@@ -389,7 +389,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
             if askFSL:
                 postStats += img(src='data:image/jpg;base64,' +
                              encodeImage(os.path.join(os.path.split(
-                                postStatsFilePath)[0],excursionSetSliceImage[i]
+                                postStatsFilePath)[0], excursionSetSliceImage[i]
                              )).decode())
             # Add the image. If we have SPM the image was regenerated.
             if askSPM:
@@ -452,9 +452,9 @@ def pageGenerate(g, outdir):
     postStatsFileName = os.path.join(outdir, "postStats.html")
 
     # Create main pages.
-    generateStatsHTML(g,statsFileName)
-    generatePostStatsHTML(g,postStatsFileName)
-    generateMainHTML(g,mainFileName)
+    generateStatsHTML(g, statsFileName)
+    generatePostStatsHTML(g, postStatsFileName)
+    generateMainHTML(g, mainFileName)
 
     # Make cluster pages
     os.mkdir(os.path.join(outdir, 'Cluster_Data'))
