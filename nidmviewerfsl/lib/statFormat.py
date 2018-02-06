@@ -1,15 +1,15 @@
-#!/usr/bin/env python3
-#======================================================================
-#
+# !/usr/bin/env python3
+# ======================================================================
+# 
 # This file contains functions used for formatting statistical data 
 # returned by SPARQL queries on NIDM-Results packs.
-#
+# 
 # Authors: Peter Williams, Tom Maullin, Camille Maumet (10/01/18)
-#
-#======================================================================
+# 
+# ======================================================================
 from queries.queryTools import runQuery
 
-#This function converts obo statistic types into the corresponding statistic.
+# This function converts obo statistic types into the corresponding statistic.
 def statisticImage(stat): 
 
     if stat == "http://purl.obolibrary.org/obo/STATO_0000376":
@@ -28,7 +28,7 @@ def statisticImage(stat):
         
         return("P")
 
-#This function returns the cluster forming threshold type of an image.
+# This function returns the cluster forming threshold type of an image.
 def heightThreshType(graph, imageType):
 
     if runQuery(graph, 'askIfOboStatistic', 'Ask') == True:
@@ -39,7 +39,7 @@ def heightThreshType(graph, imageType):
     
         return("P")
                
-#This function returns the statistic type of a statistic    
+# This function returns the statistic type of a statistic    
 def statisticImageString(statImage):
 
     if statImage == "T":
@@ -56,15 +56,15 @@ def statisticImageString(statImage):
 
 def formatClusterStats(g, excName):
     
-    #----------------------------------------------------------------------
-    #First we gather data for peaks table.
-    #----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
+    # First we gather data for peaks table.
+    # ----------------------------------------------------------------------
 
-    #Run the peak query
+    # Run the peak query
     peakQueryResult = runQuery(g, 'selectPeakData', 'Select', 
                                {'EXC_NAME': excName})
 
-    #Retrieve query results.
+    # Retrieve query results.
 
     peakZstats = [float(peakQueryResult[i]) for i in list(range(0, len(
                                                     peakQueryResult), 3))]
@@ -73,24 +73,24 @@ def formatClusterStats(g, excName):
     locations = [peakQueryResult[i] for i in list(range(2, len(
                                                     peakQueryResult), 3))]
 
-    #Obtain permutation used to sort the results in order of descending
-    #cluster index and then descending peak statistic size.
+    # Obtain permutation used to sort the results in order of descending
+    # cluster index and then descending peak statistic size.
     peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)), 
                                   reverse = True, 
                                   key=lambda k: (clusterIndicesForPeaks[k],
                                                  peakZstats[k]))
 
-    #Sort all peak data using this permutation.
+    # Sort all peak data using this permutation.
     sortedPeaksZstatsArray = [peakZstats[i] for i in peaksSortPermutation]
     sortedClusIndicesForPeaks = [clusterIndicesForPeaks[i] for i in 
                                                      peaksSortPermutation]
     sortedPeakLocations = [locations[i] for i in peaksSortPermutation]
 
-    #----------------------------------------------------------------------
-    #Second we gather data for cluster table.
-    #----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
+    # Second we gather data for cluster table.
+    # ----------------------------------------------------------------------
 
-    #Run the cluster query
+    # Run the cluster query
     clusQueryResult = runQuery(g, 'selectClusterData', 'Select', 
                                {'EXC_NAME': excName})
 
@@ -99,7 +99,7 @@ def formatClusterStats(g, excName):
     clusterSizes = [int(clusQueryResult[i]) for i in list(range(1, 
                                             len(clusQueryResult), 2))]
     
-    #Create an array for the highest peaks.
+    # Create an array for the highest peaks.
     highestPeakZArray = [0]*len(clusterIndices)
     highestPeakLocations = [0]*len(clusterIndices)
     for i in list(range(0, len(peakZstats))):
@@ -107,18 +107,18 @@ def formatClusterStats(g, excName):
             highestPeakZArray[clusterIndicesForPeaks[i]-1] = peakZstats[i]
             highestPeakLocations[clusterIndicesForPeaks[i]-1] = locations[i]
 
-    #Obtain permutation used to sort the results in order of descending
-    #cluster index and then for each cluster by peak statistic size.
+    # Obtain permutation used to sort the results in order of descending
+    # cluster index and then for each cluster by peak statistic size.
     clusterSortPermutation = sorted(range(len(clusterIndices)), 
                                     reverse = True, 
                                     key=lambda k: (clusterSizes[k], clusterIndices[k]))
 
-    #Sorted cluster arrays
+    # Sorted cluster arrays
     sortedClusSizeArray = [clusterSizes[i] for i in clusterSortPermutation]
     sortedClusIndicesArray = [clusterIndices[i] for i in 
             clusterSortPermutation]
 
-    #Sort the highest peaks
+    # Sort the highest peaks
     sortedMaxPeakZstats = [highestPeakZArray[
                                     sortedClusIndicesArray[i]-1] for i in 
                                     list(range(0, len(clusterIndices)))]

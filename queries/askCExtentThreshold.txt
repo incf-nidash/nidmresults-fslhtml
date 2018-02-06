@@ -13,7 +13,5 @@ prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
 ASK {?infer a nidm_Inference: . ?infer prov:used ?thresh .
      {?thresh a nidm_ExtentThreshold: . ?thresh a obo_qvalue: .} 
 	 UNION {?thresh a nidm_ExtentThreshold: . ?thresh a 
-	 obo_FWERadjustedpvalue: .} . ?thresh prov:value ?val
-
-	 FILTER(STR(?val) != "1.0"^^xsd:string)}
+	 obo_FWERadjustedpvalue: .} . ?thresh prov:value ?val}
 			   
