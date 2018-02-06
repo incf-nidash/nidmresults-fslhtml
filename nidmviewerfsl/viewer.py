@@ -434,12 +434,13 @@ def formatClusterStats(g, excName):
                                 
                         peakPVals = [float("%0.0s %0.0s %0.0s %0.0s %s" % row) for row in peakQueryResult]
 
+        #This is a temporary bug fix due to the FSL exporter currently not recording corrected peak P-values. 
         except ValueError:
 
                 peakPVals = [math.nan for row in peakQueryResult]
 
         #Obtain permutation used to sort the results in order of descending cluster index and then descending peak statistic size.
-        peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)), reverse = True, key=lambda k: (-clusterIndicesForPeaks[k], peakZstats[k]))
+        peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)), reverse = True, key=lambda k: (clusterIndicesForPeaks[k], peakZstats[k]))
 
         #Sort all peak data using this permutation.
         sortedPeaksZstatsArray = [peakZstats[i] for i in peaksSortPermutation]
