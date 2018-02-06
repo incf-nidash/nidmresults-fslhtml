@@ -10,7 +10,6 @@ import json
 
 class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
 
-
     def setUp(self):  # Open necessary file
         self.myString = ""
         self.scriptPath = os.path.dirname(os.path.abspath(__file__))
@@ -74,7 +73,6 @@ class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
 
 
 class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 tests
-
 
     def setUp(self):  # Open necessary file
         self.myString = ""
@@ -199,7 +197,6 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 
 class spm_thr_clustunck10(unittest.TestCase):
 
-
     def setUp(self):  # Open necessary file
         self.myString = ""
         self.scriptPath = os.path.dirname(os.path.abspath(__file__))
@@ -252,7 +249,6 @@ class spm_thr_clustunck10(unittest.TestCase):
 
 class spm_thr_voxelfdrp05(unittest.TestCase):
 
-
     def setUp(self):  # Open necessary file
         self.myString = ""
         self.scriptPath = os.path.dirname(os.path.abspath(__file__))
@@ -304,7 +300,6 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 
 
 class spm_thr_voxelunct4(unittest.TestCase):
-
 
     def setUp(self):  # Open necessary file
         self.myString = ""
