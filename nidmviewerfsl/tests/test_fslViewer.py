@@ -360,7 +360,9 @@ if __name__ == "__main__":
 
         os.makedirs(dataDir)
 
-    dataNames = ["fsl_con_f_130", "fsl_thr_clustfwep05_130","ex_spm_thr_voxelunct4","ex_spm_thr_clustunck10","ex_spm_thr_voxelfdrp05"]
+    dataNames = ["fsl_con_f_130", "fsl_thr_clustfwep05_130",
+                 "ex_spm_thr_voxelunct4", "ex_spm_thr_clustunck10",
+                 "ex_spm_thr_voxelfdrp05"]
     local = True
 
     for dataName in dataNames:  # Check if data is on local machine
@@ -390,7 +392,7 @@ if __name__ == "__main__":
                 zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile)  # copy zip file to local machine
 
 
-    globData = os.path.join(dataDir,"*.zip")
+    globData = os.path.join(dataDir, "*.zip")
     data = glob.glob(globData)  # Get names of all zip files in data folder
 
     for i in data:  # Loop over all zip files in data folder and create html
