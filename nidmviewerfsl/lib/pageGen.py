@@ -445,7 +445,7 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
 # This function generates all pages for display.
 def pageGenerate(g, outdir):
 
-        # Specify path names for main pages.
+    # Specify path names for main pages.
     mainFileName = os.path.join(outdir, "main.html")
     statsFileName = os.path.join(outdir, "stats.html")
     postStatsFileName = os.path.join(outdir, "postStats.html")
