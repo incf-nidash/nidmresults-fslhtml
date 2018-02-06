@@ -363,7 +363,7 @@ if __name__ == "__main__":
     if not local:
 
         # Request from neurovault api
-        req = urllib.request.Request("http://neurovault.org/api/" 
+        req = urllib.request.Request("http://neurovault.org/api/"
                                      "collections/2210/nidm_results")
         resp = urllib.request.urlopen(req)
         readResp = resp.read()
