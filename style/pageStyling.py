@@ -9,16 +9,19 @@ import shutil
 import random
 import base64
 
+
 # Obtain the FSL directory.
 def obtainFSLdir():
     
     return(os.environ['FSLDIR'])
+
 
 # Obtain the FSL style sheet.
 def findCSS():
 
     cssStyleSheet = os.path.join(obtainFSLdir(), 'doc', 'fsl.css')
     return(cssStyleSheet)
+
 
 # Encode an image for embedding
 def encodeImage(image):
@@ -28,6 +31,7 @@ def encodeImage(image):
 
     return encoded_string
 
+
 # Find the FSL logo and get it's encoding for embedding in the HTML page.
 def encodeLogo():
     
@@ -36,6 +40,7 @@ def encodeLogo():
 
     return('data:image/jpg;base64,' + encoded_string.decode())
 
+
 # Find the FSL color bar and get it's encoding for embedding in the HTML page.
 def encodeColorBar():
     
@@ -43,6 +48,7 @@ def encodeColorBar():
     encoded_string = encodeImage(imageLink)
 
     return('data:image/jpg;base64,' + encoded_string.decode())
+
 
 # Find the FSL background and get it's encoding for embedding in the CSS
 # style sheet.
@@ -53,6 +59,7 @@ def encodeBG():
 
     return('background-image: url(data:image/jpg;base64,' + 
            encoded_string.decode() + ');')
+
 
 # Gets the raw stylesheet as a string in order to embed.
 def getRawCSS():
