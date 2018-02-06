@@ -14,6 +14,7 @@ from nidmviewerfsl.lib.slicerTools import getVal, generateSliceImage_SPM
 from nidmviewerfsl.lib.statFormat import *
 from queries.queryTools import runQuery
 
+
 # Generate a page of excursion set peak and cluster statistics
 def generateExcPage(outdir, excName, conData):
 
@@ -37,10 +38,10 @@ def generateExcPage(outdir, excName, conData):
 
     # Make the cluster statistics table.
     excPage += raw("<table cellspacing='3' border='3'><tbody>")
-    excPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>Z-MAX" \
-                   "</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>" \
+    excPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>Z-MAX"
+                   "</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>"
                    "Z-MAX Z (mm)</th></tr>")
-    
+
     # Add the cluster statistics data into the table.
     for cluster in range(0, len(conData['clusSizes'])):
 
@@ -73,11 +74,11 @@ def generateExcPage(outdir, excName, conData):
 
     # Header
     excPage += h1("Local Maxima")
-    
+
     # Make the peak statistics table.
     excPage += raw("<table cellspacing='3' border='3'><tbody>")
-    excPage += raw("<tr><th>Cluster Index</th><th>Z-MAX</th><th>Z-MAX X" \
-                   " (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th>" \
+    excPage += raw("<tr><th>Cluster Index</th><th>Z-MAX</th><th>Z-MAX X"
+                   " (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th>"
                    "</tr>")
 
     # Add the peak statistics data into the table.
@@ -115,7 +116,7 @@ def generateExcPage(outdir, excName, conData):
 
 # Generates the main HTML page
 def generateMainHTML(graph, mainFilePath = "Main.html"):
-    
+
     # Create new document.
     main = document(title="FSL Viewer")
 
@@ -124,7 +125,7 @@ def generateMainHTML(graph, mainFilePath = "Main.html"):
         style(raw(getRawCSS()))
 
     # Add the logo to the page.
-    main += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src' \
+    main += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src'
                 '="' + encodeLogo() + '" align="right"></a>')
 
     # Viewer title.
@@ -136,7 +137,7 @@ def generateMainHTML(graph, mainFilePath = "Main.html"):
                 '<br>')
 
     # Links to other pages.
-    main += raw('<a href="stats.html" target="_top"> Stats </a> - <' \
+    main += raw('<a href="stats.html" target="_top"> Stats </a> - <'
                 'a href="postStats.html" target="_top"> Post-stats </a></div>')
 
     # Write main page to a HTML file.
@@ -146,10 +147,10 @@ def generateMainHTML(graph, mainFilePath = "Main.html"):
 
 # Generates the Stats HTML section
 def generateStatsHTML(graph,statsFilePath = "stats.html"):
-    
+
     # Obtain version number.
     softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
-    
+
     # Create new document.
     stats = document(title="FSL Viewer")
 
@@ -180,37 +181,37 @@ def generateStatsHTML(graph,statsFilePath = "stats.html"):
 
     # Section header.
     stats += h3("Analysis Methods")
-    
+
     # If SPM was used we should display a string of SPM version number.
     if runQuery(graph, 'askSPM', 'Ask'):
-        
-        stats += p("FMRI data processing was carried out using SPM Version " \
+
+        stats += p("FMRI data processing was carried out using SPM Version "
                    "%s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." %
                    softwareLabelNum[1])
-    
+
     # Otherwise we should display fsl Feat version and software label.
     elif runQuery(graph, 'askFSL', 'Ask'):
-        
+
         fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
-        stats += p("FMRI data processing was carried out using FEAT (FMRI " \
-                   "Expert Analysis Tool) Version %s, part of FSL %s (FMRIB'" \
+        stats += p("FMRI data processing was carried out using FEAT (FMRI "
+                   "Expert Analysis Tool) Version %s, part of FSL %s (FMRIB'"
                    "s Software Library, www.fmrib.ox.ac.uk/fsl)."
                    % (fslFeatVersion[0], softwareLabelNum[1]))
-        
+
     stats += hr()
 
     # Section header.
     stats += h3("Design Matrix")
-    
+
     # Work out where the design matrix is stored.
     designMatrixLocation = runQuery(graph, 'selectDesignMatrixLocation',
                                     'Select')
-    
+
     # Adds design matrix image (as a link) to html page
     stats += a(img(src = designMatrixLocation[1], style=
                    "border:5px solid black", border=0, width=250), href=
                    designMatrixLocation[0])
-    
+
     # Write stats page to HTML file.
     statsFile = open(statsFilePath, "x")
     print(stats, file = statsFile)
@@ -296,7 +297,7 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
 
     # Check if the data was generated using SPM or FSL.
     if askSPM:
-        
+
         postStats += raw("FMRI data processing was carried out using SPM" \
                          " Version %s (SPM, http://www.fil.ion.ucl.ac.uk/" \
                          "spm/). " % (softwareLabelNum[1]))
@@ -311,7 +312,7 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
                        " FSL %s (FMRIB's Software Library," \
                        " www.fmrib.ox.ac.uk/fsl). " %(fslFeatVersion[0],
                         softwareLabelNum[1]))
-    
+
     # Now display thresholding details.
     postStats += raw("%s statistic images were thresholded " % (
                      statisticTypeString))
@@ -462,7 +463,7 @@ def pageGenerate(g, outdir):
                                                 len(excDetails), 3))])
 
     for excName in excNiftiNames:
-    
+
         excData = formatClusterStats(g, excName)
         generateExcPage(os.path.join(outdir, 'Cluster_Data'),
                         excName.replace(".nii.gz", ""), excData)
