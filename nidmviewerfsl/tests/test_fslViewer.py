@@ -67,14 +67,16 @@ class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
         self.postStatsFile.close()
 
 
-class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 tests
+# Class for fsl_thr_clustfwep05 tests
+class fsl_thr_clustfwep05(unittest.TestCase):
 
     def setUp(self):  # Open necessary file
         self.myString = ""
         self.found = False
         self.scriptPath = os.path.dirname(os.path.abspath(__file__))
         self.dataPath = os.path.join(self.scriptPath, "data")
-        self.dataPath = os.path.join(self.dataPath, "fsl_thr_clustfwep05_130_test")
+        self.dataPath = os.path.join(self.dataPath,
+                                     "fsl_thr_clustfwep05_130_test")
         self.fileName = os.path.join(self.dataPath, "postStats.html")
         self.postStatsFile = open(self.fileName, "r")
 
@@ -104,7 +106,8 @@ class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 t
 
         for line in self.postStatsFile:
 
-            if "statistic images were thresholded using clusters determined by" in line:
+            if "statistic images were thresholded using clusters determined"\
+               " by" in line:
 
                 self.myString = line
                 break
@@ -135,6 +138,8 @@ class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 t
     def tearDown(self):
 
         self.postStatsFile.close()
+
+
 """
 class fsl_thr_voxelfwep05(unittest.TestCase):
 
@@ -142,7 +147,8 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
         self.myString = ""
         self.scriptPath = os.path.dirname(os.path.abspath(__file__))
         self.dataPath = os.path.join(self.scriptPath, "data")
-        self.dataPath = os.path.join(self.dataPath, "fsl_thr_voxelfwep05_130.nidm.ttlTestResults")
+        self.dataPath = os.path.join(self.dataPath,
+                            "fsl_thr_voxelfwep05_130.nidm.ttlTestResults")
         self.fileName = os.path.join(self.dataPath, "postStats.html")
         self.postStatsFile = open(self.fileName, "r")
 
@@ -190,7 +196,8 @@ class spm_thr_clustunck10(unittest.TestCase):
         self.myString = ""
         self.scriptPath = os.path.dirname(os.path.abspath(__file__))
         self.dataPath = os.path.join(self.scriptPath, "data")
-        self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_clustunck10_test")
+        self.dataPath = os.path.join(self.dataPath,
+                                     "ex_spm_thr_clustunck10_test")
         self.fileName = os.path.join(self.dataPath, "postStats.html")
         self.postStatsFile = open(self.fileName, "r")
 
@@ -238,7 +245,8 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
         self.myString = ""
         self.scriptPath = os.path.dirname(os.path.abspath(__file__))
         self.dataPath = os.path.join(self.scriptPath, "data")
-        self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelfdrp05_test")
+        self.dataPath = os.path.join(self.dataPath,
+                                     "ex_spm_thr_voxelfdrp05_test")
         self.fileName = os.path.join(self.dataPath, "postStats.html")
         self.postStatsFile = open(self.fileName, "r")
 
@@ -286,7 +294,8 @@ class spm_thr_voxelunct4(unittest.TestCase):
         self.myString = ""
         self.scriptPath = os.path.dirname(os.path.abspath(__file__))
         self.dataPath = os.path.join(self.scriptPath, "data")
-        self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelunct4_test")
+        self.dataPath = os.path.join(self.dataPath,
+                                     "ex_spm_thr_voxelunct4_test")
         self.fileName = os.path.join(self.dataPath, "postStats.html")
         self.postStatsFile = open(self.fileName, "r")
 
@@ -330,7 +339,8 @@ class spm_thr_voxelunct4(unittest.TestCase):
 
 if __name__ == "__main__":
 
-    scriptPath = os.path.dirname(os.path.abspath(__file__))  # Get path of script
+    # Get path of script
+    scriptPath = os.path.dirname(os.path.abspath(__file__))
     dataDir = os.path.join(scriptPath, "data")
 
     if not os.path.isdir(dataDir):  # Data folder does not exist
@@ -344,14 +354,17 @@ if __name__ == "__main__":
 
     for dataName in dataNames:  # Check if data is on local machine
 
-        if not os.path.isfile(os.path.join(dataDir, dataName + ".nidm.zip")):  # Data not found on local machine
+        # Data not found on local machine
+        if not os.path.isfile(os.path.join(dataDir, dataName + ".nidm.zip")):
 
             local = False
             break
 
     if not local:
 
-        req = urllib.request.Request("http://neurovault.org/api/collections/2210/nidm_results")  # Request from neurovault api
+        # Request from neurovault api
+        req = urllib.request.Request("http://neurovault.org/api/" 
+                                     "collections/2210/nidm_results")
         resp = urllib.request.urlopen(req)
         readResp = resp.read()
         data = json.loads(readResp.decode('utf-8'))
@@ -361,12 +374,15 @@ if __name__ == "__main__":
             print(nidmResult["zip_file"])
 
             zipUrl = nidmResult["zip_file"]  # Url of zip file
-            dataName = nidmResult["name"]  # Name of data (e.g. fsl_con_f.nidm)
+            # Name of data (e.g. fsl_con_f.nidm)
+            dataName = nidmResult["name"]
             dataNameFile = os.path.join(dataDir, dataName + ".zip")
 
             if not os.path.isfile(dataNameFile):
 
-                zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile)  # copy zip file to local machine
+                # copy zip file to local machine
+                zipFileRequest = urllib.request.urlretrieve(zipUrl,
+                                                            dataNameFile)
 
     globData = os.path.join(dataDir, "*.zip")
     data = glob.glob(globData)  # Get names of all zip files in data folder
