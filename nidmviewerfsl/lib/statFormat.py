@@ -115,22 +115,25 @@ def formatClusterStats(g, excName):
 
     # Obtain permutation used to sort the results in order of descending
     # cluster index and then for each cluster by peak statistic size.
-    clusterSortPermutation = sorted(range(len(clusterIndices)),
-                                    reverse=True,
-                                    key=lambda k: (clusterSizes[k], clusterIndices[k]))
+    clusterSortPermutation = sorted(
+        range(len(clusterIndices)),
+        reverse=True,
+        key=lambda k: (clusterSizes[k], clusterIndices[k]))
 
     # Sorted cluster arrays
     sortedClusSizeArray = [clusterSizes[i] for i in clusterSortPermutation]
-    sortedClusIndicesArray = [clusterIndices[i] for i in
-            clusterSortPermutation]
+    sortedClusIndicesArray = [
+        clusterIndices[i] for i in clusterSortPermutation]
 
     # Sort the highest peaks
-    sortedMaxPeakZstats = [highestPeakZArray[
-                                    sortedClusIndicesArray[i]-1] for i in
-                                    list(range(0, len(clusterIndices)))]
-    sortedMaxPeakLocations = [highestPeakLocations[
-                                    sortedClusIndicesArray[i]-1] for i in
-                                    list(range(0, len(clusterIndices)))]
+    sortedMaxPeakZstats = [
+        highestPeakZArray[
+            sortedClusIndicesArray[i]-1] for i in list(
+                range(0, len(clusterIndices)))]
+    sortedMaxPeakLocations = [
+        highestPeakLocations[
+            sortedClusIndicesArray[i]-1] for i in list(
+                range(0, len(clusterIndices)))]
 
     return({'clusSizes': sortedClusSizeArray,
             'clusIndices': sortedClusIndicesArray,
