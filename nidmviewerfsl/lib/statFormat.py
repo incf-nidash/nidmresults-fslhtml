@@ -9,6 +9,7 @@
 # ======================================================================
 from queries.queryTools import runQuery
 
+
 # This function converts obo statistic types into the corresponding statistic.
 def statisticImage(stat):
 
@@ -28,6 +29,7 @@ def statisticImage(stat):
 
         return("P")
 
+
 # This function returns the cluster forming threshold type of an image.
 def heightThreshType(graph, imageType):
 
@@ -38,6 +40,7 @@ def heightThreshType(graph, imageType):
     else:
 
         return("P")
+
 
 # This function returns the statistic type of a statistic
 def statisticImageString(statImage):
@@ -53,6 +56,7 @@ def statisticImageString(statImage):
     elif statImage == "Z":
 
         return("Z (Gaussianised T/F)")
+
 
 def formatClusterStats(g, excName):
 
@@ -76,7 +80,7 @@ def formatClusterStats(g, excName):
     # Obtain permutation used to sort the results in order of descending
     # cluster index and then descending peak statistic size.
     peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)),
-                                  reverse = True,
+                                  reverse=True,
                                   key=lambda k: (clusterIndicesForPeaks[k],
                                                  peakZstats[k]))
 
@@ -110,7 +114,7 @@ def formatClusterStats(g, excName):
     # Obtain permutation used to sort the results in order of descending
     # cluster index and then for each cluster by peak statistic size.
     clusterSortPermutation = sorted(range(len(clusterIndices)),
-                                    reverse = True,
+                                    reverse=True,
                                     key=lambda k: (clusterSizes[k], clusterIndices[k]))
 
     # Sorted cluster arrays
