@@ -68,7 +68,7 @@ def runQuery(graph, queryFile, queryType, filters={}):
 
             queryResult = row
 
-        if queryResult == True:
+        if queryResult:
 
             return(True)
 
