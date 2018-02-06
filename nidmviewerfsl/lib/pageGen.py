@@ -171,8 +171,8 @@ def generateStatsHTML(graph,statsFilePath="stats.html"):
                  '<br>')
 
     # Links to other pages.
-    stats += raw('<a href="main.html" target="_top"> Up to main page </a> -' \
-                 ' <a href="stats.html" target="_top"> Stats </a> - <a ' \
+    stats += raw('<a href="main.html" target="_top"> Up to main page </a> -'
+                 ' <a href="stats.html" target="_top"> Stats </a> - <a '
                  'href="postStats.html" target="_top"> Post-stats </a></div>')
 
     # Page title.
@@ -255,7 +255,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         style(raw(getRawCSS()))
 
     # Add the logo to the page.
-    postStats += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki">' \
+    postStats += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki">'
                      '<img src ="' + encodeLogo() + '" align="right"></a>')
 
     # Viewer title.
@@ -267,9 +267,9 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                      +'<br>')
 
     # Links to other pages.
-    postStats += raw('<a href="main.html" target="_top"> Up to main page </a' \
-                     '> - <a href="stats.html" target="_top"> Stats </a> - <' \
-                     'a href="postStats.html" target="_top"> Post-stats </a>' \
+    postStats += raw('<a href="main.html" target="_top"> Up to main page </a'
+                     '> - <a href="stats.html" target="_top"> Stats </a> - <'
+                     'a href="postStats.html" target="_top"> Post-stats </a>'
                      '</div>')
 
     # Page title.
@@ -298,8 +298,8 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     # Check if the data was generated using SPM or FSL.
     if askSPM:
 
-        postStats += raw("FMRI data processing was carried out using SPM" \
-                         " Version %s (SPM, http://www.fil.ion.ucl.ac.uk/" \
+        postStats += raw("FMRI data processing was carried out using SPM"
+                         " Version %s (SPM, http://www.fil.ion.ucl.ac.uk/"
                          "spm/). " % (softwareLabelNum[1]))
 
     elif askFSL:
@@ -307,9 +307,9 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         # Work out which FEAT version was used.
         fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
 
-        postStats += raw("FMRI data processing was carried out using FEAT" \
-                       " (FMRI Expert Analysis Tool) Version %s, part of" \
-                       " FSL %s (FMRIB's Software Library," \
+        postStats += raw("FMRI data processing was carried out using FEAT"
+                       " (FMRI Expert Analysis Tool) Version %s, part of"
+                       " FSL %s (FMRIB's Software Library,"
                        " www.fmrib.ox.ac.uk/fsl). " %(fslFeatVersion[0],
                         softwareLabelNum[1]))
 
@@ -331,7 +331,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         if clusterWise_corrected:
             corrStr = ' (corrected)'
 
-        postStats += raw("using clusters determined by %s %s %.2g and a" \
+        postStats += raw("using clusters determined by %s %s %.2g and a"
                        "%s cluster significance of P = %.2g " % (
                         statisticType, ineq, float(heightThreshValue[0]),
                         corrStr, float(extentThreshValue[0])))
