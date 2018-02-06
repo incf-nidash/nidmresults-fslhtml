@@ -1,7 +1,7 @@
 # ======================================================================
 # This file contains a collection of small functions for reading in and
-# encoding images as well as the CSS styling for FSL output pages. 
-# 
+# encoding images as well as the CSS styling for FSL output pages.
+#
 # Author: Tom Maullin (04/12/2017)
 # ======================================================================
 import os
@@ -57,7 +57,7 @@ def encodeBG():
     imageLink = os.path.join(obtainFSLdir(), 'doc', 'images', 'fsl-bg.jpg')
     encoded_string = encodeImage(imageLink)
 
-    return('background-image: url(data:image/jpg;base64,' + 
+    return('background-image: url(data:image/jpg;base64,' +
            encoded_string.decode() + ');')
 
 
@@ -72,7 +72,7 @@ def getRawCSS():
 
     # Replace the link to the logo with the embedded logo itself.
     cssStyleSheet = cssStyleSheet.replace(
-                        'background-image: url("images/fsl-bg.jpg");', 
+                        'background-image: url("images/fsl-bg.jpg");',
                         encodeBG())
 
     # Close the file.
