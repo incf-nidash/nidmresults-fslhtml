@@ -13,49 +13,49 @@ from queries.queryTools import runQuery
 def statisticImage(stat):
 
     if stat == "http://purl.obolibrary.org/obo/STATO_0000376":
-    
+
         return("Z")
-    
+
     elif stat == "http://purl.obolibrary.org/obo/STATO_0000282":
-    
+
         return("F")
-        
+
     elif stat == "http://purl.obolibrary.org/obo/STATO_0000176":
-    
+
         return("T")
-        
+
     else:
-        
+
         return("P")
 
 # This function returns the cluster forming threshold type of an image.
 def heightThreshType(graph, imageType):
 
-    if runQuery(graph, 'askIfOboStatistic', 'Ask') == True:
-    
+    if runQuery(graph, 'askIfOboStatistic', 'Ask'):
+
         return(imageType)
-        
+
     else:
-    
+
         return("P")
 
 # This function returns the statistic type of a statistic
 def statisticImageString(statImage):
 
     if statImage == "T":
-    
+
         return("T")
-        
+
     elif statImage == "F":
-    
+
         return("F")
-        
+
     elif statImage == "Z":
-    
+
         return("Z (Gaussianised T/F)")
 
 def formatClusterStats(g, excName):
-    
+
     # ----------------------------------------------------------------------
     # First we gather data for peaks table.
     # ----------------------------------------------------------------------
@@ -98,7 +98,7 @@ def formatClusterStats(g, excName):
                                             len(clusQueryResult), 2))]
     clusterSizes = [int(clusQueryResult[i]) for i in list(range(1,
                                             len(clusQueryResult), 2))]
-    
+
     # Create an array for the highest peaks.
     highestPeakZArray = [0]*len(clusterIndices)
     highestPeakLocations = [0]*len(clusterIndices)
@@ -126,10 +126,10 @@ def formatClusterStats(g, excName):
                                     sortedClusIndicesArray[i]-1] for i in
                                     list(range(0, len(clusterIndices)))]
 
-    return({'clusSizes':sortedClusSizeArray,
-            'clusIndices':sortedClusIndicesArray,
-            'clusPeakZstats':sortedMaxPeakZstats,
-            'clusPeakLocations':sortedMaxPeakLocations,
-            'peakZstats':sortedPeaksZstatsArray,
-            'peakClusIndices':sortedClusIndicesForPeaks,
-            'peakLocations':sortedPeakLocations})
+    return({'clusSizes': sortedClusSizeArray,
+            'clusIndices': sortedClusIndicesArray,
+            'clusPeakZstats': sortedMaxPeakZstats,
+            'clusPeakLocations': sortedMaxPeakLocations,
+            'peakZstats': sortedPeaksZstatsArray,
+            'peakClusIndices': sortedClusIndicesForPeaks,
+            'peakLocations': sortedPeakLocations})
