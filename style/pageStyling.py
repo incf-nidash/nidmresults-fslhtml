@@ -12,7 +12,7 @@ import base64
 
 # Obtain the FSL directory.
 def obtainFSLdir():
-    
+
     return(os.environ['FSLDIR'])
 
 
@@ -34,7 +34,7 @@ def encodeImage(image):
 
 # Find the FSL logo and get it's encoding for embedding in the HTML page.
 def encodeLogo():
-    
+
     imageLink = os.path.join(obtainFSLdir(), 'doc', 'images', 'fsl-logo.jpg')
     encoded_string = encodeImage(imageLink)
 
@@ -43,7 +43,7 @@ def encodeLogo():
 
 # Find the FSL color bar and get it's encoding for embedding in the HTML page.
 def encodeColorBar():
-    
+
     imageLink = os.path.join(obtainFSLdir(), 'etc', 'luts', 'ramp.gif')
     encoded_string = encodeImage(imageLink)
 
@@ -53,7 +53,7 @@ def encodeColorBar():
 # Find the FSL background and get it's encoding for embedding in the CSS
 # style sheet.
 def encodeBG():
-    
+
     imageLink = os.path.join(obtainFSLdir(), 'doc', 'images', 'fsl-bg.jpg')
     encoded_string = encodeImage(imageLink)
 
@@ -77,5 +77,5 @@ def getRawCSS():
 
     # Close the file.
     file.close()
-    
+
     return(cssStyleSheet)
