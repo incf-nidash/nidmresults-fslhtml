@@ -18,7 +18,20 @@ class testDatasetFeatures(unittest.TestCase):
                  'version': '6.00',
                  'hThresh': 'P = 0.001 (uncorrected)',
                  'lowSliceVal': '3.09',
-                 'highSliceVal': '7.4'}
+                 'highSliceVal': '7.4',
+                 'numExc': 2}
+
+    fsl_contrast_mask = {'Name': 'fsl_contrast_mask_130',
+                         'softwareName': 'FSL',
+                         'matchConName': 'tone counting probe vs baseline',
+                         'matchSliceImExtract': '5+fu++fQX//M9CiIsXL165cm' \
+                                                'VoaAhPDA5aVlY2MTGRz+f/8I' \
+                                                'c/nDlz5qabbvrZz35WVVWFxA' \
+                                                '5VOXhanH1FElpdXWUmpMvlKi' \
+                                                '0tfeONN4CIFB9csR80A30YI2' \
+                                                'C6dpATSgF2u3337t3MmvL5fG' \
+                                                'NjY8rvapoGY4Y0AARiY2Ojqq' \
+                                                'qKk4gNtEh9kY2NjVQqVVpayr'}
 
     fsl_thr_clustfwep05 = {'Name': 'fsl_thr_clustfwep05_130',
                            'softwareName': 'FSL',
@@ -50,12 +63,26 @@ class testDatasetFeatures(unittest.TestCase):
                             'highSliceVal': '7.92',
                             'contrastName': 'tone counting vs baseline'}
 
+    fsl_gamma_basis = {'Name': 'fsl_gamma_basis_130',
+                       'softwareName': 'FSL',
+                       'numExc': 8,
+                       'matchConName': 'tone counting vs baseline (1)',
+                       'matchSliceImExtract': 'eDwb17966trQUCgaWlpcOHD7' \
+                                              'uue+TIkXA4jF6cjuOgyHz9N3' \
+                                              '9T07RarTY9Pf3CCy+k02lUxK' \
+                                              'BTny17unDYqt+oyX7VQsJXru' \
+                                              'uiJ16lUkmn05/85CenpqZ6en' \
+                                              'oWFxfRtdZxnD179gghLl68eP' \
+                                              '369TfeeOPcuXM+n+++++6bmZ' \
+                                              'lhI6kTJ04sLy+je+bx48e//u'}
+
     ex_spm_default = {'Name': 'ex_spm_default',
                       'softwareName': 'SPM',
                       'version': '12.6906',
                       'hThresh': 'P = 0.001 (uncorrected)',
                       'lowSliceVal': '3.18',
-                      'highSliceVal': '7.92'}
+                      'highSliceVal': '7.92',
+                      'numExc': 1}
 
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
@@ -72,7 +99,8 @@ class testDatasetFeatures(unittest.TestCase):
                           'lowSliceVal': '3.18',
                           'highSliceVal': '5.65',
                           'contrastName': ['tone counting probe vs baseline',
-                                          'tone counting vs baseline']}
+                                          'tone counting vs baseline'],
+                          'numExc': 1}
 
     #Initiate a blank string.
     def setUp(self): 
@@ -372,6 +400,83 @@ class testDatasetFeatures(unittest.TestCase):
         self.assertTrue(structData["contrastName"][0] in self.testString and
                         structData["contrastName"][1] in self.testString,
                         msg = 'Test failed on ' + structData["Name"])
+
+    #Checks if the correct number of pages have been generated.
+    @data(fsl_con_f, ex_spm_default, ex_spm_conjunction, fsl_gamma_basis)
+    def test_multiplePageGen(self, structData):
+
+        #Setup
+        filePath = self.getFilePath(structData)
+        clusDir = os.path.join(filePath, 'Cluster_Data')
+
+        #Count the number of files in the cluster data directory.
+        numExc = len([name for name in os.listdir(clusDir) if os.path.isfile(
+                                                    os.path.join(clusDir, name))])
+
+        #Assert if the number of excursions is correct.
+        self.assertTrue(numExc == structData["numExc"],
+                        msg = 'Test failed on ' + structData["Name"])
+
+
+    #Checks if the correct number of slice images have been generated.
+    @data(fsl_con_f, ex_spm_default, ex_spm_conjunction, fsl_gamma_basis)   
+    def test_multipleConGen(self, structData):
+
+        #Setup
+        filePath = self.getFilePath(structData)
+        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+
+        #Count the number of slice images.
+        numSliceIm = 0
+        for line in postStatsFile:
+
+            if "a href = './Cluster_Data/" in line:
+
+                numSliceIm = numSliceIm + 1
+
+
+        #Close the file
+        postStatsFile.close()
+
+        #Assert if the number of slice images is correct.
+        self.assertTrue(numSliceIm == structData["numExc"],
+                        msg = 'Test failed on ' + structData["Name"])
+
+
+    #Test to check the correct contrast name matches the correct slice image.
+    @data(fsl_contrast_mask, fsl_gamma_basis) 
+    def test_matchingConName(self, structData):
+
+        #Setup
+        filePath = self.getFilePath(structData)
+        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+
+        #Look for the contrast name of interest.
+        nextLine = False
+        for line in postStatsFile:
+
+            #If this is the line containing the slice image check for the extract
+            if nextLine:
+
+                self.testString = line
+                break
+
+            #If this line contains the contrast name the next line is the image.
+            if structData['matchConName'] in line:
+                
+                nextLine = True
+
+        #Close the file
+        postStatsFile.close()
+
+        #Verify the slice image contained the extract.
+        self.assertIn(structData["matchSliceImExtract"], self.testString,
+                      msg = 'Test failed on ' + structData["Name"])
+
+    #Test to check whether the design matrix is being displayed correctly.
+    def test_designMatrix(self, structData):
+
+
 
 #===============================================================================
 
