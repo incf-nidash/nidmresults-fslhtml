@@ -423,15 +423,20 @@ def formatClusterStats(g, excName):
         peakZstats = [float("%s %0.0s %0.0s %0.0s %0.0s" % row) for row in peakQueryResult]
         locations = ["%0.0s %0.0s %s %0.0s %0.0s" % row for row in peakQueryResult]
 
-		#If a corrected height threshold has been applied we should display corrected peak P values.
-		#Else we should use uncorrected peak P values.
-        if checkHeightThreshold(g):
+	#If a corrected height threshold has been applied we should display corrected peak P values.
+	#Else we should use uncorrected peak P values.
+        try:
+                if checkHeightThreshold(g):
                                 
-                peakPVals = [float("%0.0s %0.0s %0.0s %s %0.0s" % row) for row in peakQueryResult]
+                        peakPVals = [float("%0.0s %0.0s %0.0s %s %0.0s" % row) for row in peakQueryResult]
 
-        else:
+                else:
                                 
-                peakPVals = [float("%0.0s %0.0s %0.0s %0.0s %s" % row) for row in peakQueryResult]
+                        peakPVals = [float("%0.0s %0.0s %0.0s %0.0s %s" % row) for row in peakQueryResult]
+
+        except ValueError:
+
+                peakPVals = [math.nan for row in peakQueryResult]
 
         #Obtain permutation used to sort the results in order of descending cluster index and then descending peak statistic size.
         peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)), reverse = True, key=lambda k: (-clusterIndicesForPeaks[k], peakZstats[k]))
@@ -582,13 +587,14 @@ def generateExcPage(outdir, excName, conData):
         
         #Make the peak statistics table.
         excPage += raw("<table cellspacing='3' border='3'><tbody>")
-        excPage += raw("<tr><th>Cluster Index</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
+        excPage += raw("<tr><th>Cluster Index</th><th>P</th><th>Z-MAX</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
 
         #Add the peak statistics data into the table.
         for peak in range(0, len(conData['peakZstats'])):
                 #New row
                 excPage += raw("<tr>")
                 excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) + "</td>")
+                excPage += raw("<td>" + '%.2g' % float(conData['peakPVals'][peak]) + "</td>")
                 excPage += raw("<td>" + '%.2f' % float(conData['peakZstats'][peak]) + "</td>")
 
                 #Peak location
