@@ -7,6 +7,7 @@ import glob
 import urllib.request
 import json
 
+
 class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
 
     def setUp(self):  # Open necessary file
@@ -64,6 +65,7 @@ class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
     def tearDown(self):
 
         self.postStatsFile.close()
+
 
 class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 tests
 
@@ -181,6 +183,7 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 
         self.postStatsFile.close()"""
 
+
 class spm_thr_clustunck10(unittest.TestCase):
 
     def setUp(self):  # Open necessary file
@@ -227,6 +230,7 @@ class spm_thr_clustunck10(unittest.TestCase):
     def tearDown(self):
 
         self.postStatsFile.close()
+
 
 class spm_thr_voxelfdrp05(unittest.TestCase):
 
@@ -275,6 +279,7 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 
         self.postStatsFile.close()
 
+
 class spm_thr_voxelunct4(unittest.TestCase):
 
     def setUp(self):  # Open necessary file
@@ -321,6 +326,7 @@ class spm_thr_voxelunct4(unittest.TestCase):
     def tearDown(self):
 
         self.postStatsFile.close()
+
 
 if __name__ == "__main__":
 
