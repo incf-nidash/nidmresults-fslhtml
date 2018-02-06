@@ -7,7 +7,6 @@ import glob
 import urllib.request
 import json
 
-
 class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
 
     def setUp(self):  # Open necessary file
@@ -17,7 +16,6 @@ class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
         self.dataPath = os.path.join(self.dataPath, "fsl_con_f_130_test")
         self.fileName = os.path.join(self.dataPath, "postStats.html")
         self.postStatsFile = open(self.fileName, "r")
-
 
     def test_softwareName(self):  # Test to see if FSL is in html file
 
@@ -30,7 +28,6 @@ class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
 
         self.assertIn("FSL", self.myString)
 
-
     def test_softwareNum(self):
 
         for line in self.postStatsFile:
@@ -41,7 +38,6 @@ class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
                 break
 
         self.assertIn("6.00", line)
-
 
     def test_statImage(self):
 
@@ -54,7 +50,6 @@ class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
 
         self.assertIn("Z (Gaussianised T/F)", self.myString)
 
-
     def test_threshold(self):
 
         for line in self.postStatsFile:
@@ -66,11 +61,9 @@ class fsl_con_f(unittest.TestCase):  # Class for fsl_con_f tests
 
         self.assertIn("P = 0.001 (uncorrected)", self.myString)
 
-
     def tearDown(self):
 
         self.postStatsFile.close()
-
 
 class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 tests
 
@@ -83,7 +76,6 @@ class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 t
         self.fileName = os.path.join(self.dataPath, "postStats.html")
         self.postStatsFile = open(self.fileName, "r")
 
-
     def test_softwareName(self):  # Test to see if FSL is in html file
 
         for line in self.postStatsFile:
@@ -94,7 +86,6 @@ class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 t
                 break
 
         self.assertIn("FSL", self.myString)
-
 
     def test_softwareNum(self):
 
@@ -107,7 +98,6 @@ class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 t
 
         self.assertIn("6.00", line)
 
-
     def test_clustThreshold(self):  # Test for Z > 2.3
 
         for line in self.postStatsFile:
@@ -118,7 +108,6 @@ class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 t
                 break
 
         self.assertIn("Z > 2.3", self.myString)
-
 
     def test_threshold(self):
 
@@ -131,7 +120,6 @@ class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 t
 
         self.assertTrue(self.found)
 
-
     def test_thresholdValue(self):
 
         for line in self.postStatsFile:
@@ -141,7 +129,6 @@ class fsl_thr_clustfwep05(unittest.TestCase):  # Class for fsl_thr_clustfwep05 t
                 self.found = True
 
         self.assertTrue(self.found)
-
 
     def tearDown(self):
 
@@ -194,7 +181,6 @@ class fsl_thr_voxelfwep05(unittest.TestCase):
 
         self.postStatsFile.close()"""
 
-
 class spm_thr_clustunck10(unittest.TestCase):
 
     def setUp(self):  # Open necessary file
@@ -204,7 +190,6 @@ class spm_thr_clustunck10(unittest.TestCase):
         self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_clustunck10_test")
         self.fileName = os.path.join(self.dataPath, "postStats.html")
         self.postStatsFile = open(self.fileName, "r")
-
 
     def test_softwareName(self):  # Test to see if FSL is in html file
 
@@ -217,7 +202,6 @@ class spm_thr_clustunck10(unittest.TestCase):
 
         self.assertIn("SPM", self.myString)
 
-
     def test_softwareNum(self):
 
         for line in self.postStatsFile:
@@ -228,7 +212,6 @@ class spm_thr_clustunck10(unittest.TestCase):
                 break
 
         self.assertIn("12.6906", line)
-
 
     def test_pThresh(self):
 
@@ -241,11 +224,9 @@ class spm_thr_clustunck10(unittest.TestCase):
 
         self.assertIn("P = 0.001", line)
 
-
     def tearDown(self):
 
         self.postStatsFile.close()
-
 
 class spm_thr_voxelfdrp05(unittest.TestCase):
 
@@ -256,7 +237,6 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
         self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelfdrp05_test")
         self.fileName = os.path.join(self.dataPath, "postStats.html")
         self.postStatsFile = open(self.fileName, "r")
-
 
     def test_softwareName(self):  # Test to see if FSL is in html file
 
@@ -269,7 +249,6 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 
         self.assertIn("SPM", self.myString)
 
-
     def test_softwareNum(self):
 
         for line in self.postStatsFile:
@@ -280,7 +259,6 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
                 break
 
         self.assertIn("12.6906", line)
-
 
     def test_pThresh(self):
 
@@ -293,11 +271,9 @@ class spm_thr_voxelfdrp05(unittest.TestCase):
 
         self.assertIn("P = 0.05", line)
 
-
     def tearDown(self):
 
         self.postStatsFile.close()
-
 
 class spm_thr_voxelunct4(unittest.TestCase):
 
@@ -308,7 +284,6 @@ class spm_thr_voxelunct4(unittest.TestCase):
         self.dataPath = os.path.join(self.dataPath, "ex_spm_thr_voxelunct4_test")
         self.fileName = os.path.join(self.dataPath, "postStats.html")
         self.postStatsFile = open(self.fileName, "r")
-
 
     def test_softwareName(self):  # Test to see if FSL is in html file
 
@@ -321,7 +296,6 @@ class spm_thr_voxelunct4(unittest.TestCase):
 
         self.assertIn("SPM", self.myString)
 
-
     def test_softwareNum(self):
 
         for line in self.postStatsFile:
@@ -332,7 +306,6 @@ class spm_thr_voxelunct4(unittest.TestCase):
                 break
 
         self.assertIn("12.6906", line)
-
 
     def test_tThresh(self):
 
@@ -345,11 +318,9 @@ class spm_thr_voxelunct4(unittest.TestCase):
 
         self.assertIn("T = 4.0 (uncorrected)", line)
 
-
     def tearDown(self):
 
         self.postStatsFile.close()
-
 
 if __name__ == "__main__":
 
@@ -390,7 +361,6 @@ if __name__ == "__main__":
             if not os.path.isfile(dataNameFile):
 
                 zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile)  # copy zip file to local machine
-
 
     globData = os.path.join(dataDir, "*.zip")
     data = glob.glob(globData)  # Get names of all zip files in data folder
