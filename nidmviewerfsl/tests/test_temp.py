@@ -474,14 +474,14 @@ class testDatasetFeatures(unittest.TestCase):
                       msg = 'Test failed on ' + structData["Name"])
 
     #Test to check whether the design matrix is being displayed correctly.
-    def test_designMatrix(self, structData):
+    #def test_designMatrix(self, structData):
 
 
 
 #===============================================================================
 
 if __name__ == "__main__":
-
+        
     scriptPath = os.path.dirname(os.path.abspath(__file__)) #Get path of script
     dataDir = os.path.join(scriptPath, "data")
     
