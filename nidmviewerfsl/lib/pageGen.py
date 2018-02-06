@@ -111,11 +111,11 @@ def generateExcPage(outdir, excName, conData):
 
     # Write excPage to a html file.
     excFile = open(os.path.join(outdir, excName + ".html"), "x")
-    print(excPage, file = excFile)
+    print(excPage, file=excFile)
     excFile.close()
 
 # Generates the main HTML page
-def generateMainHTML(graph, mainFilePath = "Main.html"):
+def generateMainHTML(graph, mainFilePath="Main.html"):
 
     # Create new document.
     main = document(title="FSL Viewer")
@@ -142,11 +142,11 @@ def generateMainHTML(graph, mainFilePath = "Main.html"):
 
     # Write main page to a HTML file.
     mainFile = open(mainFilePath, "x")
-    print(main, file = mainFile)
+    print(main, file=mainFile)
     mainFile.close()
 
 # Generates the Stats HTML section
-def generateStatsHTML(graph,statsFilePath = "stats.html"):
+def generateStatsHTML(graph,statsFilePath="stats.html"):
 
     # Obtain version number.
     softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
@@ -208,17 +208,17 @@ def generateStatsHTML(graph,statsFilePath = "stats.html"):
                                     'Select')
 
     # Adds design matrix image (as a link) to html page
-    stats += a(img(src = designMatrixLocation[1], style=
+    stats += a(img(src=designMatrixLocation[1], style=
                    "border:5px solid black", border=0, width=250), href=
                    designMatrixLocation[0])
 
     # Write stats page to HTML file.
     statsFile = open(statsFilePath, "x")
-    print(stats, file = statsFile)
+    print(stats, file=statsFile)
     statsFile.close()
 
 # Generates the PostStats HTML page
-def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
+def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
 
     # Work out if there are voxelwise or clusterwise_corrected thresholds.
     voxelWise_corrected = runQuery(graph, 'askCHeightThreshold', 'Ask')
@@ -387,7 +387,7 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
 
             # Add the image. If we have FSL the image was found in the pack.
             if askFSL:
-                postStats += img(src = 'data:image/jpg;base64,' +
+                postStats += img(src='data:image/jpg;base64,' +
                              encodeImage(os.path.join(os.path.split(
                                 postStatsFilePath)[0],excursionSetSliceImage[i]
                              )).decode())
@@ -396,7 +396,7 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
                 sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
                                                     postStatsFilePath)[0],
                                                     excursionSetNifti[i]))
-                postStats += img(src = 'data:image/jpg;base64,' + encodeImage(
+                postStats += img(src='data:image/jpg;base64,' + encodeImage(
                                  sliceImage).decode())
 
             postStats += raw("</a><br><br>")
@@ -440,7 +440,7 @@ def generatePostStatsHTML(graph, postStatsFilePath = "postStats.html"):
 
     # Write to the file.
     postStatsFile = open(postStatsFilePath, "x")
-    print(postStats, file = postStatsFile)
+    print(postStats, file=postStatsFile)
     postStatsFile.close()
 
 # This function generates all pages for display.
