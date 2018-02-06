@@ -434,7 +434,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
             excursionSetNifti[0].replace('.nii.gz', '.html')) + "'>")
 
         # Add the slice image.
-        postStats += img(src = 'data:image/jpg;base64,' + encodeImage(
+        postStats += img(src='data:image/jpg;base64,' + encodeImage(
                                                         sliceImage).decode())
         postStats += raw("</a>")
 
