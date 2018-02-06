@@ -1,16 +1,16 @@
 # !/usr/bin/env python3
 # ======================================================================
-# 
-# This file contains functions used for formatting statistical data 
+#
+# This file contains functions used for formatting statistical data
 # returned by SPARQL queries on NIDM-Results packs.
-# 
+#
 # Authors: Peter Williams, Tom Maullin, Camille Maumet (10/01/18)
-# 
+#
 # ======================================================================
 from queries.queryTools import runQuery
 
 # This function converts obo statistic types into the corresponding statistic.
-def statisticImage(stat): 
+def statisticImage(stat):
 
     if stat == "http://purl.obolibrary.org/obo/STATO_0000376":
     
@@ -38,8 +38,8 @@ def heightThreshType(graph, imageType):
     else:
     
         return("P")
-               
-# This function returns the statistic type of a statistic    
+
+# This function returns the statistic type of a statistic
 def statisticImageString(statImage):
 
     if statImage == "T":
@@ -61,7 +61,7 @@ def formatClusterStats(g, excName):
     # ----------------------------------------------------------------------
 
     # Run the peak query
-    peakQueryResult = runQuery(g, 'selectPeakData', 'Select', 
+    peakQueryResult = runQuery(g, 'selectPeakData', 'Select',
                                {'EXC_NAME': excName})
 
     # Retrieve query results.
@@ -75,14 +75,14 @@ def formatClusterStats(g, excName):
 
     # Obtain permutation used to sort the results in order of descending
     # cluster index and then descending peak statistic size.
-    peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)), 
-                                  reverse = True, 
+    peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)),
+                                  reverse = True,
                                   key=lambda k: (clusterIndicesForPeaks[k],
                                                  peakZstats[k]))
 
     # Sort all peak data using this permutation.
     sortedPeaksZstatsArray = [peakZstats[i] for i in peaksSortPermutation]
-    sortedClusIndicesForPeaks = [clusterIndicesForPeaks[i] for i in 
+    sortedClusIndicesForPeaks = [clusterIndicesForPeaks[i] for i in
                                                      peaksSortPermutation]
     sortedPeakLocations = [locations[i] for i in peaksSortPermutation]
 
@@ -91,12 +91,12 @@ def formatClusterStats(g, excName):
     # ----------------------------------------------------------------------
 
     # Run the cluster query
-    clusQueryResult = runQuery(g, 'selectClusterData', 'Select', 
+    clusQueryResult = runQuery(g, 'selectClusterData', 'Select',
                                {'EXC_NAME': excName})
 
-    clusterIndices = [int(clusQueryResult[i]) for i in list(range(0, 
+    clusterIndices = [int(clusQueryResult[i]) for i in list(range(0,
                                             len(clusQueryResult), 2))]
-    clusterSizes = [int(clusQueryResult[i]) for i in list(range(1, 
+    clusterSizes = [int(clusQueryResult[i]) for i in list(range(1,
                                             len(clusQueryResult), 2))]
     
     # Create an array for the highest peaks.
@@ -109,21 +109,21 @@ def formatClusterStats(g, excName):
 
     # Obtain permutation used to sort the results in order of descending
     # cluster index and then for each cluster by peak statistic size.
-    clusterSortPermutation = sorted(range(len(clusterIndices)), 
-                                    reverse = True, 
+    clusterSortPermutation = sorted(range(len(clusterIndices)),
+                                    reverse = True,
                                     key=lambda k: (clusterSizes[k], clusterIndices[k]))
 
     # Sorted cluster arrays
     sortedClusSizeArray = [clusterSizes[i] for i in clusterSortPermutation]
-    sortedClusIndicesArray = [clusterIndices[i] for i in 
+    sortedClusIndicesArray = [clusterIndices[i] for i in
             clusterSortPermutation]
 
     # Sort the highest peaks
     sortedMaxPeakZstats = [highestPeakZArray[
-                                    sortedClusIndicesArray[i]-1] for i in 
+                                    sortedClusIndicesArray[i]-1] for i in
                                     list(range(0, len(clusterIndices)))]
     sortedMaxPeakLocations = [highestPeakLocations[
-                                    sortedClusIndicesArray[i]-1] for i in 
+                                    sortedClusIndicesArray[i]-1] for i in
                                     list(range(0, len(clusterIndices)))]
 
     return({'clusSizes':sortedClusSizeArray,

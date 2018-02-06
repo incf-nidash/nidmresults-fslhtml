@@ -13,8 +13,8 @@ setup(
     author_email="p.williams.2@warwick.ac.uk",
     description=(
         "Viewing of NIDM-Results packs through FSL HTML results pages."),
-    license = "BSD",
-    keywords = "Prov, NIDM, Provenance",
+    license="BSD",
+    keywords="Prov, NIDM, Provenance",
     packages=find_packages(),
     package_dir={
         'nidmviewerfsl': 'nidmviewerfsl'
