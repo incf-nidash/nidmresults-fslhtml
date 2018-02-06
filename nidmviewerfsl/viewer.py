@@ -46,13 +46,13 @@ def extractZip(htmlFolder, nidmFile):
     turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
 
     # Parse the ttl file.
-    g.parse(turtleFile[0], format = "turtle")
+    g.parse(turtleFile[0], format="turtle")
 
     # Generate pages.
     pageGenerate(g, htmlFolder)
 
 
-def main(nidmFile, htmlFolder, overwrite=False): # Main program
+def main(nidmFile, htmlFolder, overwrite=False):  # Main program
 
     # First we check if we can overwrite htmlFolder if we need to.
     if not overwrite and os.path.isdir(htmlFolder):
@@ -83,7 +83,7 @@ def main(nidmFile, htmlFolder, overwrite=False): # Main program
     else:
 
         g = rdflib.Graph()
-        g.parse(nidmFile, format = rdflib.util.guess_format(nidmFile))
+        g.parse(nidmFile, format=rdflib.util.guess_format(nidmFile))
 
         # User wants to overwite folder
         if overwrite:
@@ -108,4 +108,4 @@ def main(nidmFile, htmlFolder, overwrite=False): # Main program
         dirLocation = os.path.join(currentDir, htmlFolder)
         pageGenerate(g, dirLocation)
 
-    return(htmlFolder) # Return the html/zip-extraction folder
+    return(htmlFolder)  # Return the html/zip-extraction folder
