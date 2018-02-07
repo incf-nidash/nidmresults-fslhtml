@@ -369,31 +369,33 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         if not askConjunction:
 
             # Add the colorbar and it's limits.
-            postStats += raw("%s" % contrastName[i] + "&nbsp &nbsp" +
-                             "%0.3g" % float(getVal(os.path.join(os.path.split(
-                             postStatsFilePath)[0], excursionSetNifti[i]),
-                             'min')) +
-                             " &nbsp " +
-                             "<img src = '" + encodeColorBar() + "'>" +
-                             " &nbsp " +
-                             "%0.3g" % float(getVal(os.path.join(os.path.split(
-                             postStatsFilePath)[0], excursionSetNifti[i]),
-                             'max')) +
-                             "<br><br>")
+            postStats += raw(
+                "%s" % contrastName[i] + "&nbsp &nbsp" +
+                "%0.3g" % float(getVal(os.path.join(os.path.split(
+                    postStatsFilePath)[0], excursionSetNifti[i]),
+                    'min')) +
+                    " &nbsp " +
+                    "<img src = '" + encodeColorBar() + "'>" +
+                    " &nbsp " +
+                    "%0.3g" % float(getVal(os.path.join(os.path.split(
+                        postStatsFilePath)[0], excursionSetNifti[i]),
+                        'max')) +
+                        "<br><br>")
 
             # Add a link to the clusterData page.
             postStats += raw("<a href = '" +
-                             os.path.join('.', 'Cluster_Data',
-                                excursionSetNifti[i].replace('.nii.gz', '.html'
-                             ))
-                             + "'>")
+                             os.path.join(
+                                '.', 'Cluster_Data',
+                                excursionSetNifti[i].replace('.nii.gz', '.html'))
+                                + "'>")
 
             # Add the image. If we have FSL the image was found in the pack.
             if askFSL:
-                postStats += img(src='data:image/jpg;base64,' +
-                             encodeImage(os.path.join(os.path.split(
-                                postStatsFilePath)[0], excursionSetSliceImage[i]
-                             )).decode())
+                postStats += img(
+                    src='data:image/jpg;base64,' +
+                    encodeImage(os.path.join(os.path.split(
+                        postStatsFilePath)[0], excursionSetSliceImage[i]
+                        )).decode())
             # Add the image. If we have SPM the image was regenerated.
             if askSPM:
                 sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
@@ -417,15 +419,19 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     if askConjunction:
 
         # Add the contrast names and colorbar.
-        postStats += raw("%s" % conString + "&nbsp &nbsp" +
-                         "%0.3g" % float(getVal(os.path.join(os.path.split(
-                         postStatsFilePath)[0], excursionSetNifti[0]), 'min'))+
-                         " &nbsp " +
-                         "<img src = '" + encodeColorBar() + "'>" +
-                         " &nbsp " +
-                         "%0.3g" % float(getVal(os.path.join(os.path.split(
-                         postStatsFilePath)[0], excursionSetNifti[0]), 'max'))+
-                         "<br><br>")
+        postStats += raw(
+            "%s" % conString + "&nbsp &nbsp" +
+            "%0.3g" % float(getVal(os.path.join(os.path.split(
+            postStatsFilePath)[0], excursionSetNifti[0]), 'min'))+
+            " &nbsp " +
+            "<img src = '" + encodeColorBar() + "'>" +
+            " &nbsp " +
+            "%0.3g" % float(
+                getVal(os.path.join(os.path.split(
+                    postStatsFilePath)[0], 
+                    excursionSetNifti[0]), 
+                    'max')) +
+            "<br><br>")
 
         # Make the slice image.
         sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
@@ -433,8 +439,9 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                                             excursionSetNifti[0]))
 
         # Add the link to the cluster data page.
-        postStats += raw("<a href = '" + os.path.join('.', 'Cluster_Data',
-            excursionSetNifti[0].replace('.nii.gz', '.html')) + "'>")
+        postStats += raw("<a href = '" + os.path.join(
+            '.', 'Cluster_Data', excursionSetNifti[0].replace(
+                '.nii.gz', '.html')) + "'>")
 
         # Add the slice image.
         postStats += img(src='data:image/jpg;base64,' + encodeImage(
@@ -463,8 +470,8 @@ def pageGenerate(g, outdir):
     # Make cluster pages
     os.mkdir(os.path.join(outdir, 'Cluster_Data'))
     excDetails = runQuery(g, 'selectExcursionSetDetails', 'Select')
-    excNiftiNames = set([excDetails[i] for i in list(range(0,
-                                                len(excDetails), 3))])
+    excNiftiNames = set([excDetails[i] for i in list(
+        range(0,len(excDetails), 3))])
 
     for excName in excNiftiNames:
 
