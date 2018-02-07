@@ -78,8 +78,8 @@ def formatClusterStats(g, excName):
     locations = [peakQueryResult[i] for i in list(range(2, len(
                                                     peakQueryResult), 5))]
 
-    #If a corrected height threshold has been applied we should display corrected peak P values.
-    #Else we should use uncorrected peak P values.
+    # If a corrected height threshold has been applied we should display
+    # corrected peak P values. Else we should use uncorrected peak P values.
     try:
         if runQuery(g, 'askCHeightThreshold', 'Ask'):
 
@@ -91,7 +91,8 @@ def formatClusterStats(g, excName):
             peakPVals = [float(peakQueryResult[i]) for i in list(
                                         range(4, len(peakQueryResult), 5))]
 
-    #This is a temporary bug fix due to the FSL exporter currently not recording corrected peak P-values. 
+    # This is a temporary bug fix due to the FSL exporter currently not
+    # recording corrected peak P-values.
     except ValueError:
 
         peakPVals = [math.nan for row in peakQueryResult]

@@ -103,18 +103,19 @@ def nifDim(niftiFilename, k):
     process_1 = subprocess.Popen(getDimString1, shell=False,
                                  stdout=subprocess.PIPE)
     process_2 = subprocess.Popen(getDimString2, shell=False,
-                                stdin=process_1.stdout, stdout=subprocess.PIPE)
+                                 stdin=process_1.stdout,
+                                 stdout=subprocess.PIPE)
     process_3 = subprocess.Popen(getDimString3, shell=False,
-                                stdin=process_2.stdout, stdout=subprocess.PIPE)
+                                 stdin=process_2.stdout,
+                                 stdout=subprocess.PIPE)
 
     # Close all streams and retreive output.
     process_1.stdout.close()
     process_2.stdout.close()
     output = process_3.communicate()
 
-    dimension = int(float(output[0].decode('utf-8').rstrip('\r|\n'
-                                                  ).replace(arg, ''
-                                                  ).replace(' ', '')))
+    dimension = int(float(output[0].decode('utf-8').rstrip(
+        '\r|\n').replace(arg, '').replace(' ', '')))
 
     return(dimension)
 
@@ -172,7 +173,8 @@ def getVal(niftiFilename, minOrMax):
     process_1 = subprocess.Popen(shlex.split(getValString1), shell=False,
                                  stdout=subprocess.PIPE)
     process_2 = subprocess.Popen(shlex.split(getValString2), shell=False,
-                                stdin=process_1.stdout, stdout=subprocess.PIPE)
+                                 stdin=process_1.stdout,
+                                 stdout=subprocess.PIPE)
 
     # Close all streams and retrieve output.
     process_1.stdout.close()
@@ -237,9 +239,9 @@ def generateSliceImage_SPM(exc_set):
     overlay(resized_exc_set, template, tempFolder)
 
     # Get the slices image
-    getSliceImageFromNifti(tempFolder, exc_set.replace('.nii', ''
-                                             ).replace('.gz','')+'.png')
+    getSliceImageFromNifti(tempFolder, exc_set.replace(
+        '.nii', '').replace('.gz', '')+'.png')
 
     shutil.rmtree(tempFolder)
 
-    return(exc_set.replace('.nii', '').replace('.gz','')+'.png')
+    return(exc_set.replace('.nii', '').replace('.gz', '')+'.png')
