@@ -89,9 +89,10 @@ def generateExcPage(outdir, excName, conData):
         excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) +
                        "</td>")
         excPage += raw("<td>" +
-                       str(float('%.2f' %
-                                 float(conData['peakZstats'][peak]))) +
-                                 "</td>")
+                       str(float(
+                           '%.2f' % float(conData['peakZstats'][peak]
+                            ))) +
+                        "</td>")
 
         # Peak location
         formattedLoc = conData['peakLocations'][peak].replace(
@@ -322,7 +323,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     # If is a corrected extent threshold display it.
     if clusterWise_corrected or clusterWise_uncorrected:
 
-        # If we are using a P value the threshold is equals. e.g. P=0.05. 
+        # If we are using a P value the threshold is equals. e.g. P=0.05.
         # If it's a statistic value then we use greater than. e.g. Z>1.6.
         ineq = '='
         if statisticType != 'p' and statisticType != 'P':
@@ -357,7 +358,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     # Work out if we are looking at a conjunction datapack or not.
     askConjunction = len(excursionSetNifti) != len(contrastName)
 
-    # If this is a conjunction we need to initialise an empty string to store 
+    # If this is a conjunction we need to initialise an empty string to store
     # contrast names.
     if askConjunction:
         conString = ''
