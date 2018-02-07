@@ -1,0 +1,37 @@
+#===================================================================================
+# This query returns the peak data associated to a given Excursion Set. Note that
+# in order to use this query {{{EXC_NAME}}} must be replaced with the name of the
+# excursion set of interest.
+#
+# Authors: Tom Maullin, Peter Williams, Camille Maumet (09/01/2018)
+#===================================================================================
+
+prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
+prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
+prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
+prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix nidm_coordinateVector: <http://purl.org/nidash/nidm#NIDM_0000086>
+prefix nidm_pValueUncorrected: <http://purl.org/nidash/nidm#NIDM_0000160> 
+prefix nidm_PValueUncorrected: <http://purl.org/nidash/nidm#NIDM_0000116> 
+prefix nidm_pValueFWER: <http://purl.org/nidash/nidm#NIDM_0000115> 
+prefix nidm_qValueFDR: <http://purl.org/nidash/nidm#NIDM_0000119>
+                       
+SELECT ?peakStat ?clus_index ?loc ?pVal_c ?pVal_u
+
+WHERE {{?exc a nidm_ExcursionSetMap: .
+		?clus prov:wasDerivedFrom ?exc .
+       	?clus a nidm_SupraThresholdCluster: .
+       	?exc prov:atLocation ?conMap .
+       	?clus nidm_clusterLabelID: ?clus_index .
+       	?peak prov:wasDerivedFrom ?clus .
+       	?peak nidm_equivalentZStatistic: ?peakStat .
+       	?peak prov:atLocation ?locObj .
+       	?locObj nidm_coordinateVector: ?loc .
+
+OPTIONAL {?peak nidm_pValueUncorrected: ?pVal_u .}
+OPTIONAL {?peak nidm_PValueUncorrected: ?pVal_u .}
+OPTIONAL {?peak nidm_pValueFWER: ?pVal_c .}
+OPTIONAL {?peak nidm_qValueFDR: ?pVal_c .}}
+
+FILTER(STR(?conMap) = '{{{EXC_NAME}}}'^^xsd:string)}

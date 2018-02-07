@@ -1,0 +1,23 @@
+#===================================================================================
+# This query selects a corrected Extent Threshold assuming one has been applied.
+#
+# Authors: Peter Williams, Tom Maullin, Camille Maumet (09/01/2018)
+#===================================================================================
+
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix nidm_ExtentThreshold: <http://purl.org/nidash/nidm#NIDM_0000026>
+prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+prefix obo_qvalue: <http://purl.obolibrary.org/obo/OBI_0001442>
+prefix obo_FWERadjustedpvalue: <http://purl.obolibrary.org/obo/OBI_0001265>
+
+SELECT ?val
+
+WHERE {?infer a nidm_Inference: .
+       ?infer prov:used ?thresh .
+       {?thresh a nidm_ExtentThreshold: . ?thresh a obo_qvalue: .}
+       UNION
+       {?thresh a nidm_ExtentThreshold: . ?thresh a obo_FWERadjustedpvalue: .}
+       ?thresh prov:value ?val .
+
+       FILTER(STR(?val) != "1.0"^^xsd:string)}
+	

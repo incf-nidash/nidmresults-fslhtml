@@ -1,0 +1,25 @@
+#===================================================================================
+# This query returns the cluster data associated to a given Excursion Set. Note that
+# in order to use this query {{{EXC_NAME}}} must be replaced with the name of the 
+# excursion set of interest.
+#
+# Authors: Tom Maullin, Peter Williams, Camille Maumet (09/01/2018)
+#===================================================================================
+
+prefix nidm_SupraThresholdCluster: <http://purl.org/nidash/nidm#NIDM_0000070>
+prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
+prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
+prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
+prefix prov: <http://www.w3.org/ns/prov#>
+
+SELECT ?clus_index ?clus_size
+
+WHERE {{?exc a nidm_ExcursionSetMap: .
+		?clus prov:wasDerivedFrom ?exc .
+       	?clus a nidm_SupraThresholdCluster: .
+       	?exc prov:atLocation ?conMap .
+       	?clus a nidm_SupraThresholdCluster: .
+       	?clus nidm_clusterLabelID: ?clus_index .
+       	?clus nidm_clusterSizeInVoxels: ?clus_size}
+
+FILTER(STR(?conMap) = '{{{EXC_NAME}}}'^^xsd:string)}

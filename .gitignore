@@ -1,5 +1,5 @@
 # Test data
-Tests/data
+nidmviewerfsl/tests/data
 
 # NIDM folders
 *.nidm
@@ -23,7 +23,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/

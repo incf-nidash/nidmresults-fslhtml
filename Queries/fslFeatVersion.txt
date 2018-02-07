@@ -1,4 +1,0 @@
-prefix fsl_featVersion: <http://purl.org/nidash/fsl#FSL_0000005>
-prefix src_FSL: <http://scicrunch.org/resolver/SCR_002823>
-
-SELECT ?featVersion WHERE {?x a src_FSL: . ?x fsl_featVersion: ?featVersion .}
