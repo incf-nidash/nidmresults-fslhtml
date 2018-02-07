@@ -192,7 +192,7 @@ def contrastVec(data):
     plt.axis('off')
 
     # Add contrast vector to figure
-    plt.imshow(data, aspect = 'auto', cmap='Greys')
+    plt.imshow(data, aspect='auto', cmap='Greys')
 
     # Check for bording box.
     extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
@@ -207,5 +207,5 @@ def contrastVec(data):
     # Remove the image.
     os.remove(tempFile)
 
-    #Return the image
+    # Return the image
     return('data:image/jpg;base64,' + encodedIm.decode())
