@@ -88,11 +88,10 @@ def generateExcPage(outdir, excName, conData):
         excPage += raw("<tr>")
         excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) +
                        "</td>")
-        excPage += raw("<td>" +
-                       str(float(
-                           '%.2f' % float(conData['peakZstats'][peak]
-                            ))) +
-                        "</td>")
+        excPage += raw(
+            "<td>" +
+            str(float('%.2f' % float(conData['peakZstats'][peak]))) +
+            "</td>")
 
         # Peak location
         formattedLoc = conData['peakLocations'][peak].replace(
@@ -210,9 +209,10 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
                                     'Select')
 
     # Adds design matrix image (as a link) to html page
-    stats += a(img(src=designMatrixLocation[1],
-                   style="border:5px solid black", border=0, width=250),
-                   href=designMatrixLocation[0])
+    stats += a(
+        img(src=designMatrixLocation[1], style="border:5px solid black",
+            border=0, width=250),
+        href=designMatrixLocation[0])
 
     # Write stats page to HTML file.
     statsFile = open(statsFilePath, "x")
