@@ -210,7 +210,7 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
     designMatrixLocation = runQuery(graph, 'selectDesignMatrixLocation', 
                                     'Select')
     
-    #Adds design matrix image (as a link) to html page
+    # Adds design matrix image (as a link) to html page
     stats += a(img(src = 'data:image/jpg;base64,' + 
                          encodeImage(os.path.join(os.path.split(
                          statsFilePath)[0],designMatrixLocation[1]
@@ -267,7 +267,8 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
 
     stats += br()
     stats += br()
-    
+
+    # Write stats page to HTML file.
     statsFile = open(statsFilePath, "x")
     print(stats, file=statsFile)
     statsFile.close()
