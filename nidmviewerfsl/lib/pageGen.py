@@ -402,8 +402,8 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                         os.path.join(
                             os.path.split(
                                 postStatsFilePath)[0],
-                                excursionSetSliceImage[i]
-                                )).decode())
+                                excursionSetSliceImage[i])
+                            ).decode())
 
             # Add the image. If we have SPM the image was regenerated.
             if askSPM:
@@ -430,16 +430,18 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         # Add the contrast names and colorbar.
         postStats += raw(
             "%s" % conString + "&nbsp &nbsp" +
-            "%0.3g" % float(getVal(os.path.join(os.path.split(
-                postStatsFilePath)[0], excursionSetNifti[0]), 'min')) +
-                " &nbsp " +
-                "<img src = '" + encodeColorBar() + "'>" +
-                " &nbsp " +
-                "%0.3g" % float(
-                    getVal(os.path.join(os.path.split(
-                        postStatsFilePath)[0],
-                        excursionSetNifti[0]), 'max')) +
-                "<br><br>")
+            "%0.3g" % float(getVal(os.path.join(
+                os.path.split(
+                    postStatsFilePath)[0], excursionSetNifti[0]),
+                'min')) +
+            " &nbsp " +
+            "<img src = '" + encodeColorBar() + "'>" +
+            " &nbsp " +
+            "%0.3g" % float(getVal(os.path.join(
+                os.path.split(
+                    postStatsFilePath)[0], excursionSetNifti[0]),
+                'max')) +
+            "<br><br>")
 
         # Make the slice image.
         sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
