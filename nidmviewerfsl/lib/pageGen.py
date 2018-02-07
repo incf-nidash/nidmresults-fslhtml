@@ -88,10 +88,9 @@ def generateExcPage(outdir, excName, conData):
         excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) +
                        "</td>")
         excPage += raw("<td>" +
-                       str(float('%.2f' % float(
-                           conData['peakZstats'][peak]
-                           ))) +
-                           "</td>")
+                       str(float('%.2f' %
+                                 float(conData['peakZstats'][peak]))) +
+                                 "</td>")
 
         # Peak location
         formattedLoc = conData['peakLocations'][peak].replace(
@@ -168,7 +167,7 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
 
     # Description of where and when the display was generated
     stats += raw(os.path.dirname(statsFilePath)+'<br>')
-    stats += raw('NIDM-Results display generated on '+time.strftime("%c")+
+    stats += raw('NIDM-Results display generated on ' + time.strftime("%c") +
                  '<br>')
 
     # Links to other pages.
