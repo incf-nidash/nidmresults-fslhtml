@@ -88,9 +88,10 @@ def generateExcPage(outdir, excName, conData):
         excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) +
                        "</td>")
         excPage += raw("<td>" +
-                   str(float('%.2f' % float(conData['peakZstats'][peak]
-                                            ))) +
-                   "</td>")
+                       str(float('%.2f' % float(
+                           conData['peakZstats'][peak]
+                           ))) +
+                           "</td>")
 
         # Peak location
         formattedLoc = conData['peakLocations'][peak].replace(
@@ -311,8 +312,8 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         postStats += raw("FMRI data processing was carried out using FEAT"
                          " (FMRI Expert Analysis Tool) Version %s, part of"
                          " FSL %s (FMRIB's Software Library,"
-                         " www.fmrib.ox.ac.uk/fsl). " % (fslFeatVersion[0],
-                         softwareLabelNum[1]))
+                         " www.fmrib.ox.ac.uk/fsl). " % (
+                            fslFeatVersion[0], softwareLabelNum[1]))
 
     # Now display thresholding details.
     postStats += raw("%s statistic images were thresholded " % (
