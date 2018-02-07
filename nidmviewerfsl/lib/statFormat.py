@@ -10,12 +10,13 @@
 from queries.queryTools import runQuery
 import math
 from style.pageStyling import encodeImage
-import matplotlib
-matplotlib.use('Agg')
-from matplotlib import pyplot as plt
 import numpy as np
 import random
 import os
+import math
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
 
 
 # This function converts obo statistic types into the corresponding statistic.
