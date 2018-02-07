@@ -422,16 +422,16 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         postStats += raw(
             "%s" % conString + "&nbsp &nbsp" +
             "%0.3g" % float(getVal(os.path.join(os.path.split(
-            postStatsFilePath)[0], excursionSetNifti[0]), 'min'))+
-            " &nbsp " +
-            "<img src = '" + encodeColorBar() + "'>" +
-            " &nbsp " +
-            "%0.3g" % float(
-                getVal(os.path.join(os.path.split(
-                    postStatsFilePath)[0], 
-                    excursionSetNifti[0]), 
-                    'max')) +
-            "<br><br>")
+                postStatsFilePath)[0], excursionSetNifti[0]), 'min')) +
+                " &nbsp " +
+                "<img src = '" + encodeColorBar() + "'>" +
+                " &nbsp " +
+                "%0.3g" % float(
+                    getVal(os.path.join(os.path.split(
+                        postStatsFilePath)[0],
+                        excursionSetNifti[0]),
+                        'max')) +
+                        "<br><br>")
 
         # Make the slice image.
         sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
@@ -471,7 +471,7 @@ def pageGenerate(g, outdir):
     os.mkdir(os.path.join(outdir, 'Cluster_Data'))
     excDetails = runQuery(g, 'selectExcursionSetDetails', 'Select')
     excNiftiNames = set([excDetails[i] for i in list(
-        range(0,len(excDetails), 3))])
+        range(0, len(excDetails), 3))])
 
     for excName in excNiftiNames:
 
