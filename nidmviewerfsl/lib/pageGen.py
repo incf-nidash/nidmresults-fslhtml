@@ -9,7 +9,8 @@ import time
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style, br
 from dominate.util import raw
-from style.pageStyling import encodeImage, encodeColorBar, encodeLogo, getRawCSS
+from style.pageStyling import (
+    encodeImage, encodeColorBar, encodeLogo, getRawCSS)
 from nidmviewerfsl.lib.slicerTools import getVal, generateSliceImage_SPM
 from nidmviewerfsl.lib.statFormat import *
 from queries.queryTools import runQuery
@@ -264,7 +265,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
 
     # Description of where and when the display was generated
     postStats += raw(os.path.dirname(postStatsFilePath)+'<br>')
-    postStats += raw('NIDM-Results display generated on '+time.strftime("%c")
+    postStats += raw('NIDM-Results display generated on ' + time.strftime("%c")
                      +'<br>')
 
     # Links to other pages.
@@ -321,8 +322,8 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     # If is a corrected extent threshold display it.
     if clusterWise_corrected or clusterWise_uncorrected:
 
-        # If we are using a P value the threshold is equals. e.g. P=0.05. If it's
-        # a statistic value then we use greater than. e.g. Z>1.6.
+        # If we are using a P value the threshold is equals. e.g. P=0.05. 
+        # If it's a statistic value then we use greater than. e.g. Z>1.6.
         ineq = '='
         if statisticType != 'p' and statisticType != 'P':
             ineq = '>'
@@ -356,13 +357,15 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     # Work out if we are looking at a conjunction datapack or not.
     askConjunction = len(excursionSetNifti) != len(contrastName)
 
-    # If this is a conjunction we need to initialise an empty string to store contrast names.
+    # If this is a conjunction we need to initialise an empty string to store 
+    # contrast names.
     if askConjunction:
         conString = ''
 
     for i in range(0, len(contrastName)):
 
-        # If this isn't a conjunction pack display each image with a contrast name.
+        # If this isn't a conjunction pack display each image with a contrast
+        # name.
         if not askConjunction:
 
             # Add the colorbar and it's limits.
@@ -383,7 +386,8 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
             postStats += raw("<a href = '" +
                              os.path.join(
                                 '.', 'Cluster_Data',
-                                excursionSetNifti[i].replace('.nii.gz', '.html'))
+                                excursionSetNifti[i].replace(
+                                    '.nii.gz', '.html'))
                                 + "'>")
 
             # Add the image. If we have FSL the image was found in the pack.
