@@ -204,7 +204,7 @@ def getSliceImageFromNifti(tempDir, outputName):
     # Get Slices. Slices are saved as slices.png.
 
     slicerCommand = "slicer '" + os.path.join(tempDir, "outputTemp.nii.gz") + \
-                    "' -s 0.72 -S 2 750 '"+ outputName + "'"
+                    "' -s 0.72 -S 2 750 '" + outputName + "'"
     subprocess.check_call(shlex.split(slicerCommand), shell=False)
     process = subprocess.Popen(shlex.split(slicerCommand), shell=False)
     process.wait()
