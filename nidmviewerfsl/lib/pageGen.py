@@ -114,6 +114,7 @@ def generateExcPage(outdir, excName, conData):
     print(excPage, file=excFile)
     excFile.close()
 
+
 # Generates the main HTML page
 def generateMainHTML(graph, mainFilePath="Main.html"):
 
@@ -144,6 +145,7 @@ def generateMainHTML(graph, mainFilePath="Main.html"):
     mainFile = open(mainFilePath, "x")
     print(main, file=mainFile)
     mainFile.close()
+
 
 # Generates the Stats HTML section
 def generateStatsHTML(graph, statsFilePath="stats.html"):
@@ -216,6 +218,7 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
     statsFile = open(statsFilePath, "x")
     print(stats, file=statsFile)
     statsFile.close()
+
 
 # Generates the PostStats HTML page
 def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
@@ -442,6 +445,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     postStatsFile = open(postStatsFilePath, "x")
     print(postStats, file=postStatsFile)
     postStatsFile.close()
+
 
 # This function generates all pages for display.
 def pageGenerate(g, outdir):
