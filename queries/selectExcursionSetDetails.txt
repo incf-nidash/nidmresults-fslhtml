@@ -19,10 +19,17 @@ prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
 
 SELECT ?nifti ?image ?contrastName
 
-WHERE {{?infer a nidm_Inference:} UNION {?infer a nidm_ConjunctionInference:} UNION
-      {?infer a spm_PartialConjunctionInference:}. ?exc prov:wasGeneratedBy ?infer .
-       ?exc a nidm_ExcursionSetMap: . ?exc prov:atLocation ?nifti .
-       ?infer prov:used ?statMap . ?statMap a nidm_StatisticMap: .
+WHERE {{?infer a nidm_Inference:}
+	   UNION
+	   {?infer a nidm_ConjunctionInference:}
+	   UNION
+       {?infer a spm_PartialConjunctionInference:}.
+       ?exc prov:wasGeneratedBy ?infer .
+       ?exc a nidm_ExcursionSetMap: .
+       ?exc prov:atLocation ?nifti .
+       ?infer prov:used ?statMap .
+       ?statMap a nidm_StatisticMap: .
        ?statMap nidm_contrastName: ?contrastName .
 
-OPTIONAL {?exc dc:description ?des . ?des prov:atLocation ?image .}}
+OPTIONAL {?exc dc:description ?des .
+		  ?des prov:atLocation ?image .}}

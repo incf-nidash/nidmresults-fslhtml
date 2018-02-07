@@ -11,9 +11,12 @@ prefix nidm_PValueUncorrected: <http://purl.org/nidash/nidm#NIDM_0000160>
 prefix obo_statistic: <http://purl.obolibrary.org/obo/STATO_0000039>
 prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
 
-ASK {?infer a nidm_Inference: . ?infer prov:used ?thresh .
-     ?thresh a nidm_ExtentThreshold: . 
-     {?thresh a obo_statistic: . } UNION {?thresh a obo_statistic: .} 
+ASK {?infer a nidm_Inference: .
+	 ?infer prov:used ?thresh .
+     ?thresh a nidm_ExtentThreshold: .
+     {?thresh a obo_statistic: . }
+     UNION
+     {?thresh a obo_statistic: .}
      ?thresh nidm_clusterSizeInVoxels: ?val .
 
      FILTER(STR(?val) != "0"^^xsd:string)

@@ -15,8 +15,13 @@ prefix obo_tstatistic: <http://purl.obolibrary.org/obo/STATO_0000176>
 prefix obo_Fstatistic: <http://purl.obolibrary.org/obo/STATO_0000282>
 prefix obo_Zstatistic: <http://purl.obolibrary.org/obo/STATO_0000376>
 
-SELECT ?statType 
+SELECT ?statType
 
-WHERE {{?infer a nidm_ConjunctionInference: .} UNION { ?infer a nidm_Inference: .} UNION 
-       {?infer a spm_PartialConjunctionInference: .} ?infer prov:used ?statMap . 
-       ?statMap a nidm_statisticMap: . ?statMap nidm_statisticType: ?statType .}
+WHERE {{?infer a nidm_ConjunctionInference: .}
+		UNION
+		{ ?infer a nidm_Inference: .}
+		UNION
+       	{?infer a spm_PartialConjunctionInference: .}
+       	?infer prov:used ?statMap .
+       	?statMap a nidm_statisticMap: .
+       	?statMap nidm_statisticType: ?statType .}

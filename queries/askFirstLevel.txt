@@ -8,6 +8,8 @@ prefix nidm_DesignMatrix: <http://purl.org/nidash/nidm#NIDM_0000019>
 prefix nidm_regressorNames: <http://purl.org/nidash/nidm#NIDM_0000021>
 prefix nidm_hasDriftModel: <http://purl.org/nidash/nidm#NIDM_0000088>
 
-ASK {?desMat a nidm_DesignMatrix: . {?desMat nidm_regressorNames: ?regressNames .} UNION 
+ASK {?desMat a nidm_DesignMatrix: .
+	 {?desMat nidm_regressorNames: ?regressNames .}
+	 UNION
      {?desMat nidm_hasDriftModel: ?regressNames .}}
 			

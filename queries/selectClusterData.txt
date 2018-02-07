@@ -14,9 +14,12 @@ prefix prov: <http://www.w3.org/ns/prov#>
 
 SELECT ?clus_index ?clus_size
 
-WHERE {{?exc a nidm_ExcursionSetMap: . ?clus prov:wasDerivedFrom ?exc . 
-       ?clus a nidm_SupraThresholdCluster: . ?exc prov:atLocation ?conMap . 
-       ?clus a nidm_SupraThresholdCluster: . ?clus nidm_clusterLabelID: 
-       ?clus_index . ?clus nidm_clusterSizeInVoxels: ?clus_size}
+WHERE {{?exc a nidm_ExcursionSetMap: .
+		?clus prov:wasDerivedFrom ?exc .
+       	?clus a nidm_SupraThresholdCluster: .
+       	?exc prov:atLocation ?conMap .
+       	?clus a nidm_SupraThresholdCluster: .
+       	?clus nidm_clusterLabelID: ?clus_index .
+       	?clus nidm_clusterSizeInVoxels: ?clus_size}
 
 FILTER(STR(?conMap) = '{{{EXC_NAME}}}'^^xsd:string)}

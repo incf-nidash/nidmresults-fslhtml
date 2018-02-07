@@ -13,10 +13,13 @@ prefix nidm_equivalentThreshold: <http://purl.org/nidash/nidm#NIDM_0000161>
 
 SELECT ?val
 
-WHERE {?infer a nidm_Inference: . ?infer prov:used ?thresh .
-       ?thresh a nidm_ExtentThreshold: . ?thresh a obo_statistic: .
+WHERE {?infer a nidm_Inference: .
+	   ?infer prov:used ?thresh .
+       ?thresh a nidm_ExtentThreshold: .
+       ?thresh a obo_statistic: .
        ?thresh nidm_equivalentThreshold: ?thresh2 .
-       ?thresh2 a nidm_PValueUncorrected: . ?thresh2 prov:value ?val .
+       ?thresh2 a nidm_PValueUncorrected: .
+       ?thresh2 prov:value ?val .
 
        FILTER(STR(?val) != "0"^^xsd:string)
        FILTER(STR(?val) != "1"^^xsd:string)}

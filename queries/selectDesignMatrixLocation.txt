@@ -9,7 +9,9 @@ prefix dc: <http://purl.org/dc/elements/1.1/>
 prefix prov: <http://www.w3.org/ns/prov#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?csv ?location 
+SELECT ?csv ?location
 
-WHERE {?desMat a nidm_DesignMatrix: . ?desMat dc:description ?image . ?image prov:atLocation 
-       ?location . ?desMat prov:atLocation ?csv .}
+WHERE {?desMat a nidm_DesignMatrix: .
+	   ?desMat dc:description ?image .
+	   ?image prov:atLocation ?location .
+	   ?desMat prov:atLocation ?csv .}
