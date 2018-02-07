@@ -347,10 +347,8 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         if voxelWise_corrected:
             corrStr = '(corrected)'
 
-        postStats += raw("at %s = %s %s" % (statisticType, float('%.2g'
-                                              %float(heightThreshValue[0])),
-                                              corrStr))
-
+        postStats += raw("at %s = %s %s" % (statisticType, float(
+            '%.2g' % float(heightThreshValue[0])), corrStr))
 
     postStats += raw('</p><hr>')
     postStats += h3("Thresholded Activation Images")
@@ -393,9 +391,13 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
             if askFSL:
                 postStats += img(
                     src='data:image/jpg;base64,' +
-                    encodeImage(os.path.join(os.path.split(
-                        postStatsFilePath)[0], excursionSetSliceImage[i]
-                        )).decode())
+                    encodeImage(
+                        os.path.join(
+                            os.path.split(
+                                postStatsFilePath)[0],
+                                excursionSetSliceImage[i]
+                                )).decode())
+
             # Add the image. If we have SPM the image was regenerated.
             if askSPM:
                 sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
@@ -429,9 +431,8 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                 "%0.3g" % float(
                     getVal(os.path.join(os.path.split(
                         postStatsFilePath)[0],
-                        excursionSetNifti[0]),
-                        'max')) +
-                        "<br><br>")
+                        excursionSetNifti[0]), 'max')) +
+                "<br><br>")
 
         # Make the slice image.
         sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
