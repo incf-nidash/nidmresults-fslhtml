@@ -402,8 +402,8 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                         os.path.join(
                             os.path.split(
                                 postStatsFilePath)[0],
-                                excursionSetSliceImage[i])
-                            ).decode())
+                            excursionSetSliceImage[i])
+                        ).decode())
 
             # Add the image. If we have SPM the image was regenerated.
             if askSPM:
