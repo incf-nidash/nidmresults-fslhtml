@@ -177,7 +177,7 @@ def contrastVec(data):
     conLength = len(data)
 
     # Make the contrast vector larger so we can make an image.
-    data = np.kron(data, np.ones((10,30)))
+    data = np.kron(data, np.ones((10, 30)))
 
     # Add border to data.
     data[:, 0] = np.ones(10)
@@ -186,10 +186,10 @@ def contrastVec(data):
     data[10-1, :] = np.ones(30*conLength)
 
     # Create figure.
-    fig=plt.figure(figsize = (len(data),1))
+    fig = plt.figure(figsize=(len(data), 1))
 
     # Remove axis
-    ax=fig.add_subplot(1,1,1)
+    ax = fig.add_subplot(1, 1, 1)
     plt.axis('off')
 
     # Add contrast vector to figure
