@@ -11,7 +11,6 @@ from queries.queryTools import runQuery
 import math
 from style.pageStyling import encodeImage
 import matplotlib
-matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import numpy as np
 import random
@@ -176,36 +175,36 @@ def contrastVec(data):
 
     conLength = len(data)
 
-    #Make the contrast vector larger so we can make an image.
+    # Make the contrast vector larger so we can make an image.
     data = np.kron(data, np.ones((10,30)))
 
-    #Add border to data.
+    # Add border to data.
     data[:, 0] = np.ones(10)
     data[:, 30*conLength-1] = np.ones(10)
     data[0, :] = np.ones(30*conLength)
     data[10-1, :] = np.ones(30*conLength)
 
-    #Create figure.
+    # Create figure.
     fig=plt.figure(figsize = (len(data),1))
 
-    #Remove axis
+    # Remove axis
     ax=fig.add_subplot(1,1,1)
     plt.axis('off')
 
-    #Add contrast vector to figure
+    # Add contrast vector to figure
     plt.imshow(data, aspect = 'auto', cmap='Greys')
 
-    #Check for bording box.
+    # Check for bording box.
     extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
 
-    #Save figure (without bording box)
+    # Save figure (without bording box)
     tempFile = 'tempCon'+ str(random.randint(0, 999999)) + '.png'
     plt.savefig(tempFile, bbox_inches=extent)
 
-    #Encode the figure.
+    # Encode the figure.
     encodedIm = encodeImage(tempFile)
 
-    #Remove the image.
+    # Remove the image.
     os.remove(tempFile)
 
     #Return the image
