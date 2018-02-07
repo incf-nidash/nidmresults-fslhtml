@@ -311,10 +311,10 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
 
         postStats += raw("FMRI data processing was carried out using FEAT"
-                       " (FMRI Expert Analysis Tool) Version %s, part of"
-                       " FSL %s (FMRIB's Software Library,"
-                       " www.fmrib.ox.ac.uk/fsl). " %(fslFeatVersion[0],
-                        softwareLabelNum[1]))
+                         " (FMRI Expert Analysis Tool) Version %s, part of"
+                         " FSL %s (FMRIB's Software Library,"
+                         " www.fmrib.ox.ac.uk/fsl). " % (fslFeatVersion[0],
+                         softwareLabelNum[1]))
 
     # Now display thresholding details.
     postStats += raw("%s statistic images were thresholded " % (
