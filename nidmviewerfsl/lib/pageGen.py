@@ -208,9 +208,9 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
                                     'Select')
 
     # Adds design matrix image (as a link) to html page
-    stats += a(img(src=designMatrixLocation[1], style=
-                   "border:5px solid black", border=0, width=250), href=
-                   designMatrixLocation[0])
+    stats += a(img(src=designMatrixLocation[1],
+                   style="border:5px solid black", border=0, width=250),
+                   href=designMatrixLocation[0])
 
     # Write stats page to HTML file.
     statsFile = open(statsFilePath, "x")
@@ -333,9 +333,10 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
             corrStr = ' (corrected)'
 
         postStats += raw("using clusters determined by %s %s %.2g and a"
-                       "%s cluster significance of P = %.2g " % (
-                        statisticType, ineq, float(heightThreshValue[0]),
-                        corrStr, float(extentThreshValue[0])))
+                         "%s cluster significance of P = %.2g " % (
+                            statisticType, ineq,
+                            float(heightThreshValue[0]),
+                            corrStr, float(extentThreshValue[0])))
 
     # Othewise we only have a height threshold to display.
     else:
