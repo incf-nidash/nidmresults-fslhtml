@@ -8,6 +8,7 @@
 #
 # ======================================================================
 from queries.queryTools import runQuery
+import math
 
 
 # This function converts obo statistic types into the corresponding statistic.
@@ -71,17 +72,35 @@ def formatClusterStats(g, excName):
     # Retrieve query results.
 
     peakZstats = [float(peakQueryResult[i]) for i in list(range(0, len(
-                                                    peakQueryResult), 3))]
+                                                    peakQueryResult), 5))]
     clusterIndicesForPeaks = [int(peakQueryResult[i]) for i in list(range(
-                                             1, len(peakQueryResult), 3))]
+                                             1, len(peakQueryResult), 5))]
     locations = [peakQueryResult[i] for i in list(range(2, len(
-                                                    peakQueryResult), 3))]
+                                                    peakQueryResult), 5))]
+
+    #If a corrected height threshold has been applied we should display corrected peak P values.
+    #Else we should use uncorrected peak P values.
+    try:
+        if runQuery(g, 'askCHeightThreshold', 'Ask'):
+
+            peakPVals = [float(peakQueryResult[i]) for i in list(
+                                        range(3, len(peakQueryResult), 5))]
+
+        else:
+
+            peakPVals = [float(peakQueryResult[i]) for i in list(
+                                        range(4, len(peakQueryResult), 5))]
+
+    #This is a temporary bug fix due to the FSL exporter currently not recording corrected peak P-values. 
+    except ValueError:
+
+        peakPVals = [math.nan for row in peakQueryResult]
 
     # Obtain permutation used to sort the results in order of descending
     # cluster index and then descending peak statistic size.
     peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)),
                                   reverse=True,
-                                  key=lambda k: (clusterIndicesForPeaks[k],
+                                  key=lambda k: (-clusterIndicesForPeaks[k],
                                                  peakZstats[k]))
 
     # Sort all peak data using this permutation.
@@ -89,6 +108,7 @@ def formatClusterStats(g, excName):
     sortedClusIndicesForPeaks = [
         clusterIndicesForPeaks[i] for i in peaksSortPermutation]
     sortedPeakLocations = [locations[i] for i in peaksSortPermutation]
+    sortedPeakPVals = [peakPVals[i] for i in peaksSortPermutation]
 
     # ----------------------------------------------------------------------
     # Second we gather data for cluster table.
@@ -141,4 +161,5 @@ def formatClusterStats(g, excName):
             'clusPeakLocations': sortedMaxPeakLocations,
             'peakZstats': sortedPeaksZstatsArray,
             'peakClusIndices': sortedClusIndicesForPeaks,
-            'peakLocations': sortedPeakLocations})
+            'peakLocations': sortedPeakLocations,
+            'peakPVals': sortedPeakPVals})

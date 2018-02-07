@@ -77,9 +77,9 @@ def generateExcPage(outdir, excName, conData):
 
     # Make the peak statistics table.
     excPage += raw("<table cellspacing='3' border='3'><tbody>")
-    excPage += raw("<tr><th>Cluster Index</th><th>Z-MAX</th><th>Z-MAX X"
-                   " (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th>"
-                   "</tr>")
+    excPage += raw("<tr><th>Cluster Index</th><th>P</th><th>Z-MAX</th>"
+                   "<th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX"
+                   " Z (mm)</th></tr>")
 
     # Add the peak statistics data into the table.
     for peak in range(0, len(conData['peakZstats'])):
@@ -87,6 +87,8 @@ def generateExcPage(outdir, excName, conData):
         # New row of peak data
         excPage += raw("<tr>")
         excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) +
+                       "</td>")
+        excPage += raw("<td>" + '%.2g' % float(conData['peakPVals'][peak]) +
                        "</td>")
         excPage += raw(
             "<td>" +
