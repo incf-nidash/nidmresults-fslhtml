@@ -246,8 +246,8 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     excDetails = runQuery(graph, 'selectExcursionSetDetails', 'Select')
     excursionSetNifti = list(set([excDetails[i] for i in list(range(0,
                              len(excDetails), 3))]))
-    excursionSetSliceImage = [excDetails[i] for i in list(range(1,
-                             len(excDetails), 3))]
+    excursionSetSliceImage = [excDetails[i] for i in list(
+        range(1, len(excDetails), 3))]
     contrastName = [excDetails[i] for i in list(range(2, len(excDetails), 3))]
 
     # Creates initial HTML page (Post Stats)
@@ -266,8 +266,9 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
 
     # Description of where and when the display was generated
     postStats += raw(os.path.dirname(postStatsFilePath)+'<br>')
-    postStats += raw('NIDM-Results display generated on ' + time.strftime("%c")
-                     +'<br>')
+    postStats += raw('NIDM-Results display generated on ' +
+                     time.strftime("%c") +
+                     '<br>')
 
     # Links to other pages.
     postStats += raw('<a href="main.html" target="_top"> Up to main page </a'
@@ -296,7 +297,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     heightThreshValue = runQuery(graph, 'selectUHeightThreshold', 'Select')
     if heightThreshValue == []:
         heightThreshValue = runQuery(graph, 'selectCHeightThreshold',
-            'Select')
+                                     'Select')
 
     # Check if the data was generated using SPM or FSL.
     if askSPM:
@@ -372,16 +373,18 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
             # Add the colorbar and it's limits.
             postStats += raw(
                 "%s" % contrastName[i] + "&nbsp &nbsp" +
-                "%0.3g" % float(getVal(os.path.join(os.path.split(
-                    postStatsFilePath)[0], excursionSetNifti[i]),
-                    'min')) +
-                    " &nbsp " +
-                    "<img src = '" + encodeColorBar() + "'>" +
-                    " &nbsp " +
-                    "%0.3g" % float(getVal(os.path.join(os.path.split(
+                "%0.3g" % float(getVal(os.path.join(
+                    os.path.split(
                         postStatsFilePath)[0], excursionSetNifti[i]),
-                        'max')) +
-                        "<br><br>")
+                    'min')) +
+                " &nbsp " +
+                "<img src = '" + encodeColorBar() + "'>" +
+                " &nbsp " +
+                "%0.3g" % float(getVal(os.path.join(
+                    os.path.split(
+                        postStatsFilePath)[0], excursionSetNifti[i]),
+                    'max')) +
+                "<br><br>")
 
             # Add a link to the clusterData page.
             postStats += raw("<a href = '" +
