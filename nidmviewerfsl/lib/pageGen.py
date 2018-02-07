@@ -51,9 +51,8 @@ def generateExcPage(outdir, excName, conData):
                        "</td>")
         excPage += raw("<td>" + str(conData['clusSizes'][cluster]) +
                        "</td>")
-        excPage += raw("<td>" +
-         str(float('%.2f' % float(conData['clusPeakZstats'][cluster])))
-                       + "</td>")
+        excPage += raw("<td>" + str(float('%.2f' % float(
+            conData['clusPeakZstats'][cluster]))) + "</td>")
 
         # Peak location
         formattedLoc = conData['clusPeakLocations'][cluster].replace(
@@ -94,10 +93,9 @@ def generateExcPage(outdir, excName, conData):
                    "</td>")
 
         # Peak location
-        formattedLoc = conData['peakLocations'][peak].replace(" ", ""
-                                                    ).replace("[", ""
-                                                    ).replace("]", ""
-                                                    ).split(",")
+        formattedLoc = conData['peakLocations'][peak].replace(
+            " ", "").replace("[", "").replace("]", "").split(",")
+
         excPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
         excPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
         excPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
