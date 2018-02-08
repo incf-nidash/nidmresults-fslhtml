@@ -15,7 +15,7 @@ import random
 import os
 import math
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('Agg') 
 from matplotlib import pyplot as plt
 
 
