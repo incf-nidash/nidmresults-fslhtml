@@ -213,12 +213,12 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
     # Adds design matrix image (as a link) to html page
     stats += a(img(src='data:image/jpg;base64,' +
                         encodeImage(os.path.join(os.path.split(
-                        statsFilePath)[0],designMatrixLocation[1]
+                        statsFilePath)[0], designMatrixLocation[1]
                         )).decode(),
                    style="border:5px solid black",
                    border=0,
                    width=250),
-                   href=designMatrixLocation[0])
+                href=designMatrixLocation[0])
 
     # If we are looking at SPM data the contrast vectors are not given in the
     # design matrix image.
