@@ -396,7 +396,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                             float(heightThreshValue[0]),
                             corrStr, float(extentThreshValue[0])))
 
-    # Othewise we only have a height threshold to display.
+    # Othewise we only have the height threshold to display.
     else:
 
         # Check to see if corrected.
