@@ -15,8 +15,7 @@ import random
 import os
 import math
 import matplotlib
-matplotlib.use('Agg') 
-from matplotlib import pyplot as plt
+matplotlib.use('Agg')
 
 
 # This function converts obo statistic types into the corresponding statistic.
@@ -174,6 +173,9 @@ def formatClusterStats(g, excName):
             'peakPVals': sortedPeakPVals})
 
 def contrastVec(data):
+
+    #This import is needed only in this function.
+    from matplotlib import pyplot as plt
 
     conLength = len(data)
 
