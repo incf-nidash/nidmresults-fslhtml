@@ -469,9 +469,6 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Test to check whether the design matrix is being displayed correctly.
     # def test_designMatrix(self, structData):
-
-
-
 # ===============================================================================
 
 if __name__ == "__main__":
