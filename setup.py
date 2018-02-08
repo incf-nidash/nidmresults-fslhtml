@@ -13,8 +13,8 @@ setup(
     author_email="p.williams.2@warwick.ac.uk",
     description=(
         "Viewing of NIDM-Results packs through FSL HTML results pages."),
-    license = "BSD",
-    keywords = "Prov, NIDM, Provenance",
+    license="BSD",
+    keywords="Prov, NIDM, Provenance",
     packages=find_packages(),
     package_dir={
         'nidmviewerfsl': 'nidmviewerfsl'
@@ -26,8 +26,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
     ],
-    package_data={'':
-                  ['Queries/checkExtentThreshold.txt']},
+    package_data={'nidmviewerfsl':
+                  ['queries/*.txt']},
     include_package_data=True,
     install_requires=requirements
 )

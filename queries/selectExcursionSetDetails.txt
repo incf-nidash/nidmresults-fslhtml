@@ -1,0 +1,35 @@
+#===================================================================================
+# This query selects an the names of nifti containing excursion sets, slice images
+# of said excursion sets and the contrast names associated with said excursion
+# sets.
+#
+# Authors: Tom Maullin, Peter Williams, Camille Maumet (09/01/2018)
+#===================================================================================
+
+prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
+prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
+prefix nidm_contrastName: <http://purl.org/nidash/nidm#NIDM_0000085>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
+prefix dc: <http://purl.org/dc/elements/1.1/>
+prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
+
+SELECT ?nifti ?image ?contrastName
+
+WHERE {{?infer a nidm_Inference:}
+	   UNION
+	   {?infer a nidm_ConjunctionInference:}
+	   UNION
+       {?infer a spm_PartialConjunctionInference:}.
+       ?exc prov:wasGeneratedBy ?infer .
+       ?exc a nidm_ExcursionSetMap: .
+       ?exc prov:atLocation ?nifti .
+       ?infer prov:used ?statMap .
+       ?statMap a nidm_StatisticMap: .
+       ?statMap nidm_contrastName: ?contrastName .
+
+OPTIONAL {?exc dc:description ?des .
+		  ?des prov:atLocation ?image .}}

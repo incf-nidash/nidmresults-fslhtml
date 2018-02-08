@@ -1,9 +1,0 @@
-prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
-prefix nidm_statisticType: <http://purl.org/nidash/nidm#NIDM_0000123>
-prefix prov: <http://www.w3.org/ns/prov#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix obo_tstatistic: <http://purl.obolibrary.org/obo/STATO_0000176>
-prefix obo_Fstatistic: <http://purl.obolibrary.org/obo/STATO_0000282>
-prefix obo_Zstatistic: <http://purl.obolibrary.org/obo/STATO_0000376>
-
-SELECT ?statType WHERE {nidm_Inference: prov:used ?x. ?x nidm_statisticType: ?statType .}

@@ -15,6 +15,6 @@ install:
  - export FSLOUTPUTTYPE=NIFTI_GZ
  - cwd=`pwd`
 script:
- - ./Tests/testError.py
- - ./Tests/test_fslViewer.py
+ - ./nidmviewerfsl/tests/testError.py
+ - ./nidmviewerfsl/tests/test_fslViewer.py
  
