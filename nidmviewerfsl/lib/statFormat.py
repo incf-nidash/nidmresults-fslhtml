@@ -178,7 +178,7 @@ def contrastVec(data, v_min, v_max):
     # This import is needed only in this function.
     from matplotlib import pyplot as plt
 
-    #This import is needed only in this function.
+    # This import is needed only in this function.
     from matplotlib import pyplot as plt
 
     conLength = len(data)
