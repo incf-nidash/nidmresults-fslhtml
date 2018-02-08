@@ -24,13 +24,13 @@ class testDatasetFeatures(unittest.TestCase):
     fsl_contrast_mask = {'Name': 'fsl_contrast_mask_130',
                          'softwareName': 'FSL',
                          'matchConName': 'tone counting probe vs baseline',
-                         'matchSliceImExtract': '5+fu++fQX//M9CiIsXL165cm' \
-                                                'VoaAhPDA5aVlY2MTGRz+f/8I' \
-                                                'c/nDlz5qabbvrZz35WVVWFxA' \
-                                                '5VOXhanH1FElpdXWUmpMvlKi' \
-                                                '0tfeONN4CIFB9csR80A30YI2' \
-                                                'C6dpATSgF2u3337t3MmvL5fG' \
-                                                'NjY8rvapoGY4Y0AARiY2Ojqq' \
+                         'matchSliceImExtract': '5+fu++fQX//M9CiIsXL165cm'
+                                                'VoaAhPDA5aVlY2MTGRz+f/8I'
+                                                'c/nDlz5qabbvrZz35WVVWFxA'
+                                                '5VOXhanH1FElpdXWUmpMvlKi'
+                                                '0tfeONN4CIFB9csR80A30YI2'
+                                                'C6dpATSgF2u3337t3MmvL5fG'
+                                                'NjY8rvapoGY4Y0AARiY2Ojqq'
                                                 'qKk4gNtEh9kY2NjVQqVVpayr'}
 
     fsl_thr_clustfwep05 = {'Name': 'fsl_thr_clustfwep05_130',
@@ -38,12 +38,12 @@ class testDatasetFeatures(unittest.TestCase):
                            'version': '6.00',
                            'hThresh': 'determined by Z > 2.3',
                            'eThresh': 'cluster significance of P = 0.05',
-                           'sliceImExtract': 'gU0F7EeKZImaLEbUAZ1Qq9KGm' \
-                                             'htwBlMDvMPlMcUpI5pkA7Ho5A' \
-                                             'E0fVzeWacqEBEzHbtK9IqEAI/' \
-                                             'iSY46wGloNUrSfWUikMokAbh6' \
-                                             'Dtc5ay5JOQtK9Ba/acMa5CeA+' \
-                                             'Kyt5CC8DliNGGAzb/mgp/oenI' \
+                           'sliceImExtract': 'gU0F7EeKZImaLEbUAZ1Qq9KGm'
+                                             'htwBlMDvMPlMcUpI5pkA7Ho5A'
+                                             'E0fVzeWacqEBEzHbtK9IqEAI/'
+                                             'iSY46wGloNUrSfWUikMokAbh6'
+                                             'Dtc5ay5JOQtK9Ba/acMa5CeA+'
+                                             'Kyt5CC8DliNGGAzb/mgp/oenI'
                                              'M7keUZVG4arsDJ36YZn8Am1N4',
                            'lowSliceVal': '2.3',
                            'highSliceVal': '7.49',
@@ -53,11 +53,11 @@ class testDatasetFeatures(unittest.TestCase):
                             'softwareName': 'SPM',
                             'version': '12.6906',
                             'hThresh': 'P = 0.001 (uncorrected)',
-                            'sliceImExtract': 'VTGdaW0UiEeInYDOSRTqngIJ' \
-                                              'KT3piwYmJiZPSf5LxyCOPjIy' \
-                                              'MXHrppbAFoRFArJbc3obdnh8' \
-                                              'eDk1NpSIRWkBzmHF+sCNTlKH' \
-                                              'Fl0EzfSfYoloBr1ZqmHfs2HE' \
+                            'sliceImExtract': 'VTGdaW0UiEeInYDOSRTqngIJ'
+                                              'KT3piwYmJiZPSf5LxyCOPjIy'
+                                              'MXHrppbAFoRFArJbc3obdnh8'
+                                              'eDk1NpSIRWkBzmHF+sCNTlKH'
+                                              'Fl0EzfSfYoloBr1ZqmHfs2HE'
                                               'Smf+FQuHrX//6j370ozVr1pA',
                             'lowSliceVal': '3.18',
                             'highSliceVal': '7.92',
@@ -67,13 +67,13 @@ class testDatasetFeatures(unittest.TestCase):
                        'softwareName': 'FSL',
                        'numExc': 8,
                        'matchConName': 'tone counting vs baseline (1)',
-                       'matchSliceImExtract': 'eDwb17966trQUCgaWlpcOHD7' \
-                                              'uue+TIkXA4jF6cjuOgyHz9N3' \
-                                              '9T07RarTY9Pf3CCy+k02lUxK' \
-                                              'BTny17unDYqt+oyX7VQsJXru' \
-                                              'uiJ16lUkmn05/85CenpqZ6en' \
-                                              'oWFxfRtdZxnD179gghLl68eP' \
-                                              '369TfeeOPcuXM+n+++++6bmZ' \
+                       'matchSliceImExtract': 'eDwb17966trQUCgaWlpcOHD7'
+                                              'uue+TIkXA4jF6cjuOgyHz9N3'
+                                              '9T07RarTY9Pf3CCy+k02lUxK'
+                                              'BTny17unDYqt+oyX7VQsJXru'
+                                              'uiJ16lUkmn05/85CenpqZ6en'
+                                              'oWFxfRtdZxnD179gghLl68eP'
+                                              '369TfeeOPcuXM+n+++++6bmZ'
                                               'lhI6kTJ04sLy+je+bx48e//u'}
 
     ex_spm_default = {'Name': 'ex_spm_default',
@@ -87,14 +87,14 @@ class testDatasetFeatures(unittest.TestCase):
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
                           'version': '12.6906',
-                          'sliceImExtract': 'eau3d3dr7766pNPPvnqq6+O5/hbW' \
-                                            '1uRQuR0OuUDC3JVUPwxGo2+9dZbc' \
-                                            'jJmT09PfX29HCZnhtv/wtlACAkEA' \
-                                            'q+++up//Md/jIP+IISEw+G2trapU' \
-                                            '6ci1o6MZtkTTgiBkoBFPH/+/PHjx' \
-                                            '4PBYH19PerdyefbEY3CsWoELyKRy' \
-                                            'HPPPffss8+OenX5D3LixAmn01lUV' \
-                                            'IQuBFBycu0WRCqxBceR+4sXL1osl' \
+                          'sliceImExtract': 'eau3d3dr7766pNPPvnqq6+O5/hbW'
+                                            '1uRQuR0OuUDC3JVUPwxGo2+9dZbc'
+                                            'jJmT09PfX29HCZnhtv/wtlACAkEA'
+                                            'q+++up//Md/jIP+IISEw+G2trapU'
+                                            '6ci1o6MZtkTTgiBkoBFPH/+/PHjx'
+                                            '4PBYH19PerdyefbEY3CsWoELyKRy'
+                                            'HPPPffss8+OenX5D3LixAmn01lUV'
+                                            'IQuBFBycu0WRCqxBceR+4sXL1osl'
                                             'oKCAphqOeSUG25Wxwx3Wkmn0xcuX',
                           'lowSliceVal': '3.18',
                           'highSliceVal': '5.65',
@@ -137,7 +137,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Verify the software name is what we expected.
         self.assertIn(structData["softwareName"], self.testString,
-                      msg = 'Test failed on ' + structData["Name"])
+                      msg='Test failed on ' + structData["Name"])
 
     # Test to see if the software version has been recorded correctly.
     @data(fsl_con_f, fsl_thr_clustfwep05, ex_spm_contrast_mask,
@@ -158,7 +158,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Verify the software version is what we expected.
         self.assertIn(structData["version"], line,
-                      msg = 'Test failed on ' + structData["Name"])
+                      msg='Test failed on ' + structData["Name"])
 
         # Close the file
         postStatsFile.close()
@@ -184,7 +184,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Verify the height threshold is what we expected.
         self.assertIn(structData["hThresh"], self.testString,
-                      msg = 'Test failed on ' + structData["Name"])
+                      msg='Test failed on ' + structData["Name"])
 
     # Test to see if the extent threshold has been recorded correctly.
     @data(fsl_thr_clustfwep05)
@@ -207,7 +207,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Verify the extent threshold is what we expected.
         self.assertIn(structData["eThresh"], self.testString,
-                      msg = 'Test failed on ' + structData["Name"])
+                      msg='Test failed on ' + structData["Name"])
 
     # Check if the slice image had been embedded correctly
     @data(fsl_thr_clustfwep05, ex_spm_contrast_mask, ex_spm_conjunction)
@@ -236,7 +236,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Verify the slice image contained the extract.
         self.assertIn(structData["sliceImExtract"], self.testString,
-                      msg = 'Test failed on ' + structData["Name"])
+                      msg='Test failed on ' + structData["Name"])
 
     # Check if the FSL logo had been embedded correctly.
     @data(fsl_con_f, ex_spm_default, ex_spm_conjunction)
@@ -267,7 +267,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Verify the FSL logo contained the extract.
         self.assertIn(logoExtract, self.testString,
-                      msg = 'Test failed on ' + structData["Name"])
+                      msg='Test failed on ' + structData["Name"])
 
     # Check if the lower slice value is given correctly correctly.
     @data(fsl_con_f, fsl_thr_clustfwep05, ex_spm_contrast_mask,
@@ -299,7 +299,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Verify the FSL logo contained the extract.
         self.assertIn(structData["lowSliceVal"], self.testString,
-                      msg = 'Test failed on ' + structData["Name"])
+                      msg='Test failed on ' + structData["Name"])
 
     # Check if the upper slice value is given correctly correctly.
     @data(fsl_con_f, fsl_thr_clustfwep05, ex_spm_contrast_mask,
@@ -331,7 +331,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Verify the FSL logo contained the extract.
         self.assertIn(structData["highSliceVal"], self.testString,
-                      msg = 'Test failed on ' + structData["Name"])
+                      msg='Test failed on ' + structData["Name"])
 
     # Check if the contrast name is correctly in postStats.
     @data(fsl_thr_clustfwep05, ex_spm_contrast_mask)
@@ -361,7 +361,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Verify the slice image contained the extract.
         self.assertIn(structData["contrastName"], self.testString,
-                      msg = 'Test failed on ' + structData["Name"])
+                      msg='Test failed on ' + structData["Name"])
 
     # Check if the contrast name is correctly in postStats in conjunction
     # datasets.
@@ -393,7 +393,7 @@ class testDatasetFeatures(unittest.TestCase):
         # Verify the slice image contained the extract.
         self.assertTrue(structData["contrastName"][0] in self.testString and
                         structData["contrastName"][1] in self.testString,
-                        msg = 'Test failed on ' + structData["Name"])
+                        msg='Test failed on ' + structData["Name"])
 
     # Checks if the correct number of pages have been generated.
     @data(fsl_con_f, ex_spm_default, ex_spm_conjunction, fsl_gamma_basis)
@@ -409,7 +409,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Assert if the number of excursions is correct.
         self.assertTrue(numExc == structData["numExc"],
-                        msg = 'Test failed on ' + structData["Name"])
+                        msg='Test failed on ' + structData["Name"])
 
 
     # Checks if the correct number of slice images have been generated.
@@ -434,7 +434,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Assert if the number of slice images is correct.
         self.assertTrue(numSliceIm == structData["numExc"],
-                        msg = 'Test failed on ' + structData["Name"])
+                        msg='Test failed on ' + structData["Name"])
 
 
     # Test to check the correct contrast name matches the correct slice image.
@@ -465,7 +465,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Verify the slice image contained the extract.
         self.assertIn(structData["matchSliceImExtract"], self.testString,
-                      msg = 'Test failed on ' + structData["Name"])
+                      msg='Test failed on ' + structData["Name"])
 
     # Test to check whether the design matrix is being displayed correctly.
     # def test_designMatrix(self, structData):
