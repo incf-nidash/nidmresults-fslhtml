@@ -174,7 +174,7 @@ def formatClusterStats(g, excName):
 
 def contrastVec(data):
 
-    #This import is needed only in this function.
+    # This import is needed only in this function.
     from matplotlib import pyplot as plt
 
     conLength = len(data)
@@ -202,7 +202,7 @@ def contrastVec(data):
     extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
 
     # Save figure (without bording box)
-    tempFile = 'tempCon'+ str(random.randint(0, 999999)) + '.png'
+    tempFile = 'tempCon' + str(random.randint(0, 999999)) + '.png'
     plt.savefig(tempFile, bbox_inches=extent)
 
     # Encode the figure.
