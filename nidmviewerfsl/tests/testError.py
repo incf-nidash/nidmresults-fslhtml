@@ -29,7 +29,7 @@ if __name__ == "__main__":
     scriptDir = os.path.dirname(os.path.abspath(__file__))
     dataDir = os.path.join(scriptDir, "data")
 
-    if os.path.isdir(dataDir) == False: # Data folder does not exist
+    if not os.path.isdir(dataDir): # Data folder does not exist
 
         os.makedirs(dataDir)
 
@@ -37,12 +37,12 @@ if __name__ == "__main__":
     local = True
     for dataName in dataNames: # Checks if data is on local machine
 
-        if os.path.isfile(os.path.join(dataDir, dataName + ".nidm.zip")) == False: # Data not found on local machine
+        if not os.path.isfile(os.path.join(dataDir, dataName + ".nidm.zip")): # Data not found on local machine
 
             local = False
             break
 
-    if local == False: # Data not on local machine
+    if not local: # Data not on local machine
 
         print("Downloading data")
         req = urllib.request.Request("http://neurovault.org/api/collections/2210/nidm_results") # Request from neurovault api
@@ -58,7 +58,7 @@ if __name__ == "__main__":
             dataName = nidmResult["name"] # Name of data (e.g. fsl_con_f.nidm)
             dataNameFile = os.path.join(dataDir, dataName + ".zip")
 
-            if os.path.isfile(dataNameFile) == False:
+            if not os.path.isfile(dataNameFile):
 
                 zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile) # copy zip file to local machine
 
