@@ -16,5 +16,4 @@ install:
  - cwd=`pwd`
 script:
  - ./nidmviewerfsl/tests/testError.py
- - sudo ./nidmviewerfsl/tests/test_fslViewer.py
-
+ # - ./nidmviewerfsl/tests/test_fslViewer.py
