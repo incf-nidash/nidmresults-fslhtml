@@ -1,4 +1,4 @@
 rdflib
 dominate
 matplotlib
-ddt
+ddt==1.1.1
