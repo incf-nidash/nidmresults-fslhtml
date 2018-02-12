@@ -5,6 +5,7 @@ python:
   - "3.5"
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
+ - ls /home/travis/virtualenv/python3.5.5/lib/python3.5/site-packages/
  - pip install -r requirements.txt
  - python setup.py install # install package from sources
  # Install FSL using neurodebian
@@ -16,4 +17,4 @@ install:
  - cwd=`pwd`
 script:
  - ./nidmviewerfsl/tests/testError.py
- # - ./nidmviewerfsl/tests/test_fslViewer.py
+ - ./nidmviewerfsl/tests/test_fslViewer.py
