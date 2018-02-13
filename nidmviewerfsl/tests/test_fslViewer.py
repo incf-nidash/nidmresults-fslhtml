@@ -98,7 +98,8 @@ class testDatasetFeatures(unittest.TestCase):
                                        'XcIBxug7N0JVms5gZumIEn1TFCIYwQ7'
                                        'ZmTKU8F4MZGjkqmM2aoTcLs5hMq9SNe'
                                        '1pl5LA3VmztgvqmAozv/pyLAcZtvhI0'
-                                       'Y46pAON0rdiai68y3DoFdqgKphI0b/A'}
+                                       'Y46pAON0rdiai68y3DoFdqgKphI0b/A',
+                      'conVec': ['[1, 0, 0]']}
 
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
@@ -116,7 +117,8 @@ class testDatasetFeatures(unittest.TestCase):
                           'highSliceVal': '5.65',
                           'contrastName': ['tone counting probe vs baseline',
                                            'tone counting vs baseline'],
-                          'numExc': 1}
+                          'numExc': 1,
+                          'conVec': ['[0, 1, 0]','[1, 0, 0]']}
 
     # Initiate a blank string.
     def setUp(self):
@@ -487,7 +489,6 @@ class testDatasetFeatures(unittest.TestCase):
                       msg='Test failed on ' + structData["Name"])
 
     # Test to check whether the design matrix is being displayed correctly.
-    # def test_designMatrix(self, structData):
     @data(fsl_con_f, ex_spm_default)
     def test_designMatrix(self, structData):
 
@@ -516,6 +517,34 @@ class testDatasetFeatures(unittest.TestCase):
         # Verify the slice image contained the extract.
         self.assertIn(structData["desMatExtract"], self.testString,
                       msg='Test failed on ' + structData["Name"])
+
+    # Test to check whether the contrast vectors are being written correctly.
+    @data(ex_spm_conjunction, ex_spm_default)
+    def test_conVec(self, structData):
+
+        # Setup
+        filePath = self.getFilePath(structData)
+        statsFile = open(os.path.join(filePath, 'stats.html'), "r")
+
+        conPresent = [False]*len(structData['conVec'])
+
+        #Look through each line.
+        for line in statsFile:
+
+            #Check if each contrast vector is in the line.
+            for i in range(0,len(structData['conVec'])):
+
+                conVec = structData['conVec'][i]
+
+                #If the contrast vector is there, record that we've seen it.
+                if conVec in line:
+
+                    conPresent[i] = True
+
+        statsFile.close()
+
+        self.assertNotIn(False, conPresent,
+                         msg='Test failed on ' + structData["Name"])
 
 
 # ===============================================================================
