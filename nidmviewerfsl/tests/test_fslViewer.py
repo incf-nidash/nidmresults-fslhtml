@@ -13,7 +13,9 @@ from ddt import ddt, data
 @ddt
 class testDatasetFeatures(unittest.TestCase):
 
-    # Create a structure for each test datapack.
+    # Create a structure for each test datapack. These structures consist
+    # of information about each datapack that should be included in the 
+    # display produced by the viewer.
     fsl_con_f = {'Name': 'fsl_con_f_130',
                  'softwareName': 'FSL',
                  'version': '6.00',
@@ -99,7 +101,16 @@ class testDatasetFeatures(unittest.TestCase):
                                        'ZmTKU8F4MZGjkqmM2aoTcLs5hMq9SNe'
                                        '1pl5LA3VmztgvqmAozv/pyLAcZtvhI0'
                                        'Y46pAON0rdiai68y3DoFdqgKphI0b/A',
-                      'conVec': ['[1, 0, 0]']}
+                      'conVec': ['[1, 0, 0]'],
+                      'conVecImEx': ['APYQAAD2EBqD+naQAAADl0RVh0U29mdHd'
+                                     'hcmUAbWF0cGxvdGxpYiB2ZXJzaW9uIDIu'
+                                     'MS4yLCBodHRwOi8vbWF0cGxvdGxpYi5vc'
+                                     'mcvNQv5yAAAAe9JREFUeJzt3TEKAjEQQF'
+                                     'FH9v5Xjq1a+MEmQd/rFlJM+xmymbXWugE'
+                                     'AAHxw3z0AAABwPuEAAAAk4QAAAKTr+WNm'
+                                     'ds0BAAAc5P0qtI0DAACQhAMAAJCEAwAAk'
+                                     'IQDAACQhAMAAJCEAwAAkK4+AvyT91+vAQ'
+                                     'C/55tnGGwcAACAJBwAAIAkHAAAgCQcAAC']}
 
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
@@ -118,7 +129,30 @@ class testDatasetFeatures(unittest.TestCase):
                           'contrastName': ['tone counting probe vs baseline',
                                            'tone counting vs baseline'],
                           'numExc': 1,
-                          'conVec': ['[0, 1, 0]','[1, 0, 0]']}
+                          'conVec': ['[0, 1, 0]', '[1, 0, 0]'],
+                          'conVecImEx': ['VBORw0KGgoAAAANSUhEUgAAAw4AAABU'
+                                        'CAYAAAArv2BBAAAABHNCSVQICAgIfAhk'
+                                        'iAAAAAlwSFlzAAAPYQAAD2EBqD+naQAA'
+                                        'ADl0RVh0U29mdHdhcmUAbWF0cGxvdGxp'
+                                        'YiB2ZXJzaW9uIDIuMS4yLCBodHRwOi8v'
+                                        'bWF0cGxvdGxpYi5vcmcvNQv5yAAAAflJ'
+                                        'REFUeJzt3UEKg0AQAEE3+P8vb67Rg00C'
+                                        'wUWqboLC3JZmUMecc24AAAAXXncPAAAA'
+                                        'rE84AAAASTgAAABp/7wYY9w1BwAAsJDz'
+                                        'q9A2DgAAQBIOAABAEg4AAEASDgAAQBIO'
+                                        'AABAEg4AAEDa+5aj82eZgGfxWWZg25z3'
+                                        '8HS/nPc2DgAAQBIOAABAEg4AAEASDgAA',
+                                        'FFH9v5Xjq1a+MEmQd/rFlJM+xmymbXWu'
+                                        'gEAAHxw3z0AAABwPuEAAAAk4QAAAKTr+'
+                                        'WNmds0BAAAc5P0qtI0DAACQhAMAAJCEA'
+                                        'wAAkIQDAACQhAMAAJCEAwAAkK4+AvyT9'
+                                        '1+vAQC/55tnGGwcAACAJBwAAIAkHAAAg'
+                                        'CQcAACAJBwAAIAkHAAAgCQcAACAJBwAA'
+                                        'IAkHAAAgCQcAACAJBwAAIAkHAAAgCQcA'
+                                        'ACAJBwAAIAkHAAAgCQcAACAJBwAAIAkH'
+                                        'AAAgCQcAACAJBwAAIAkHAAAgCQcAACAJ'
+                                        'BwAAIAkHAAAgCQcAACAJBwAAIAkHAAAg'
+                                        'CQcAACAJBwAAIAkHAAAgCQcAACAJBwAA']}
 
     # Initiate a blank string.
     def setUp(self):
@@ -520,7 +554,7 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Test to check whether the contrast vectors are being written correctly.
     @data(ex_spm_conjunction, ex_spm_default)
-    def test_conVec(self, structData):
+    def test_conVecString(self, structData):
 
         # Setup
         filePath = self.getFilePath(structData)
@@ -528,15 +562,44 @@ class testDatasetFeatures(unittest.TestCase):
 
         conPresent = [False]*len(structData['conVec'])
 
-        #Look through each line.
+        # Look through each line.
         for line in statsFile:
 
-            #Check if each contrast vector is in the line.
-            for i in range(0,len(structData['conVec'])):
+            # Check if each contrast vector is in the line.
+            for i in range(0, len(structData['conVec'])):
 
                 conVec = structData['conVec'][i]
 
-                #If the contrast vector is there, record that we've seen it.
+                # If the contrast vector is there, record that we've seen it.
+                if conVec in line:
+
+                    conPresent[i] = True
+
+        statsFile.close()
+
+        self.assertNotIn(False, conPresent,
+                         msg='Test failed on ' + structData["Name"])
+
+    # Test to check whether the contrast vectors are being displayed correctly.
+    @data(ex_spm_conjunction, ex_spm_default)
+    def test_conVecImage(self, structData):
+
+        # Setup
+        filePath = self.getFilePath(structData)
+        statsFile = open(os.path.join(filePath, 'stats.html'), "r")
+
+        conPresent = [False]*len(structData['conVecImEx'])
+
+        # Look through each line.
+        for line in statsFile:
+
+            # Check if each contrast vector is in the line.
+            for i in range(0, len(structData['conVecImEx'])):
+
+                conVec = structData['conVecImEx'][i]
+
+                # If the contrast vector image is there, record that we've 
+                # seen it.
                 if conVec in line:
 
                     conPresent[i] = True
@@ -561,10 +624,11 @@ if __name__ == "__main__":
 
     dataNames = ["fsl_con_f_130",
                  "fsl_thr_clustfwep05_130",
+                 "fsl_contrast_mask_130",
+                 "fsl_gamma_basis_130",
                  "ex_spm_contrast_mask",
-                 "ex_spm_thr_voxelunct4",
-                 "ex_spm_thr_clustunck10",
-                 "ex_spm_thr_voxelfdrp05"]
+                 "ex_spm_default",
+                 "ex_spm_conjunction"]
 
     local = True
 
