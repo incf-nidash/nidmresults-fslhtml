@@ -72,7 +72,8 @@ if __name__ == "__main__":
             if not os.path.isfile(dataNameFile):
 
                 # copy zip file to local machine
-                zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile)
+                zipFileRequest = urllib.request.urlretrieve(zipUrl, 
+                                                            dataNameFile)
 
             dataPath = os.path.join(dataDir, dataName + ".zip")
 

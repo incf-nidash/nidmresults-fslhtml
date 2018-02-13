@@ -199,7 +199,7 @@ class testDatasetFeatures(unittest.TestCase):
         for line in postStatsFile:
 
             if "statistic images were thresholded using clusters " \
-               "determined by" in line:
+                       "determined by" in line:
 
                 self.testString = line
                 break
