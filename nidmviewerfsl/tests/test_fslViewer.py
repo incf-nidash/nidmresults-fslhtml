@@ -8,6 +8,7 @@ import urllib.request
 import json
 from ddt import ddt, data
 
+
 # This is the class of tests for testing specific features of datasets.
 @ddt
 class testDatasetFeatures(unittest.TestCase):
@@ -99,7 +100,7 @@ class testDatasetFeatures(unittest.TestCase):
                           'lowSliceVal': '3.18',
                           'highSliceVal': '5.65',
                           'contrastName': ['tone counting probe vs baseline',
-                                          'tone counting vs baseline'],
+                                           'tone counting vs baseline'],
                           'numExc': 1}
 
     # Initiate a blank string.
@@ -111,8 +112,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Open the necessary file.
         fileName = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                     "data",
-                                     structData["Name"] + "_test")
+                                "data",
+                                structData["Name"] + "_test")
         return(fileName)
 
     # Test to see if the software name has been recorded correctly.
@@ -197,7 +198,8 @@ class testDatasetFeatures(unittest.TestCase):
         # Check for the extent threshold.
         for line in postStatsFile:
 
-            if "statistic images were thresholded using clusters determined by" in line:
+            if "statistic images were thresholded using clusters" \
+               "determined by" in line:
 
                 self.testString = line
                 break
@@ -213,7 +215,7 @@ class testDatasetFeatures(unittest.TestCase):
     @data(fsl_thr_clustfwep05, ex_spm_contrast_mask, ex_spm_conjunction)
     def test_sliceImageExtract(self, structData):
 
-         # Setup
+        # Setup
         filePath = self.getFilePath(structData)
         postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
         nextLine = False
@@ -247,11 +249,12 @@ class testDatasetFeatures(unittest.TestCase):
         postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
 
         # This is an extract of the encoding for the FSL logo
-        logoExtract = 'WriWP7OC0Zy6j7w4yMeoqnKL9NPivby0uILm1ZSwKEFh0NPvrlodWs' \
-                      '7iI7DP+7YnoR1Gf1ouFiBtOspXAjPB5UHncMdv8OtY+qeGVCuUTlef' \
-                      'l5yPWtaSN0nu7KL76kXUJP8JJ6fnkGp5L+VYLK4CExSsFcbcjaQf60' \
-                      'aMRzGh61deHtQWyuXZ7R8EFuqg9x+ddddWCXMb3FtyCN4CnPNZF7ZC' \
-                      '58RwW7IZYolLhtucjHTPfpVvS737Kiyw3J8iQbjC2CFB9OfpTQk7mX'
+        logoExtract = 'WriWP7OC0Zy6j7w4yMeoqnKL9NPivby0uILm1ZSwKEFh0N' \
+                      'PvrlodWs7iI7DP+7YnoR1Gf1ouFiBtOspXAjPB5UHncMdv' \
+                      '8OtY+qeGVCuUTlefl5yPWtaSN0nu7KL76kXUJP8JJ6fnkG' \
+                      'p5L+VYLK4CExSsFcbcjaQf60aMRzGh61deHtQWyuXZ7R8E' \
+                      'Fuqg9x+ddddWCXMb3FtyCN4CnPNZF7ZC58RwW7IZYolLht' \
+                      'ucjHTPfpVvS737Kiyw3J8iQbjC2CFB9OfpTQk7mX'
 
         # Check for the FSL logo.
         for line in postStatsFile:
@@ -271,7 +274,7 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Check if the lower slice value is given correctly correctly.
     @data(fsl_con_f, fsl_thr_clustfwep05, ex_spm_contrast_mask,
-          ex_spm_default,ex_spm_conjunction)
+          ex_spm_default, ex_spm_conjunction)
     def test_LowerSliceVal(self, structData):
 
         # Setup
@@ -279,11 +282,12 @@ class testDatasetFeatures(unittest.TestCase):
         postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
 
         # This is an extract of the encoding for the colorbar
-        colorBarExtract = 'P+6AP+yAP+qAP+oAP+gAP+eAP+WAP+MAP+EAP+CAP98AP96AP9y' \
-                          'AP9wAP9oAP9mAP9gAP9eAP9WAP9UAP9EAP9CAP86AP84AP8wAP8' \
-                          'oAP8mAP8eAP8cAP8WAP8UAP8MAP8KAP/lAP/dAP/bAP/TAP/RAP' \
-                          '/JAP/BAP+/AP+3AP+1AP+vAP+tAP+lAP+jAP+bAP+ZAP+TAP+RA' \
-                          'P+JAP+HAP9/AP93AP91AP9tAP9rAP9jAP9bAP9ZAP9RAP9PAP9J'
+        colorBarExtract = 'P+6AP+yAP+qAP+oAP+gAP+eAP+WAP+MAP+EAP+CAP98AP9' \
+                          '6AP9yAP9wAP9oAP9mAP9gAP9eAP9WAP9UAP9EAP9CAP86A' \
+                          'P84AP8wAP8oAP8mAP8eAP8cAP8WAP8UAP8MAP8KAP/lAP/' \
+                          'dAP/bAP/TAP/RAP/JAP/BAP+/AP+3AP+1AP+vAP+tAP+lA' \
+                          'P+jAP+bAP+ZAP+TAP+RAP+JAP+HAP9/AP93AP91AP9tAP9' \
+                          'rAP9jAP9bAP9ZAP9RAP9PAP9J'
 
         # Check for the FSL logo.
         for line in postStatsFile:
@@ -311,11 +315,12 @@ class testDatasetFeatures(unittest.TestCase):
         postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
 
         # This is an extract of the encoding for the colorbar
-        colorBarExtract = 'P+6AP+yAP+qAP+oAP+gAP+eAP+WAP+MAP+EAP+CAP98AP96AP9y' \
-                          'AP9wAP9oAP9mAP9gAP9eAP9WAP9UAP9EAP9CAP86AP84AP8wAP8' \
-                          'oAP8mAP8eAP8cAP8WAP8UAP8MAP8KAP/lAP/dAP/bAP/TAP/RAP' \
-                          '/JAP/BAP+/AP+3AP+1AP+vAP+tAP+lAP+jAP+bAP+ZAP+TAP+RA' \
-                          'P+JAP+HAP9/AP93AP91AP9tAP9rAP9jAP9bAP9ZAP9RAP9PAP9J'
+        colorBarExtract = 'P+6AP+yAP+qAP+oAP+gAP+eAP+WAP+MAP+EAP+CAP98AP9' \
+                          '6AP9yAP9wAP9oAP9mAP9gAP9eAP9WAP9UAP9EAP9CAP86A' \
+                          'P84AP8wAP8oAP8mAP8eAP8cAP8WAP8UAP8MAP8KAP/lAP/' \
+                          'dAP/bAP/TAP/RAP/JAP/BAP+/AP+3AP+1AP+vAP+tAP+lA' \
+                          'P+jAP+bAP+ZAP+TAP+RAP+JAP+HAP9/AP93AP91AP9tAP9' \
+                          'rAP9jAP9bAP9ZAP9RAP9PAP9J'
 
         # Check for the FSL logo.
         for line in postStatsFile:
@@ -337,7 +342,7 @@ class testDatasetFeatures(unittest.TestCase):
     @data(fsl_thr_clustfwep05, ex_spm_contrast_mask)
     def test_contrastName(self, structData):
 
-         # Setup
+        # Setup
         filePath = self.getFilePath(structData)
         postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
         nextLine = False
@@ -368,7 +373,7 @@ class testDatasetFeatures(unittest.TestCase):
     @data(ex_spm_conjunction)
     def test_contrastName_conjunction(self, structData):
 
-         # Setup
+        # Setup
         filePath = self.getFilePath(structData)
         postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
         nextLine = False
@@ -404,13 +409,12 @@ class testDatasetFeatures(unittest.TestCase):
         clusDir = os.path.join(filePath, 'Cluster_Data')
 
         # Count the number of files in the cluster data directory.
-        numExc = len([name for name in os.listdir(clusDir) if os.path.isfile(
-                                                    os.path.join(clusDir, name))])
+        numExc = len([name for name in os.listdir(
+            clusDir) if os.path.isfile(os.path.join(clusDir, name))])
 
         # Assert if the number of excursions is correct.
         self.assertTrue(numExc == structData["numExc"],
                         msg='Test failed on ' + structData["Name"])
-
 
     # Checks if the correct number of slice images have been generated.
     @data(fsl_con_f, ex_spm_default, ex_spm_conjunction, fsl_gamma_basis)
@@ -428,14 +432,12 @@ class testDatasetFeatures(unittest.TestCase):
 
                 numSliceIm = numSliceIm + 1
 
-
         # Close the file
         postStatsFile.close()
 
         # Assert if the number of slice images is correct.
         self.assertTrue(numSliceIm == structData["numExc"],
                         msg='Test failed on ' + structData["Name"])
-
 
     # Test to check the correct contrast name matches the correct slice image.
     @data(fsl_contrast_mask, fsl_gamma_basis)
@@ -449,13 +451,15 @@ class testDatasetFeatures(unittest.TestCase):
         nextLine = False
         for line in postStatsFile:
 
-            # If this is the line containing the slice image check for the extract
+            # If this is the line containing the slice image check for the
+            # extract
             if nextLine:
 
                 self.testString = line
                 break
 
-            # If this line contains the contrast name the next line is the image.
+            # If this line contains the contrast name the next line is the
+            # image.
             if structData['matchConName'] in line:
 
                 nextLine = True
@@ -468,29 +472,62 @@ class testDatasetFeatures(unittest.TestCase):
                       msg='Test failed on ' + structData["Name"])
 
     # Test to check whether the design matrix is being displayed correctly.
+<<<<<<< b3609a20421cef1368eb7f3840706d1722bbd539
     # def test_designMatrix(self, structData):
+=======
+    @data(fsl_con_f, ex_spm_default)
+    def test_designMatrix(self, structData):
+
+        # Setup
+        filePath = self.getFilePath(structData)
+        statsFile = open(os.path.join(filePath, 'stats.html'), "r")
+
+        nextLine = False
+
+        # Check for the design matrix.
+        for line in statsFile:
+
+            if nextLine:
+
+                self.testString = line
+                break
+
+            # If we see this the next line contains the design matrix.
+            if '<a href="DesignMatrix.csv">' in line:
+
+                nextLine = True
+
+        # Close the file
+        statsFile.close()
+
+        # Verify the slice image contained the extract.
+        self.assertIn(structData["desMatExtract"], self.testString,
+                      msg='Test failed on ' + structData["Name"])
+
+
+>>>>>>> PEP8 fixes
 # ===============================================================================
 
 if __name__ == "__main__":
 
-    scriptPath = os.path.dirname(os.path.abspath(__file__)) # Get path of script
+    scriptPath = os.path.dirname(os.path.abspath(__file__))  # Get path of script
     dataDir = os.path.join(scriptPath, "data")
 
-    if not os.path.isdir(dataDir): # Data folder does not exist
+    if not os.path.isdir(dataDir):  # Data folder does not exist
 
         os.makedirs(dataDir)
 
 
     dataNames = ["fsl_con_f_130",
                  "fsl_thr_clustfwep05_130",
-                 "ex_spm_contrast_mask"]
-                 # "ex_spm_thr_voxelunct4",
-                 # "ex_spm_thr_clustunck10",
-                 # "ex_spm_thr_voxelfdrp05"]
+                 "ex_spm_contrast_mask",
+                 "ex_spm_thr_voxelunct4",
+                 "ex_spm_thr_clustunck10",
+                 "ex_spm_thr_voxelfdrp05"]
 
     local = True
 
-    for dataName in dataNames: # Check if data is on local machine
+    for dataName in dataNames:  # Check if data is on local machine
 
         # Data not found on local machine
         if not os.path.isfile(os.path.join(dataDir, dataName + ".nidm.zip")):
@@ -511,8 +548,8 @@ if __name__ == "__main__":
 
             print(nidmResult["zip_file"])
 
-            zipUrl = nidmResult["zip_file"] # Url of zip file
-            dataName = nidmResult["name"] # Name of data (e.g. fsl_con_f.nidm)
+            zipUrl = nidmResult["zip_file"]  # Url of zip file
+            dataName = nidmResult["name"]  # Name of data (e.g. fsl_con_f.nidm)
             dataNameFile = os.path.join(dataDir, dataName + ".zip")
 
             if not os.path.isfile(dataNameFile):
@@ -521,11 +558,11 @@ if __name__ == "__main__":
                 zipFileRequest = urllib.request.urlretrieve(zipUrl,
                                                             dataNameFile)
 
-    globData = os.path.join(dataDir,"*.zip")
-    data = glob.glob(globData) # Get names of all zip files in data folder
+    globData = os.path.join(dataDir, "*.zip")
+    data = glob.glob(globData)  # Get names of all zip files in data folder
 
-    for i in data: # Loop over all zip files in data folder and create html
+    for i in data:  # Loop over all zip files in data folder and create html
 
         viewer.main(i, i.replace(".nidm.zip", "") + "_test", overwrite=True)
 
-    unittest.main() # Tests
+    unittest.main()  # Tests
