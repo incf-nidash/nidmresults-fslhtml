@@ -14,7 +14,7 @@ from ddt import ddt, data
 class testDatasetFeatures(unittest.TestCase):
 
     # Create a structure for each test datapack. These structures consist
-    # of information about each datapack that should be included in the 
+    # of information about each datapack that should be included in the
     # display produced by the viewer.
     fsl_con_f = {'Name': 'fsl_con_f_130',
                  'softwareName': 'FSL',
@@ -131,28 +131,28 @@ class testDatasetFeatures(unittest.TestCase):
                           'numExc': 1,
                           'conVec': ['[0, 1, 0]', '[1, 0, 0]'],
                           'conVecImEx': ['VBORw0KGgoAAAANSUhEUgAAAw4AAABU'
-                                        'CAYAAAArv2BBAAAABHNCSVQICAgIfAhk'
-                                        'iAAAAAlwSFlzAAAPYQAAD2EBqD+naQAA'
-                                        'ADl0RVh0U29mdHdhcmUAbWF0cGxvdGxp'
-                                        'YiB2ZXJzaW9uIDIuMS4yLCBodHRwOi8v'
-                                        'bWF0cGxvdGxpYi5vcmcvNQv5yAAAAflJ'
-                                        'REFUeJzt3UEKg0AQAEE3+P8vb67Rg00C'
-                                        'wUWqboLC3JZmUMecc24AAAAXXncPAAAA'
-                                        'rE84AAAASTgAAABp/7wYY9w1BwAAsJDz'
-                                        'q9A2DgAAQBIOAABAEg4AAEASDgAAQBIO'
-                                        'AABAEg4AAEDa+5aj82eZgGfxWWZg25z3'
-                                        '8HS/nPc2DgAAQBIOAABAEg4AAEASDgAA',
-                                        'FFH9v5Xjq1a+MEmQd/rFlJM+xmymbXWu'
-                                        'gEAAHxw3z0AAABwPuEAAAAk4QAAAKTr+'
-                                        'WNmds0BAAAc5P0qtI0DAACQhAMAAJCEA'
-                                        'wAAkIQDAACQhAMAAJCEAwAAkK4+AvyT9'
-                                        '1+vAQC/55tnGGwcAACAJBwAAIAkHAAAg'
-                                        'CQcAACAJBwAAIAkHAAAgCQcAACAJBwAA'
-                                        'IAkHAAAgCQcAACAJBwAAIAkHAAAgCQcA'
-                                        'ACAJBwAAIAkHAAAgCQcAACAJBwAAIAkH'
-                                        'AAAgCQcAACAJBwAAIAkHAAAgCQcAACAJ'
-                                        'BwAAIAkHAAAgCQcAACAJBwAAIAkHAAAg'
-                                        'CQcAACAJBwAAIAkHAAAgCQcAACAJBwAA']}
+                                         'CAYAAAArv2BBAAAABHNCSVQICAgIfAhk'
+                                         'iAAAAAlwSFlzAAAPYQAAD2EBqD+naQAA'
+                                         'ADl0RVh0U29mdHdhcmUAbWF0cGxvdGxp'
+                                         'YiB2ZXJzaW9uIDIuMS4yLCBodHRwOi8v'
+                                         'bWF0cGxvdGxpYi5vcmcvNQv5yAAAAflJ'
+                                         'REFUeJzt3UEKg0AQAEE3+P8vb67Rg00C'
+                                         'wUWqboLC3JZmUMecc24AAAAXXncPAAAA'
+                                         'rE84AAAASTgAAABp/7wYY9w1BwAAsJDz'
+                                         'q9A2DgAAQBIOAABAEg4AAEASDgAAQBIO'
+                                         'AABAEg4AAEDa+5aj82eZgGfxWWZg25z3'
+                                         '8HS/nPc2DgAAQBIOAABAEg4AAEASDgAA',
+                                         'FFH9v5Xjq1a+MEmQd/rFlJM+xmymbXWu'
+                                         'gEAAHxw3z0AAABwPuEAAAAk4QAAAKTr+'
+                                         'WNmds0BAAAc5P0qtI0DAACQhAMAAJCEA'
+                                         'wAAkIQDAACQhAMAAJCEAwAAkK4+AvyT9'
+                                         '1+vAQC/55tnGGwcAACAJBwAAIAkHAAAg'
+                                         'CQcAACAJBwAAIAkHAAAgCQcAACAJBwAA'
+                                         'IAkHAAAgCQcAACAJBwAAIAkHAAAgCQcA'
+                                         'ACAJBwAAIAkHAAAgCQcAACAJBwAAIAkH'
+                                         'AAAgCQcAACAJBwAAIAkHAAAgCQcAACAJ'
+                                         'BwAAIAkHAAAgCQcAACAJBwAAIAkHAAAg'
+                                         'CQcAACAJBwAAIAkHAAAgCQcAACAJBwAA']}
 
     # Initiate a blank string.
     def setUp(self):
@@ -598,7 +598,7 @@ class testDatasetFeatures(unittest.TestCase):
 
                 conVec = structData['conVecImEx'][i]
 
-                # If the contrast vector image is there, record that we've 
+                # If the contrast vector image is there, record that we've
                 # seen it.
                 if conVec in line:
 
