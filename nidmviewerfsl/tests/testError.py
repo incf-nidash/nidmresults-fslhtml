@@ -29,6 +29,7 @@ class generalTests(unittest.TestCase):
             viewer.main(
                 i, i.replace(".nidm.zip", "") + "_test_err", overwrite=True)
 
+
 if __name__ == "__main__":
 
     scriptDir = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +45,8 @@ if __name__ == "__main__":
     local = True
     for dataName in dataNames:  # Checks if data is on local machine
 
-        if not os.path.isfile(os.path.join(dataDir, dataName + ".nidm.zip")):  # Data not found on local machine
+        # Data not found on local machine
+        if not os.path.isfile(os.path.join(dataDir, dataName + ".nidm.zip")):
 
             local = False
             break
@@ -52,7 +54,9 @@ if __name__ == "__main__":
     if not local:  # Data not on local machine
 
         print("Downloading data")
-        req = urllib.request.Request("http://neurovault.org/api/collections/2210/nidm_results") # Request from neurovault api
+        # Request from neurovault api
+        req = urllib.request.Request(
+            "http://neurovault.org/api/collections/2210/nidm_results")
         resp = urllib.request.urlopen(req)
         readResp = resp.read()
         data = json.loads(readResp.decode('utf-8'))
@@ -67,7 +71,8 @@ if __name__ == "__main__":
 
             if not os.path.isfile(dataNameFile):
 
-                zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile)  # copy zip file to local machine
+                # copy zip file to local machine
+                zipFileRequest = urllib.request.urlretrieve(zipUrl, dataNameFile)
 
             dataPath = os.path.join(dataDir, dataName + ".zip")
 

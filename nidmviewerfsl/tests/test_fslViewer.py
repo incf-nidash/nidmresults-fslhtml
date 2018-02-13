@@ -510,13 +510,13 @@ class testDatasetFeatures(unittest.TestCase):
 
 if __name__ == "__main__":
 
-    scriptPath = os.path.dirname(os.path.abspath(__file__))  # Get path of script
+    # Get path of script
+    scriptPath = os.path.dirname(os.path.abspath(__file__))
     dataDir = os.path.join(scriptPath, "data")
 
     if not os.path.isdir(dataDir):  # Data folder does not exist
 
         os.makedirs(dataDir)
-
 
     dataNames = ["fsl_con_f_130",
                  "fsl_thr_clustfwep05_130",
