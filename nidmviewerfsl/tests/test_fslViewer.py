@@ -20,7 +20,14 @@ class testDatasetFeatures(unittest.TestCase):
                  'hThresh': 'P = 0.001 (uncorrected)',
                  'lowSliceVal': '3.09',
                  'highSliceVal': '7.4',
-                 'numExc': 2}
+                 'numExc': 2,
+                 'desMatExtract': 'dO9drThsTEyZMUHf83LmfX/mP/yVfAEAdAYA6A'
+                                  'imqt7c32ksffPCBmj/PnTv3H43ZuTFXdN0333z'
+                                  'j52cye/ZsdcePHz/+sTF7XN2Ym8eTLwCgjgBAH'
+                                  'YHUdPHixYglJ0+eVLPojIwMEckY6p2+ceUcx2A'
+                                  'rVqxQ97SlpUWfbmlp+ZOxvCV672NnP0S+AIA6A'
+                                  'gB1BFLTjz/+aE6fPn1azasnT548eeAbEqWnp8d'
+                                  '5IyUlJerehUKhUChUYSwJxd/L2NnkCwCoIwBQR'}
 
     fsl_contrast_mask = {'Name': 'fsl_contrast_mask_130',
                          'softwareName': 'FSL',
@@ -83,7 +90,15 @@ class testDatasetFeatures(unittest.TestCase):
                       'hThresh': 'P = 0.001 (uncorrected)',
                       'lowSliceVal': '3.18',
                       'highSliceVal': '7.92',
-                      'numExc': 1}
+                      'numExc': 1,
+                      'desMatExtract': 'fCRVgvijvXoD5oJzQy8G8URXMK1XZmy'
+                                       'HMCzW0GjfX5WCcaRWM92adgjaEGQqaj'
+                                       'aDSbO6pKyrAnFE/VIBxK3FYA8wudU1V'
+                                       'MJVZYI+qdGinq18kwPhdHdYKphI0txI'
+                                       'XcIBxug7N0JVms5gZumIEn1TFCIYwQ7'
+                                       'ZmTKU8F4MZGjkqmM2aoTcLs5hMq9SNe'
+                                       '1pl5LA3VmztgvqmAozv/pyLAcZtvhI0'
+                                       'Y46pAON0rdiai68y3DoFdqgKphI0b/A'}
 
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
@@ -472,9 +487,7 @@ class testDatasetFeatures(unittest.TestCase):
                       msg='Test failed on ' + structData["Name"])
 
     # Test to check whether the design matrix is being displayed correctly.
-<<<<<<< b3609a20421cef1368eb7f3840706d1722bbd539
     # def test_designMatrix(self, structData):
-=======
     @data(fsl_con_f, ex_spm_default)
     def test_designMatrix(self, structData):
 
@@ -505,7 +518,6 @@ class testDatasetFeatures(unittest.TestCase):
                       msg='Test failed on ' + structData["Name"])
 
 
->>>>>>> PEP8 fixes
 # ===============================================================================
 
 if __name__ == "__main__":
