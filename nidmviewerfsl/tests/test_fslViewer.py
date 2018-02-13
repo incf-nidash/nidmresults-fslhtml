@@ -198,7 +198,7 @@ class testDatasetFeatures(unittest.TestCase):
         # Check for the extent threshold.
         for line in postStatsFile:
 
-            if "statistic images were thresholded using clusters" \
+            if "statistic images were thresholded using clusters " \
                "determined by" in line:
 
                 self.testString = line
