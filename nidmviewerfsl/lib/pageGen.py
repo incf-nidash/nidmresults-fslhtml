@@ -214,8 +214,7 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
     stats += a(
         img(src='data:image/jpg;base64,' +
             encodeImage(os.path.join(os.path.split(statsFilePath)[0],
-                        designMatrixLocation[1]
-                        )).decode(),
+                        designMatrixLocation[1])).decode(),
             style="border:5px solid black",
             border=0,
             width=250),
