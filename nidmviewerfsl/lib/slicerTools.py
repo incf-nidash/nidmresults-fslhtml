@@ -78,85 +78,26 @@ import os
 import shutil
 import random
 import shlex
+import numpy as np
+import nibabel as nib
+from queries.queryTools import runQuery
 
 
-def nifDim(niftiFilename, k):
-    # Retrieve the k dimension of a nifti given it's filename using FSL.
+def nifDim(header, k):
+    # Retrieve the k dimension of a nifti given it's header using FSL.
 
     if k == 'x':
-        arg = 'dim1'
+        dimension = header['dim'][1]
     elif k == 'y':
-        arg = 'dim2'
+        dimension = header['dim'][2]
     elif k == 'z':
-        arg = 'dim3'
+        dimension = header['dim'][3]
     elif k == 'pix':
-        arg = 'pixdim1'
+        dimension = header['pixdim'][1]
     else:
         error('Enter a valid dimension... x, y, z or pix')
 
-    # Make the commands
-    getDimString1 = ["fslhd", niftiFilename]
-    getDimString2 = ["cat", "-v"]
-    getDimString3 = ["grep", "^" + arg]
-
-    # Run the command
-    process_1 = subprocess.Popen(getDimString1, shell=False,
-                                 stdout=subprocess.PIPE)
-    process_2 = subprocess.Popen(getDimString2, shell=False,
-                                 stdin=process_1.stdout,
-                                 stdout=subprocess.PIPE)
-    process_3 = subprocess.Popen(getDimString3, shell=False,
-                                 stdin=process_2.stdout,
-                                 stdout=subprocess.PIPE)
-
-    # Close all streams and retreive output.
-    process_1.stdout.close()
-    process_2.stdout.close()
-    output = process_3.communicate()
-
-    dimension = int(float(output[0].decode('utf-8').rstrip(
-        '\r|\n').replace(arg, '').replace(' ', '')))
-
     return(dimension)
-
-
-def createResizeMatrix(niftiFilename1, niftiFilename2, scalefactor, tempDir):
-    # This creates the resize matrix for the resizing of the niftis and saves
-    # it as resizeMatrix.mat
-
-    xShift = abs(nifDim(niftiFilename1, 'x') - nifDim(niftiFilename2, 'x'))
-    yShift = abs(nifDim(niftiFilename1, 'y') - nifDim(niftiFilename2, 'y'))
-
-    # Open the matrix file.
-    matrixFile = open(os.path.join(tempDir, 'resizeMatrix.mat'), 'w')
-
-    # Write the matrix file
-    matrixFile.write('1 0 0 ' + str(scalefactor*xShift) + ' \n')
-    matrixFile.write('0 1 0 ' + str(scalefactor*yShift) + ' \n')
-    matrixFile.write('0 0 1 0 \n')
-    matrixFile.write('0 0 0 1 \n')
-
-    # Close the matrix file.
-    matrixFile.close()
-
-
-def resizeSPMtoFSL(exc_set, template, scalefactor, tempDir):
-    # This function resizes an SPM excursion set to a FSL template if
-    # necessary, assuming the volume of the brain in both the template and
-    # excursion set are the same and they are correctly aligned.
-
-    # Create necessary tranformation.
-    createResizeMatrix(exc_set, template, scalefactor, tempDir)
-
-    # Run the command  if necessary.
-    resizeCommand = "flirt -init " + \
-                    os.path.join(tempDir, "resizeMatrix.mat") + \
-                    " -in " + exc_set + " -ref " + template + " -out " + \
-                    os.path.join(tempDir, "resizedNifti.nii.gz") + " -applyxfm"
-    subprocess.check_call(shlex.split(resizeCommand), shell=False)
-    process = subprocess.Popen(shlex.split(resizeCommand), shell=False)
-    process.wait()
-
 
 def getVal(niftiFilename, minOrMax):
     # Retrieve the min or max values of the image.
@@ -210,33 +151,42 @@ def getSliceImageFromNifti(tempDir, outputName):
     process.wait()
 
 
-def generateSliceImage_SPM(exc_set):
+def generateSliceImage_SPM(exc_set, SPMorFSL):
 
     tempFolder = 'temp_NIDM_viewer' + str(random.randint(0, 999999))
     os.mkdir(tempFolder)
     FSLDIR = os.environ['FSLDIR']
 
-    # Find the template. If we can't find an appropriate template scaling will
-    # be required later.
-    if nifDim(exc_set, 'pix') == 1:
-        template = os.path.join(FSLDIR, 'data', 'standard',
-                                'MNI152_T1_1mm_brain.nii.gz')
-        scalefactor = 1
-    elif nifDim(exc_set, 'pix') == 2:
-        template = os.path.join(FSLDIR, 'data', 'standard',
-                                'MNI152_T1_2mm_brain.nii.gz')
-        scalefactor = 1
+    #Retrieve image header.
+    n = nib.load(exc_set)
+    header = n.header
+
+    # If we are looking at FSL data use the FSL template.
+    if SPMorFSL == 'FSL':
+        if nifDim(header, 'pix') == 1:
+            template = os.path.join(FSLDIR, 'data', 'standard',
+                                    'MNI152_T1_1mm_brain.nii.gz')
+        else:
+            template = os.path.join(FSLDIR, 'data', 'standard',
+                                    'MNI152_T1_2mm_brain.nii.gz')
     else:
-        template = os.path.join(FSLDIR, 'data', 'standard',
-                                'MNI152_T1_2mm_brain.nii.gz')
-        scalefactor = 1/nifDim(exc_set, 'pix')
+        #Remove NaN values.
+        d = n.get_data()
+        exc_set_nonan = nib.Nifti1Image(np.nan_to_num(d), n.affine, header=n.header)
+
+        # Combine activations and deactivations in a single image 
+        nib.save(exc_set_nonan, os.path.join(tempFolder, 'excset_nonan.nii.gz'))
+        exc_set = os.path.join(tempFolder, 'excset_nonan.nii.gz')
+
+        #Use the SPM template.
+        template = '/home/tom/Documents/Repos/nidmresults-fslhtml/templates/T1.nii'
 
     # Check which is bigger and resize if necessary
-    resizeSPMtoFSL(exc_set, template, scalefactor, tempFolder)
-    resized_exc_set = os.path.join(tempFolder, 'resizedNifti.nii.gz')
+    #resizeSPMtoFSL(exc_set, template, scalefactor, tempFolder)
+    #resized_exc_set = os.path.join(tempFolder, 'resizedNifti.nii.gz')
 
     # Overlay niftis
-    overlay(resized_exc_set, template, tempFolder)
+    overlay(exc_set, template, tempFolder)
 
     # Get the slices image
     getSliceImageFromNifti(tempFolder, exc_set.replace(
@@ -245,3 +195,5 @@ def generateSliceImage_SPM(exc_set):
     shutil.rmtree(tempFolder)
 
     return(exc_set.replace('.nii', '').replace('.gz', '')+'.png')
+
+generateSliceImage_SPM('/home/tom/Documents/Repos/nidmresults-fslhtml/nidmviewerfsl/tests/data/ex_spm_default_test/ExcursionSet.nii.gz', 'SPM')
