@@ -172,21 +172,30 @@ def formatClusterStats(g, excName):
             'peakLocations': sortedPeakLocations,
             'peakPVals': sortedPeakPVals})
 
+<<<<<<< c09910f6321f39ce95c07abe8c9b902295e0a247
 def contrastVec(data):
+=======
+
+def contrastVec(data, v_min, v_max):
+>>>>>>> colourbar range fix
 
     # This import is needed only in this function.
     from matplotlib import pyplot as plt
 
     conLength = len(data)
 
+    # We invert the values so the colours appear correctly (i.
+    # e. 1 -> white, 0 -> black).
+    data = np.ones(len(data))-data
+
     # Make the contrast vector larger so we can make an image.
     data = np.kron(data, np.ones((10, 30)))
 
     # Add border to data.
-    data[:, 0] = np.ones(10)
-    data[:, 30*conLength-1] = np.ones(10)
-    data[0, :] = np.ones(30*conLength)
-    data[10-1, :] = np.ones(30*conLength)
+    data[:, 0] = v_max*np.ones(10)
+    data[:, 30*conLength-1] = v_max*np.ones(10)
+    data[0, :] = v_max*np.ones(30*conLength)
+    data[10-1, :] = v_max*np.ones(30*conLength)
 
     # Create figure.
     fig = plt.figure(figsize=(len(data), 1))
@@ -196,7 +205,7 @@ def contrastVec(data):
     plt.axis('off')
 
     # Add contrast vector to figure
-    plt.imshow(data, aspect='auto', cmap='Greys')
+    plt.imshow(data, aspect='auto', cmap='Greys', vmin=v_min, vmax=v_max)
 
     # Check for bording box.
     extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())

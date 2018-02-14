@@ -233,15 +233,29 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
         conNames = list(set([conData[i] for i in range(0, len(conData), 2)]))
         conVal = list(set([conData[i] for i in range(1, len(conData), 2)]))
 
+        # First we must find the min and maximum contrast vector values.
+        conVec = [[0]]*len(conNames)
+        vmin = 0
+        vmax = 1
+
+        # Read in the contrast vectors and check for min/max values.
         for i in range(0, len(conNames)):
 
             # Read an individual contrast vector
-            conVec = conVal[i].replace('[', '').replace(
+            conVecStr = conVal[i].replace('[', '').replace(
                 ']', '').replace(',', '').split()
-            conVec = [float(conVec[i]) for i in range(0, len(conVec))]
+            conVec[i] = [float(conVecStr[i]) for i in range(0, len(conVecStr))]
 
+            # Update vmin and vmax. This is for the color range of the
+            # contrast vector.
+            vmin = min(min(np.ones(len(conVec[i]))-conVec[i]), vmin)
+            vmax = max(max(np.ones(len(conVec[i]))-conVec[i]), vmax)
+
+        #Then we must display each contrast vector.
+        for i in range(0, len(conNames)):
+            
             # Display an image of the contrast vector.
-            stats += img(src=contrastVec(conVec),
+            stats += img(src=contrastVec(conVec[i], vmin, vmax),
                          style="float:left;margin-right:1em;padding-top:4px;",
                          width="120",
                          height="30")
