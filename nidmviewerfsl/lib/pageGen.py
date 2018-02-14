@@ -194,7 +194,7 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
 
     # Otherwise we should display fsl Feat version and software label.
     elif runQuery(graph, 'askFSL', 'Ask'):
-        
+
         fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
         stats += p("FMRI data processing was carried out using FEAT (FMRI "
                    "Expert Analysis Tool) Version %s, part of FSL %s (FMRIB'"
@@ -251,9 +251,9 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
             vmin = min(min(np.ones(len(conVec[i]))-conVec[i]), vmin)
             vmax = max(max(np.ones(len(conVec[i]))-conVec[i]), vmax)
 
-        #Then we must display each contrast vector.
+        # Then we must display each contrast vector.
         for i in range(0, len(conNames)):
-            
+
             # Display an image of the contrast vector.
             stats += img(src=contrastVec(conVec[i], vmin, vmax),
                          style="float:left;margin-right:1em;padding-top:4px;",

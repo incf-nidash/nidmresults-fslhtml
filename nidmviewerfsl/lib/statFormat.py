@@ -172,6 +172,7 @@ def formatClusterStats(g, excName):
             'peakLocations': sortedPeakLocations,
             'peakPVals': sortedPeakPVals})
 
+
 def contrastVec(data, v_min, v_max):
 
     # This import is needed only in this function.
