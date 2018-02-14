@@ -213,9 +213,9 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
     # Adds design matrix image (as a link) to html page
     stats += a(
         img(src='data:image/jpg;base64,' +
-            encodeImage(os.path.join(os.path.split(statsFilePath)[0], 
-                designMatrixLocation[1]
-            )).decode(),
+            encodeImage(os.path.join(os.path.split(statsFilePath)[0],
+                        designMatrixLocation[1]
+                        )).decode(),
             style="border:5px solid black",
             border=0,
             width=250),
