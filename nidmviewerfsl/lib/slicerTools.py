@@ -196,4 +196,4 @@ def generateSliceImage_SPM(exc_set, SPMorFSL):
 
     return(exc_set.replace('.nii', '').replace('.gz', '')+'.png')
 
-generateSliceImage_SPM('/home/tom/Documents/Repos/nidmresults-fslhtml/nidmviewerfsl/tests/data/ex_spm_default_test/ExcursionSet.nii.gz', 'SPM')
+generateSliceImage_SPM('/home/tom/Documents/Repos/nidmresults-fslhtml/nidmviewerfsl/tests/data/fsl_default_130_test/ExcursionSet.nii.gz', 'SPM')
