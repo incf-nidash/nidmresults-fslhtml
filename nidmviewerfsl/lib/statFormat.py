@@ -172,12 +172,7 @@ def formatClusterStats(g, excName):
             'peakLocations': sortedPeakLocations,
             'peakPVals': sortedPeakPVals})
 
-<<<<<<< c09910f6321f39ce95c07abe8c9b902295e0a247
-def contrastVec(data):
-=======
-
 def contrastVec(data, v_min, v_max):
->>>>>>> colourbar range fix
 
     # This import is needed only in this function.
     from matplotlib import pyplot as plt
