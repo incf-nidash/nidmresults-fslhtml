@@ -1,2 +1,5 @@
 rdflib
 dominate
+sklearn
+nilearn
+nibabel

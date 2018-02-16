@@ -231,7 +231,8 @@ def generateSliceImage(exc_set, SPMorFSL):
         exc_set = os.path.join(tempFolder, 'excset_nonan.nii.gz')
 
         #Use the SPM template.
-        template = '/home/tom/Documents/Repos/nidmresults-fslhtml/templates/T1_skullStripped.nii'
+        template = os.path.join(os.path.split(os.path.realpath(__file__))[0],
+                                '..', '..', 'templates', 'T1_skullStripped.nii')
 
         # Check which is bigger and resize if necessary
         resizeTemplateOrExcSet(exc_set, template, tempFolder)
