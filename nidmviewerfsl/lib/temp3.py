@@ -35,14 +35,26 @@ def getVal(niftiFilename, minOrMax):
 def getVal2(niftiFilename, minOrMax):
     # Retrieve the min or max values of the image.
 
-    #Retrieve image header.
+    # Retrieve image data.
     n = nib.load(niftiFilename)
-    header = n.header
-    print(header)
+    d = n.get_data()
+
+    # Ensure there are no NaN's
+    d = np.nan_to_num(d)
+
+    # We are only interested in non-zero values.
+    d = d[d.nonzero()]
+
     if minOrMax == 'min':
-        return(header['Min'][0])
+        return(d.min())
     else:
-        return(0)
+        return(d.max())
+    
+print(getVal('/home/tom/Documents/Repos/nidmresults-fslhtml/nidmviewerfsl/tests/data/ex_spm_default_test/ExcursionSet.nii.gz', 'min'))
 
 print(getVal2('/home/tom/Documents/Repos/nidmresults-fslhtml/nidmviewerfsl/tests/data/ex_spm_default_test/ExcursionSet.nii.gz', 'min'))
+
+print(getVal('/home/tom/Documents/Repos/nidmresults-fslhtml/nidmviewerfsl/tests/data/ex_spm_default_test/ExcursionSet.nii.gz', 'max'))
+
+print(getVal2('/home/tom/Documents/Repos/nidmresults-fslhtml/nidmviewerfsl/tests/data/ex_spm_default_test/ExcursionSet.nii.gz', 'max'))
 

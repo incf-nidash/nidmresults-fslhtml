@@ -152,35 +152,28 @@ def resizeTemplateOrExcSet(exc_set, template, tempDir):
 def getVal(niftiFilename, minOrMax):
     # Retrieve the min or max values of the image.
 
-    getValString1 = "fslstats '" + niftiFilename + "' -l 0.01 -R"
+    # Retrieve image data.
+    n = nib.load(niftiFilename)
+    d = n.get_data()
+
+    # Ensure there are no NaN's
+    d = np.nan_to_num(d)
+
+    # We are only interested in non-zero values.
+    d = d[d.nonzero()]
+
     if minOrMax == 'min':
-        getValString2 = "awk '{print $1}'"
-    elif minOrMax == 'max':
-        getValString2 = "awk '{print $2}'"
+        return(d.min())
     else:
-        error('Please enter "min" or "max"')
-
-    # Process the command to obtain the value
-    process_1 = subprocess.Popen(shlex.split(getValString1), shell=False,
-                                 stdout=subprocess.PIPE)
-    process_2 = subprocess.Popen(shlex.split(getValString2), shell=False,
-                                 stdin=process_1.stdout,
-                                 stdout=subprocess.PIPE)
-
-    # Close all streams and retrieve output.
-    process_1.stdout.close()
-    output = process_2.communicate()
-
-    # Return value.
-    return(output[0].decode('utf-8').rstrip('\r|\n'))
+        return(d.max())
 
 
 def overlay(exc_set, template, tempDir):
     # Overlay exc_set onto template. The output is saved as outputTemp
 
     # Get min and max values of the excursion set.
-    minZ = getVal(exc_set, 'min')
-    maxZ = getVal(exc_set, 'max')
+    minZ = str(getVal(exc_set, 'min'))
+    maxZ = str(getVal(exc_set, 'max'))
 
     # Place the template onto the excursion set using overlay
     overlayCommand = "overlay 1 1 " + template + " -a " + exc_set + " " + \
