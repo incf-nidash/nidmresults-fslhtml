@@ -11,7 +11,7 @@ from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style, br
 from dominate.util import raw
 from style.pageStyling import (
     encodeImage, encodeColorBar, encodeLogo, getRawCSS)
-from nidmviewerfsl.lib.slicerTools import getVal, generateSliceImage_SPM
+from nidmviewerfsl.lib.slicerTools import getVal, generateSliceImage
 from nidmviewerfsl.lib.statFormat import *
 from queries.queryTools import runQuery
 
@@ -409,9 +409,10 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
 
             # Add the image. If we have SPM the image was regenerated.
             if askSPM:
-                sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
-                                                    postStatsFilePath)[0],
-                                                    excursionSetNifti[i]))
+                sliceImage = generateSliceImage(os.path.join(os.path.split(
+                                                postStatsFilePath)[0],
+                                                excursionSetNifti[i]),
+                                                'SPM')
                 postStats += img(src='data:image/jpg;base64,' + encodeImage(
                                  sliceImage).decode())
 
@@ -446,9 +447,10 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
             "<br><br>")
 
         # Make the slice image.
-        sliceImage = generateSliceImage_SPM(os.path.join(os.path.split(
-                                            postStatsFilePath)[0],
-                                            excursionSetNifti[0]))
+        sliceImage = generateSliceImage(os.path.join(os.path.split(
+                                        postStatsFilePath)[0],
+                                        excursionSetNifti[0]),
+                                        'SPM')
 
         # Add the link to the cluster data page.
         postStats += raw("<a href = '" + os.path.join(

@@ -83,8 +83,12 @@ import nibabel as nib
 from queries.queryTools import runQuery
 
 
-def nifDim(header, k):
-    # Retrieve the k dimension of a nifti given it's header using FSL.
+def nifDim(nifti, k):
+    # Retrieve the k dimension of a nifti using nibabel.
+
+    #Retrieve image header.
+    n = nib.load(nifti)
+    header = n.header
 
     if k == 'x':
         dimension = header['dim'][1]
@@ -98,6 +102,52 @@ def nifDim(header, k):
         error('Enter a valid dimension... x, y, z or pix')
 
     return(dimension)
+
+
+def createResizeMatrix(niftiFilename1, niftiFilename2, tempDir):
+    # This creates the resize matrix for the resizing of the niftis and saves
+    # it as resizeMatrix.mat
+
+    xShift = -abs(nifDim(niftiFilename1, 'x') - nifDim(niftiFilename2, 'x'))
+    yShift = -abs(nifDim(niftiFilename1, 'y') - nifDim(niftiFilename2, 'y'))
+
+    # Open the matrix file.
+    matrixFile = open(os.path.join(tempDir, 'resizeMatrix.mat'), 'w')
+
+    # Write the matrix file
+    matrixFile.write('1 0 0 ' + str(xShift) + ' \n')
+    matrixFile.write('0 1 0 ' + str(yShift) + ' \n')
+    matrixFile.write('0 0 1 0 \n')
+    matrixFile.write('0 0 0 1 \n')
+
+    # Close the matrix file.
+    matrixFile.close()
+
+
+def resizeTemplateOrExcSet(exc_set, template, tempDir):
+    # This function resizes an SPM excursion set to an SPM template if
+    # necessary.
+
+    # Create necessary tranformation.
+    createResizeMatrix(exc_set, template, tempDir)
+
+    if nifDim(exc_set, 'x') > nifDim(template, 'x'):
+        # Run the command  if necessary.
+        resizeCommand = "flirt -init " + \
+                        os.path.join(tempDir, "resizeMatrix.mat") + \
+                        " -in " + exc_set + " -ref " + template + " -out " + \
+                        os.path.join(tempDir, "resizedNifti.nii.gz") + " -applyxfm"
+
+    if nifDim(exc_set, 'x') < nifDim(template, 'x'):
+        # Run the command  if necessary.
+        resizeCommand = "flirt -init " + \
+                        os.path.join(tempDir, "resizeMatrix.mat") + \
+                        " -in " + template + " -ref " + exc_set + " -out " + \
+                        os.path.join(tempDir, "resizedNifti.nii.gz") + " -applyxfm"
+
+    subprocess.check_call(shlex.split(resizeCommand), shell=False)
+    process = subprocess.Popen(shlex.split(resizeCommand), shell=False)
+    process.wait()
 
 def getVal(niftiFilename, minOrMax):
     # Retrieve the min or max values of the image.
@@ -150,20 +200,21 @@ def getSliceImageFromNifti(tempDir, outputName):
     process = subprocess.Popen(shlex.split(slicerCommand), shell=False)
     process.wait()
 
+    print(outputName)
 
-def generateSliceImage_SPM(exc_set, SPMorFSL):
+
+def generateSliceImage(exc_set, SPMorFSL):
 
     tempFolder = 'temp_NIDM_viewer' + str(random.randint(0, 999999))
     os.mkdir(tempFolder)
     FSLDIR = os.environ['FSLDIR']
 
-    #Retrieve image header.
-    n = nib.load(exc_set)
-    header = n.header
+    #Make a copy of the original name of the excursion set.
+    o_exc_set = exc_set
 
     # If we are looking at FSL data use the FSL template.
     if SPMorFSL == 'FSL':
-        if nifDim(header, 'pix') == 1:
+        if nifDim(exc_set, 'pix') == 1:
             template = os.path.join(FSLDIR, 'data', 'standard',
                                     'MNI152_T1_1mm_brain.nii.gz')
         else:
@@ -171,29 +222,35 @@ def generateSliceImage_SPM(exc_set, SPMorFSL):
                                     'MNI152_T1_2mm_brain.nii.gz')
     else:
         #Remove NaN values.
+        n = nib.load(exc_set)
         d = n.get_data()
         exc_set_nonan = nib.Nifti1Image(np.nan_to_num(d), n.affine, header=n.header)
 
-        # Combine activations and deactivations in a single image 
+        # Save the result.
         nib.save(exc_set_nonan, os.path.join(tempFolder, 'excset_nonan.nii.gz'))
         exc_set = os.path.join(tempFolder, 'excset_nonan.nii.gz')
 
         #Use the SPM template.
-        template = '/home/tom/Documents/Repos/nidmresults-fslhtml/templates/T1.nii'
+        template = '/home/tom/Documents/Repos/nidmresults-fslhtml/templates/T1_skullStripped.nii'
 
-    # Check which is bigger and resize if necessary
-    #resizeSPMtoFSL(exc_set, template, scalefactor, tempFolder)
-    #resized_exc_set = os.path.join(tempFolder, 'resizedNifti.nii.gz')
+        # Check which is bigger and resize if necessary
+        resizeTemplateOrExcSet(exc_set, template, tempFolder)
+
+        # If we've resized the excursion set we want to look at the resized file.
+        if nifDim(exc_set, 'x') > nifDim(template, 'x'):
+            exc_set = os.path.join(tempFolder, 'resizedNifti.nii.gz')
+
+        # If we've resized the template we want to look at the resized file.
+        if nifDim(exc_set, 'x') < nifDim(template, 'x'):
+            template = os.path.join(tempFolder, 'resizedNifti.nii.gz')
 
     # Overlay niftis
     overlay(exc_set, template, tempFolder)
 
     # Get the slices image
-    getSliceImageFromNifti(tempFolder, exc_set.replace(
+    getSliceImageFromNifti(tempFolder, o_exc_set.replace(
         '.nii', '').replace('.gz', '')+'.png')
 
     shutil.rmtree(tempFolder)
 
-    return(exc_set.replace('.nii', '').replace('.gz', '')+'.png')
-
-generateSliceImage_SPM('/home/tom/Documents/Repos/nidmresults-fslhtml/nidmviewerfsl/tests/data/fsl_default_130_test/ExcursionSet.nii.gz', 'SPM')
+    return(o_exc_set.replace('.nii', '').replace('.gz', '')+'.png')
