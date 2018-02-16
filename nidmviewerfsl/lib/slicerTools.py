@@ -235,6 +235,12 @@ def generateSliceImage(exc_set, SPMorFSL):
                                 '..', '..', 
                                 'templates', 'T1_skullStripped.nii')
 
+        #Calculate the scale factor.
+        if nifDim(exc_set, 'pix') <= 2:
+            scalefactor = 1
+        else:
+            scalefactor = 1/nifDim(exc_set, 'pix')
+
         # Check which is bigger and resize if necessary
         resizeTemplateOrExcSet(exc_set, template, tempFolder)
 

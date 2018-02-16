@@ -28,7 +28,7 @@ setup(
     ],
     package_data={'nidmviewerfsl':
                   ['queries/*.txt',
-                  'templates/*nii']},
+                  'templates/*.nii']},
     include_package_data=True,
     install_requires=requirements
 )
