@@ -232,7 +232,8 @@ def generateSliceImage(exc_set, SPMorFSL):
 
         #Use the SPM template.
         template = os.path.join(os.path.split(os.path.realpath(__file__))[0],
-                                '..', '..', 'templates', 'T1_skullStripped.nii')
+                                '..', '..', 
+                                'templates', 'T1_skullStripped.nii')
 
         # Check which is bigger and resize if necessary
         resizeTemplateOrExcSet(exc_set, template, tempFolder)

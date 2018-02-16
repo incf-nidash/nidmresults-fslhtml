@@ -27,7 +27,8 @@ setup(
         "Programming Language :: Python :: 3",
     ],
     package_data={'nidmviewerfsl':
-                  ['queries/*.txt']},
+                  ['queries/*.txt',
+                  'templates/*nii']},
     include_package_data=True,
     install_requires=requirements
 )
