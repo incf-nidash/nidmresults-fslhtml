@@ -231,9 +231,11 @@ def generateSliceImage(exc_set, SPMorFSL):
         exc_set = os.path.join(tempFolder, 'excset_nonan.nii.gz')
 
         #Use the SPM template.
-        template = os.path.join(os.path.split(os.path.realpath(__file__))[0],
-                                '..', '..', 
-                                'templates', 'T1_skullStripped.nii')
+        template = os.path.join(
+            os.path.split(
+                os.path.split(
+                    os.path.split(os.path.realpath(__file__))[0])[0])[0],
+            'templates', 'T1_skullStripped.nii')
 
         #Calculate the scale factor.
         if nifDim(exc_set, 'pix') <= 2:
