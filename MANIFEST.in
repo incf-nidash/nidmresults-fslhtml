@@ -1,1 +1,2 @@
 include queries/*.txt
+include templates/*.nii
