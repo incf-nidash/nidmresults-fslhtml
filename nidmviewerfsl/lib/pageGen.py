@@ -418,7 +418,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                                                     postStatsFilePath)[0],
                                                     excursionSetNifti[i]),
                                                     'FSL')
-                    postStats += img(src='data:image/jpg;base64,' + 
+                    postStats += img(src='data:image/jpg;base64,' +
                                      encodeImage(sliceImage).decode())
 
             # Add the image. If we have SPM the image was regenerated.
