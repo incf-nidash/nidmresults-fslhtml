@@ -1,7 +1,9 @@
 # ==============================================================================
 #
 # The following functions are designed to resize SPM nifti maps to align with
-# the given SPM template using FSL and nilearn commands.
+# the given SPM template using FSL and nilearn commands. This also works for 
+# resizing FSL statistic maps. However, as these are often in subject space, 
+# misaligned images may appear.
 #
 # ==============================================================================
 #
@@ -184,8 +186,6 @@ def getSliceImageFromNifti(tempDir, outputName):
     process = subprocess.Popen(shlex.split(slicerCommand), shell=False)
     process.wait()
 
-    print(outputName)
-
 
 def generateSliceImage(exc_set, SPMorFSL):
 
@@ -224,23 +224,27 @@ def generateSliceImage(exc_set, SPMorFSL):
                     os.path.split(os.path.realpath(__file__))[0])[0])[0],
             'templates', 'T1_skullStripped.nii')
 
-        # Calculate the scale factor.
-        if nifDim(exc_set, 'pix') <= 2:
-            scalefactor = 1
-        else:
-            scalefactor = 1/nifDim(exc_set, 'pix')
+    # Calculate the scale factor.
+    print(nifDim(exc_set, 'pix'))
+    if nifDim(exc_set, 'pix') <= 2:
+        scalefactor = 1
+    else:
+        scalefactor = 1/nifDim(exc_set, 'pix')
 
+    print(scalefactor)
+
+    if nifDim(exc_set, 'x') != nifDim(template, 'x'):
         # Check which is bigger and resize if necessary
         resizeTemplateOrExcSet(exc_set, template, scalefactor, tempFolder)
 
-        # If we've resized the excursion set we want to look at the resized
-        # file.
-        if nifDim(exc_set, 'x') > nifDim(template, 'x'):
-            exc_set = os.path.join(tempFolder, 'resizedNifti.nii.gz')
+    # If we've resized the excursion set we want to look at the resized
+    # file.
+    if nifDim(exc_set, 'x') > nifDim(template, 'x'):
+        exc_set = os.path.join(tempFolder, 'resizedNifti.nii.gz')
 
-        # If we've resized the template we want to look at the resized file.
-        if nifDim(exc_set, 'x') < nifDim(template, 'x'):
-            template = os.path.join(tempFolder, 'resizedNifti.nii.gz')
+    # If we've resized the template we want to look at the resized file.
+    if nifDim(exc_set, 'x') < nifDim(template, 'x'):
+        template = os.path.join(tempFolder, 'resizedNifti.nii.gz')
 
     # Overlay niftis
     overlay(exc_set, template, tempFolder)
