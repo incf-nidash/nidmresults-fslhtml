@@ -104,7 +104,7 @@ def nifDim(nifti, k):
     return(dimension)
 
 
-def createResizeMatrix(niftiFilename1, niftiFilename2, tempDir):
+def createResizeMatrix(niftiFilename1, niftiFilename2, scalefactor, tempDir):
     # This creates the resize matrix for the resizing of the niftis and saves
     # it as resizeMatrix.mat
 
@@ -115,8 +115,8 @@ def createResizeMatrix(niftiFilename1, niftiFilename2, tempDir):
     matrixFile = open(os.path.join(tempDir, 'resizeMatrix.mat'), 'w')
 
     # Write the matrix file
-    matrixFile.write('1 0 0 ' + str(xShift) + ' \n')
-    matrixFile.write('0 1 0 ' + str(yShift) + ' \n')
+    matrixFile.write('1 0 0 ' + str(scalefactor*xShift) + ' \n')
+    matrixFile.write('0 1 0 ' + str(scalefactor*yShift) + ' \n')
     matrixFile.write('0 0 1 0 \n')
     matrixFile.write('0 0 0 1 \n')
 
@@ -124,12 +124,12 @@ def createResizeMatrix(niftiFilename1, niftiFilename2, tempDir):
     matrixFile.close()
 
 
-def resizeTemplateOrExcSet(exc_set, template, tempDir):
+def resizeTemplateOrExcSet(exc_set, template, scalefactor, tempDir):
     # This function resizes an SPM excursion set to an SPM template if
     # necessary.
 
     # Create necessary tranformation.
-    createResizeMatrix(exc_set, template, tempDir)
+    createResizeMatrix(exc_set, template, scalefactor, tempDir)
 
     if nifDim(exc_set, 'x') > nifDim(template, 'x'):
         # Run the command  if necessary.
@@ -237,7 +237,7 @@ def generateSliceImage(exc_set, SPMorFSL):
             scalefactor = 1/nifDim(exc_set, 'pix')
 
         # Check which is bigger and resize if necessary
-        resizeTemplateOrExcSet(exc_set, template, tempFolder)
+        resizeTemplateOrExcSet(exc_set, template, scalefactor, tempFolder)
 
         # If we've resized the excursion set we want to look at the resized file.
         if nifDim(exc_set, 'x') > nifDim(template, 'x'):
