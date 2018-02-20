@@ -1,8 +1,8 @@
 # ==============================================================================
 #
 # The following functions are designed to resize SPM nifti maps to align with
-# the given SPM template using FSL and nilearn commands. This also works for 
-# resizing FSL statistic maps. However, as these are often in subject space, 
+# the given SPM template using FSL and nilearn commands. This also works for
+# resizing FSL statistic maps. However, as these are often in subject space,
 # misaligned images may appear.
 #
 # ==============================================================================
