@@ -86,7 +86,7 @@ from queries.queryTools import runQuery
 def nifDim(nifti, k):
     # Retrieve the k dimension of a nifti using nibabel.
 
-    #Retrieve image header.
+    # Retrieve image header.
     n = nib.load(nifti)
     header = n.header
 
@@ -236,7 +236,7 @@ def generateSliceImage(exc_set, SPMorFSL):
                     os.path.split(os.path.realpath(__file__))[0])[0])[0],
             'templates', 'T1_skullStripped.nii')
 
-        #Calculate the scale factor.
+        # Calculate the scale factor.
         if nifDim(exc_set, 'pix') <= 2:
             scalefactor = 1
         else:
