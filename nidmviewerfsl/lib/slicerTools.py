@@ -1,16 +1,7 @@
 # ==============================================================================
 #
 # The following functions are designed to resize SPM nifti maps to align with
-# an FSL template and create corresponding slice images. It does this by
-# making several calls to FSL using the bash command line through fsl
-# subprocess. To create an FSL slice image for an SPM excursion set simply call
-# generateSliceImage(<excursion set filepath>)`.
-#
-# Note: This resizing is necessary as the SPM excursion set map will be
-# surrounded by less blank space (e.g. there will be less zeros/NaNs on the
-# border of the NIFTI image) than the FSL template and without this
-# adjustment, the excursion set will not be aligned with the background it is
-# displayed on.
+# the given SPM template using FSL and nilearn commands.
 #
 # ==============================================================================
 #
@@ -20,34 +11,31 @@
 #
 # When the voxel size in mm in both maps is the same:
 #
-# An SPM map containing a brain volume will be larger than an FSL template
+# An SPM map containing a brain volume may be smaller than the template
 # holding a brain volume of the same size (more blank space is included at the
 # edges/sides). In order to display a slice view this extra blank space at the
-# side of the nifti must be accounted for (else the FSL template and SPM
-# excursion set will not align in the slice display) and to do this, we must
-# resize the SPM nifti by adding more blank space to the side (note this does
+# side of the nifti must be accounted for. To do this, we must resize the 
+# larger nifti by removing blank from the side (note this does
 # not affect the statistic values inside the excursion set).
 #
-# To resize an SPM map to match the layout of an FSL template the FSL function
-# `flirt` can be used. However, to do this specific transform a resize matrix
-# is required.
+# To do this `flirt` can be used. However, to do this specific transform 
+# a resize matrixis required.
 #
-# By default, if resizing a smaller map to a larger map `flirt` creates an
-# empty map of the same size
-# as the larger map and places the smaller map in the front-left hand corner,
-# centered in the z-axis.
+# By default, if resizing a larger map to a smaller map flirt just crops the x
+# and y values on only one side (meaning the brain is no longer centered in
+# the new nifti).
 #
-# In other words when the smaller map is enlarged, (x, y, z) in the original
-# small map becomes (x, y, {l_z-s_z}/2 + z) in the larger map where l_z is the
+# In other words when the larger map is cropped, (x, y, z) in the original
+# large map becomes (x, y, z - {l_z-s_z}/2) in the smaller map where l_z is the
 # z dimension of the larger map and s_z is the z dimension of the smaller map.
 #
 # This means the z dimensions of the SPM brain volume is now aligned with the
-# z dimension of the FSL template brain volume but the x and y dimensions are
+# z dimension of the template brain volume but the x and y dimensions are
 # not. To rectify this the following transform
 # matrix must be used in flirt:
 #
-#  / 1 0 0 dx \
-# |  0 1 0 dy  |
+#  / 1 0 0 -dx \
+# |  0 1 0 -dy  |
 # |  0 0 1 0   |
 #  \ 0 0 0 1  /
 #
@@ -60,7 +48,7 @@
 #
 # When the voxel size in mm is not the same a scaling factor must be added.
 # When the SPM map has a voxel size larger than 2, the matrix to scale and
-# align the SPM map to the FSL 2mm template simplifies to:
+# align the SPM map to the 2mm template simplifies to:
 #
 #  / 1 0 0 s*dx \
 # |  0 1 0 s*dy  |
