@@ -14,11 +14,11 @@
 # An SPM map containing a brain volume may be smaller than the template
 # holding a brain volume of the same size (more blank space is included at the
 # edges/sides). In order to display a slice view this extra blank space at the
-# side of the nifti must be accounted for. To do this, we must resize the 
+# side of the nifti must be accounted for. To do this, we must resize the
 # larger nifti by removing blank from the side (note this does
 # not affect the statistic values inside the excursion set).
 #
-# To do this `flirt` can be used. However, to do this specific transform 
+# To do this `flirt` can be used. However, to do this specific transform
 # a resize matrixis required.
 #
 # By default, if resizing a larger map to a smaller map flirt just crops the x
