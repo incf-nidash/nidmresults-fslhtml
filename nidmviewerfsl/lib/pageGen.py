@@ -398,14 +398,28 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
 
             # Add the image. If we have FSL the image was found in the pack.
             if askFSL:
-                postStats += img(
-                    src='data:image/jpg;base64,' +
-                    encodeImage(
-                        os.path.join(
-                            os.path.split(
-                                postStatsFilePath)[0],
-                            excursionSetSliceImage[i])
-                        ).decode())
+
+                # If the slice image already exists add it.
+                if os.path.exists(os.path.join(os.path.split(
+                                        postStatsFilePath)[0],
+                                        excursionSetSliceImage[i])):
+                    postStats += img(
+                        src='data:image/jpg;base64,' +
+                        encodeImage(
+                            os.path.join(
+                                os.path.split(
+                                    postStatsFilePath)[0],
+                                excursionSetSliceImage[i])
+                            ).decode())
+
+                # Otherwise recreate the slice image.
+                else:
+                    sliceImage = generateSliceImage(os.path.join(os.path.split(
+                                                    postStatsFilePath)[0],
+                                                    excursionSetNifti[i]),
+                                                    'FSL')
+                    postStats += img(src='data:image/jpg;base64,' + encodeImage(
+                                     sliceImage).decode())
 
             # Add the image. If we have SPM the image was regenerated.
             if askSPM:
