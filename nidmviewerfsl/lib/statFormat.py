@@ -9,6 +9,13 @@
 # ======================================================================
 from queries.queryTools import runQuery
 import math
+from style.pageStyling import encodeImage
+import numpy as np
+import random
+import os
+import math
+import matplotlib
+matplotlib.use('Agg')
 
 
 # This function converts obo statistic types into the corresponding statistic.
@@ -164,3 +171,50 @@ def formatClusterStats(g, excName):
             'peakClusIndices': sortedClusIndicesForPeaks,
             'peakLocations': sortedPeakLocations,
             'peakPVals': sortedPeakPVals})
+
+
+def contrastVec(data, v_min, v_max):
+
+    # This import is needed only in this function.
+    from matplotlib import pyplot as plt
+
+    conLength = len(data)
+
+    # We invert the values so the colours appear correctly (i.
+    # e. 1 -> white, 0 -> black).
+    data = np.ones(len(data))-data
+
+    # Make the contrast vector larger so we can make an image.
+    data = np.kron(data, np.ones((10, 30)))
+
+    # Add border to data.
+    data[:, 0] = v_max*np.ones(10)
+    data[:, 30*conLength-1] = v_max*np.ones(10)
+    data[0, :] = v_max*np.ones(30*conLength)
+    data[10-1, :] = v_max*np.ones(30*conLength)
+
+    # Create figure.
+    fig = plt.figure(figsize=(len(data), 1))
+
+    # Remove axis
+    ax = fig.add_subplot(1, 1, 1)
+    plt.axis('off')
+
+    # Add contrast vector to figure
+    plt.imshow(data, aspect='auto', cmap='Greys', vmin=v_min, vmax=v_max)
+
+    # Check for bording box.
+    extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+
+    # Save figure (without bording box)
+    tempFile = 'tempCon' + str(random.randint(0, 999999)) + '.png'
+    plt.savefig(tempFile, bbox_inches=extent)
+
+    # Encode the figure.
+    encodedIm = encodeImage(tempFile)
+
+    # Remove the image.
+    os.remove(tempFile)
+
+    # Return the image
+    return('data:image/jpg;base64,' + encodedIm.decode())

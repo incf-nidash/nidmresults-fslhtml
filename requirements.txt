@@ -1,2 +1,4 @@
 rdflib
 dominate
+matplotlib
+
