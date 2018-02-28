@@ -102,15 +102,14 @@ class testDatasetFeatures(unittest.TestCase):
                                        '1pl5LA3VmztgvqmAozv/pyLAcZtvhI0'
                                        'Y46pAON0rdiai68y3DoFdqgKphI0b/A',
                       'conVec': ['[1, 0, 0]'],
-                      'conVecImEx': ['APYQAAD2EBqD+naQAAADl0RVh0U29mdHd'
-                                     'hcmUAbWF0cGxvdGxpYiB2ZXJzaW9uIDIu'
-                                     'MS4yLCBodHRwOi8vbWF0cGxvdGxpYi5vc'
-                                     'mcvNQv5yAAAAe9JREFUeJzt3TEKAjEQQF'
-                                     'FH9v5Xjq1a+MEmQd/rFlJM+xmymbXWugE'
-                                     'AAHxw3z0AAABwPuEAAAAk4QAAAKTr+WNm'
-                                     'ds0BAAAc5P0qtI0DAACQhAMAAJCEAwAAk'
-                                     'IQDAACQhAMAAJCEAwAAkK4+AvyT91+vAQ'
-                                     'C/55tnGGwcAACAJBwAAIAkHAAAgCQcAAC']}
+                      'conVecImEx': ['U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJza'
+                                     'W9uIDIuMi4wcmMxLCBodHRwOi8vbWF0cG'
+                                     'xvdGxpYi5vcmcvjNbHMQAAAe9JREFUeJz'
+                                     't3UEKwkAQAEFH8v8vr1cjYuNBskjVLZDA'
+                                     'XJthN7PWWjcAAIAP7lcPAAAA7E84AAAAS'
+                                     'TgAAADpeH6YmavmAAAANvJ6FNrGAQAASM'
+                                     'IBAABIwgEAAEjCAQAASMIBAABIwgEAAEh'
+                                     'Hv3L2ei0T8F9cywwAvGPjAAAAJOEAAAAk']
 
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
@@ -130,29 +129,19 @@ class testDatasetFeatures(unittest.TestCase):
                                            'tone counting vs baseline'],
                           'numExc': 1,
                           'conVec': ['[0, 1, 0]', '[1, 0, 0]'],
-                          'conVecImEx': ['VBORw0KGgoAAAANSUhEUgAAAw4AAABU'
-                                         'CAYAAAArv2BBAAAABHNCSVQICAgIfAhk'
-                                         'iAAAAAlwSFlzAAAPYQAAD2EBqD+naQAA'
-                                         'ADl0RVh0U29mdHdhcmUAbWF0cGxvdGxp'
-                                         'YiB2ZXJzaW9uIDIuMS4yLCBodHRwOi8v'
-                                         'bWF0cGxvdGxpYi5vcmcvNQv5yAAAAflJ'
-                                         'REFUeJzt3UEKg0AQAEE3+P8vb67Rg00C'
-                                         'wUWqboLC3JZmUMecc24AAAAXXncPAAAA'
-                                         'rE84AAAASTgAAABp/7wYY9w1BwAAsJDz'
-                                         'q9A2DgAAQBIOAABAEg4AAEASDgAAQBIO'
-                                         'AABAEg4AAEDa+5aj82eZgGfxWWZg25z3'
-                                         '8HS/nPc2DgAAQBIOAABAEg4AAEASDgAA',
-                                         'FFH9v5Xjq1a+MEmQd/rFlJM+xmymbXWu'
-                                         'gEAAHxw3z0AAABwPuEAAAAk4QAAAKTr+'
-                                         'WNmds0BAAAc5P0qtI0DAACQhAMAAJCEA'
-                                         'wAAkIQDAACQhAMAAJCEAwAAkK4+AvyT9'
-                                         '1+vAQC/55tnGGwcAACAJBwAAIAkHAAAg'
-                                         'CQcAACAJBwAAIAkHAAAgCQcAACAJBwAA'
-                                         'IAkHAAAgCQcAACAJBwAAIAkHAAAgCQcA'
-                                         'ACAJBwAAIAkHAAAgCQcAACAJBwAAIAkH'
-                                         'AAAgCQcAACAJBwAAIAkHAAAgCQcAACAJ'
-                                         'BwAAIAkHAAAgCQcAACAJBwAAIAkHAAAg'
-                                         'CQcAACAJBwAAIAkHAAAgCQcAACAJBwAA']}
+                          'conVecImEx': ['mUAbWF0cGxvdGxpYiB2ZXJzaW9uIDIuMi'
+                                         '4wcmMxLCBodHRwOi8vbWF0cGxvdGxpYi5'
+                                         'vcmcvjNbHMQAAAe5JREFUeJzt3TEKwzAQ'
+                                         'AMEo+P9fvrSJi2wpgWc6g4prl0Pympl5A'
+                                         'QAA/PHePQAAAHA+4QAAACThAAAApOv7Y6'
+                                         '21aw4AAOAg96vQNg4AAEASDgAAQBIOAAB',
+                                         '9/j4+Pn5+fr6+vv7+/z8/P39/f7+/v///'
+                                         '8BqPm4AAAAB3RJTUUH4QIKDjofpo4vBQA'
+                                         'AAaJJREFUaIHt2klSA0EMRFGfg3kIIJgW'
+                                         'zDPc/1Yc4eUiUbSNc93h36WSlKpqrw6pf'
+                                         'eqdWh1QR9QTFWAeqABzST1SAeaZ8osEGG'
+                                         '/fCRVgvijvXoD5oJzQy8G8URXMK1XZmyH'
+                                         'MCzW0GjfX5WCcaRWM92adgjaEGQqajaDS']}
 
     # Initiate a blank string.
     def setUp(self):
