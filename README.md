@@ -22,14 +22,28 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
-##### Install from source
+##### Install via pip
+
+The viewer can be installed via pip through:
 ```
 pip install https://github.com/incf-nidash/nidmresults-fslhtml.git@master
 ```
 
+##### Install via git
+
+Alternatively, instalation is possible via cloning from github like so:
+```
+git clone https://github.com/incf-nidash/nidmresults-fslhtml.git
+```
+And then running the `setup.py` file as follows:
+```
+python3 setup.py
+```
 ##### Tests
-To run the tests:
+To run the tests from the commandline use the following commands:
 ```
-	Tests\test_fslViewer.py
-	Tests\testError.py
+	python3 nidmviewerfsl/tests/test_fslViewer.py
+	python3 nidmviewerfsl/tests/testError.py
 ```
+
+The output of the tests will appear in the folders given in `nidmviewerfsl/tests/data`.
