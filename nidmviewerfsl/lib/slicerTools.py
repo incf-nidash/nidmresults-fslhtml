@@ -1,67 +1,12 @@
 # ==============================================================================
 #
 # The following functions are designed to resize SPM nifti maps to align with
-# the given SPM template using FSL and nilearn commands. This also works for
-# resizing FSL statistic maps. However, as these are often in subject space,
-# misaligned images may appear.
+# the given SPM template nifti using FSL and nilearn commands and output a slice 
+# image of the two niftis overlaid.
 #
 # ==============================================================================
 #
-# Documentation of matrix creation:
-#
-# ==============================================================================
-#
-# When the voxel size in mm in both maps is the same:
-#
-# An SPM map containing a brain volume may be smaller than the template
-# holding a brain volume of the same size (more blank space is included at the
-# edges/sides). In order to display a slice view this extra blank space at the
-# side of the nifti must be accounted for. To do this, we must resize the
-# larger nifti by removing blank from the side (note this does
-# not affect the statistic values inside the excursion set).
-#
-# To do this `flirt` can be used. However, to do this specific transform
-# a resize matrixis required.
-#
-# By default, if resizing a larger map to a smaller map flirt just crops the x
-# and y values on only one side (meaning the brain is no longer centered in
-# the new nifti).
-#
-# In other words when the larger map is cropped, (x, y, z) in the original
-# large map becomes (x, y, z - {l_z-s_z}/2) in the smaller map where l_z is the
-# z dimension of the larger map and s_z is the z dimension of the smaller map.
-#
-# This means the z dimensions of the SPM brain volume is now aligned with the
-# z dimension of the template brain volume but the x and y dimensions are
-# not. To rectify this the following transform
-# matrix must be used in flirt:
-#
-#  / 1 0 0 -dx \
-# |  0 1 0 -dy  |
-# |  0 0 1 0   |
-#  \ 0 0 0 1  /
-#
-# Where dx = l_x - s_x, the difference in size of the x dimensions.
-# and dy = l_y - s_y, the difference in size of the y dimensions.
-#
-# ------------------------------------------------------------------------------
-#
-# When the voxel size in mm in both maps is not the same:
-#
-# When the voxel size in mm is not the same a scaling factor must be added.
-# When the SPM map has a voxel size larger than 2, the matrix to scale and
-# align the SPM map to the 2mm template simplifies to:
-#
-#  / 1 0 0 s*dx \
-# |  0 1 0 s*dy  |
-# |  0 0 1  0    |
-#  \ 0 0 0  1   /
-#
-# where s = 1/v_spm where v_spm is the voxel size of the SPM map.
-#
-# ------------------------------------------------------------------------------
-# Source: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FLIRT/FAQ
-# Author: Tom Maullin (29/11/2017)
+# Authors: Tom Maullin, Camille Maumet (29/11/2017)
 
 import subprocess
 import os
@@ -70,6 +15,7 @@ import random
 import shlex
 import numpy as np
 import nibabel as nib
+from nibabel.processing import resample_from_to
 from queries.queryTools import runQuery
 
 
@@ -94,52 +40,21 @@ def nifDim(nifti, k):
     return(dimension)
 
 
-def createResizeMatrix(niftiFilename1, niftiFilename2, scalefactor, tempDir):
-    # This creates the resize matrix for the resizing of the niftis and saves
-    # it as resizeMatrix.mat
-
-    xShift = -abs(nifDim(niftiFilename1, 'x') - nifDim(niftiFilename2, 'x'))
-    yShift = -abs(nifDim(niftiFilename1, 'y') - nifDim(niftiFilename2, 'y'))
-
-    # Open the matrix file.
-    matrixFile = open(os.path.join(tempDir, 'resizeMatrix.mat'), 'w')
-
-    # Write the matrix file
-    matrixFile.write('1 0 0 ' + str(scalefactor*xShift) + ' \n')
-    matrixFile.write('0 1 0 ' + str(scalefactor*yShift) + ' \n')
-    matrixFile.write('0 0 1 0 \n')
-    matrixFile.write('0 0 0 1 \n')
-
-    # Close the matrix file.
-    matrixFile.close()
-
-
-def resizeTemplateOrExcSet(exc_set, template, scalefactor, tempDir):
+def resizeTemplateOrExcSet(exc_set, template, tempDir):
     # This function resizes an SPM excursion set to an SPM template if
     # necessary.
 
-    # Create necessary tranformation.
-    createResizeMatrix(exc_set, template, scalefactor, tempDir)
+    #Load the images
+    template_img = nib.load(template)
+    excset_img = nib.load(exc_set)
 
+    # Resample if necessary
     if nifDim(exc_set, 'x') > nifDim(template, 'x'):
-        # Run the command  if necessary.
-        resizeCommand = "flirt -init " + \
-                        os.path.join(tempDir, "resizeMatrix.mat") + \
-                        " -in " + exc_set + " -ref " + template + " -out " + \
-                        os.path.join(tempDir, "resizedNifti.nii.gz") + \
-                        " -applyxfm"
-
+        img_resl = resample_from_to(excset_img, template_img)
     if nifDim(exc_set, 'x') < nifDim(template, 'x'):
-        # Run the command  if necessary.
-        resizeCommand = "flirt -init " + \
-                        os.path.join(tempDir, "resizeMatrix.mat") + \
-                        " -in " + template + " -ref " + exc_set + " -out " + \
-                        os.path.join(tempDir, "resizedNifti.nii.gz") + \
-                        " -applyxfm"
+        img_resl = resample_from_to(template_img, excset_img)
 
-    subprocess.check_call(shlex.split(resizeCommand), shell=False)
-    process = subprocess.Popen(shlex.split(resizeCommand), shell=False)
-    process.wait()
+    nib.save(img_resl, os.path.join(tempDir, "resizedNifti.nii.gz"))
 
 
 def getVal(niftiFilename, minOrMax):
@@ -224,18 +139,9 @@ def generateSliceImage(exc_set, SPMorFSL):
                     os.path.split(os.path.realpath(__file__))[0])[0])[0],
             'templates', 'T1_skullStripped.nii')
 
-    # Calculate the scale factor.
-    print(nifDim(exc_set, 'pix'))
-    if nifDim(exc_set, 'pix') <= 2:
-        scalefactor = 1
-    else:
-        scalefactor = 1/nifDim(exc_set, 'pix')
-
-    print(scalefactor)
-
     if nifDim(exc_set, 'x') != nifDim(template, 'x'):
         # Check which is bigger and resize if necessary
-        resizeTemplateOrExcSet(exc_set, template, scalefactor, tempFolder)
+        resizeTemplateOrExcSet(exc_set, template, tempFolder)
 
     # If we've resized the excursion set we want to look at the resized
     # file.
