@@ -205,7 +205,7 @@ def contrastVec(data, v_min, v_max):
 
     # Add contrast vector to figure
     plt.imshow(data, aspect='auto', cmap='Greys', vmin=v_min, vmax=v_max)
-    
+
     # Check for bording box.
     extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
 

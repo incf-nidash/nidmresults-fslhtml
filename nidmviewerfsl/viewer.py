@@ -14,7 +14,6 @@ import shutil
 import rdflib
 import zipfile
 import glob
-<<<<<<< a1989d41c402fdf9548c3f71649c65e39a9acd05
 from nidmviewerfsl.lib.pageGen import pageGenerate
 
 
