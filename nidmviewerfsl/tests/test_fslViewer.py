@@ -109,7 +109,7 @@ class testDatasetFeatures(unittest.TestCase):
                                      'XJthN7PWWjcAAIAP7lcPAAAA7E84AAAAS'
                                      'TgAAADpeH6YmavmAAAANvJ6FNrGAQAASM'
                                      'IBAABIwgEAAEjCAQAASMIBAABIwgEAAEh'
-                                     'Hv3L2ei0T8F9cywwAvGPjAAAAJOEAAAAk']
+                                     'Hv3L2ei0T8F9cywwAvGPjAAAAJOEAAAAk']}
 
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
