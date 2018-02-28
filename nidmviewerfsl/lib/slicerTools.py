@@ -1,8 +1,8 @@
 # ==============================================================================
 #
 # The following functions are designed to resize SPM nifti maps to align with
-# the given SPM template nifti using FSL and nilearn commands and output a slice 
-# image of the two niftis overlaid.
+# the given SPM template nifti using FSL and nilearn commands and output a
+# slice image of the two niftis overlaid.
 #
 # ==============================================================================
 #
@@ -44,7 +44,7 @@ def resizeTemplateOrExcSet(exc_set, template, tempDir):
     # This function resizes an SPM excursion set to an SPM template if
     # necessary.
 
-    #Load the images
+    # Load the images
     template_img = nib.load(template)
     excset_img = nib.load(exc_set)
 
