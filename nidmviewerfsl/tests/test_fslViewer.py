@@ -102,14 +102,13 @@ class testDatasetFeatures(unittest.TestCase):
                                        '1pl5LA3VmztgvqmAozv/pyLAcZtvhI0'
                                        'Y46pAON0rdiai68y3DoFdqgKphI0b/A',
                       'conVec': ['[1, 0, 0]'],
-                      'conVecImEx': ['U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJza'
-                                     'W9uIDIuMi4wcmMxLCBodHRwOi8vbWF0cG'
-                                     'xvdGxpYi5vcmcvjNbHMQAAAe9JREFUeJz'
-                                     't3UEKwkAQAEFH8v8vr1cjYuNBskjVLZDA'
-                                     'XJthN7PWWjcAAIAP7lcPAAAA7E84AAAAS'
-                                     'TgAAADpeH6YmavmAAAANvJ6FNrGAQAASM'
-                                     'IBAABIwgEAAEjCAQAASMIBAABIwgEAAEh'
-                                     'Hv3L2ei0T8F9cywwAvGPjAAAAJOEAAAAk']}
+                      'conVecImEx': ['Ae9JREFUeJzt3UEKwkAQAEFH8v8vr1cjY'
+                                     'uNBskjVLZDAXJthN7PWWjcAAIAP7lcPAA'
+                                     'AA7E84AAAASTgAAADpeH6YmavmAAAANvJ'
+                                     '6FNrGAQAASMIBAABIwgEAAEjCAQAASMIB'
+                                     'AABIwgEAAEhHv3L2ei0T8F9cywwAvGPjA'
+                                     'AAAJOEAAAAk4QAAACThAAAAJOEAAAAk4Q'
+                                     'AAACThAAAAJOEAAAAk4QAAACThAAAAJOE']}
 
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
@@ -129,19 +128,21 @@ class testDatasetFeatures(unittest.TestCase):
                                            'tone counting vs baseline'],
                           'numExc': 1,
                           'conVec': ['[0, 1, 0]', '[1, 0, 0]'],
-                          'conVecImEx': ['mUAbWF0cGxvdGxpYiB2ZXJzaW9uIDIuMi'
-                                         '4wcmMxLCBodHRwOi8vbWF0cGxvdGxpYi5'
-                                         'vcmcvjNbHMQAAAe5JREFUeJzt3TEKwzAQ'
-                                         'AMEo+P9fvrSJi2wpgWc6g4prl0Pympl5A'
-                                         'QAA/PHePQAAAHA+4QAAACThAAAApOv7Y6'
-                                         '21aw4AAOAg96vQNg4AAEASDgAAQBIOAAB',
-                                         '9/j4+Pn5+fr6+vv7+/z8/P39/f7+/v///'
-                                         '8BqPm4AAAAB3RJTUUH4QIKDjofpo4vBQA'
-                                         'AAaJJREFUaIHt2klSA0EMRFGfg3kIIJgW'
-                                         'zDPc/1Yc4eUiUbSNc93h36WSlKpqrw6pf'
-                                         'eqdWh1QR9QTFWAeqABzST1SAeaZ8osEGG'
-                                         '/fCRVgvijvXoD5oJzQy8G8URXMK1XZmyH'
-                                         'MCzW0GjfX5WCcaRWM92adgjaEGQqajaDS']}
+                          'conVecImEx': ['Jzt3UEKwkAQAEFH8v8vr1cjYuNBskjVL'
+                                         'ZDAXJthN7PWWjcAAIAP7lcPAAAA7E84A'
+                                         'AAASTgAAADpeH6YmavmAAAANvJ6FNrGA'
+                                         'QAASMIBAABIwgEAAEjCAQAASMIBAABIw'
+                                         'gEAAEhHv3L2ei0T8F9cywwAvGPjAAAAJ'
+                                         'OEAAAAk4QAAACThAAAAJOEAAAAk4QAAA'
+                                         'CThAAAAJOEAAAAk4QAAACThAAAAJOEAA',
+                                         'e5JREFUeJzt3TEKwzAQAMEo+P9fvrSJi'
+                                         '2wpgWc6g4prl0Pympl5AQAA/PHePQAAA'
+                                         'HA+4QAAACThAAAApOv7Y621aw4AAOAg9'
+                                         '6vQNg4AAEASDgAAQBIOAABAEg4AAEASD'
+                                         'gAAQBIOAABAuvoI8CT3p9eAZ/JEO3Bn4'
+                                         'wAAACThAAAAJOEAAAAk4QAAACThAAAAJ'
+                                         'OEAAAAk4QAAACThAAAAJOEAAAAk4QAAA'
+                                         'CThAAAAJOEAAAAk4QAAACThAAAAJOEAA']}
 
     # Initiate a blank string.
     def setUp(self):
