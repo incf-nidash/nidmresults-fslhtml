@@ -1,4 +1,4 @@
-# !/usr/bin/env python3
+#!/usr/bin/env python3
 # ======================================================================
 #
 # This file contains functions used for formatting statistical data
@@ -8,7 +8,6 @@
 #
 # ======================================================================
 from queries.queryTools import runQuery
-import math
 from style.pageStyling import encodeImage
 import numpy as np
 import random
@@ -149,7 +148,8 @@ def formatClusterStats(g, excName):
         key=lambda k: (clusterSizes[k], clusterIndices[k]))
 
     # Sorted cluster arrays
-    sortedClusSizeArray = [clusterSizes[i] for i in clusterSortPermutation]
+    sortedClusSizeArray = [
+        clusterSizes[i] for i in clusterSortPermutation]
     sortedClusIndicesArray = [
         clusterIndices[i] for i in clusterSortPermutation]
 
@@ -205,7 +205,7 @@ def contrastVec(data, v_min, v_max):
 
     # Add contrast vector to figure
     plt.imshow(data, aspect='auto', cmap='Greys', vmin=v_min, vmax=v_max)
-
+    
     # Check for bording box.
     extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
 

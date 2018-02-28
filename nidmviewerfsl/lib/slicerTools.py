@@ -180,6 +180,9 @@ def getVal(niftiFilename, minOrMax):
     process_1.stdout.close()
     output = process_2.communicate()
 
+    print(output[0].decode('utf-8').rstrip('\r|\n'))
+    print(niftiFilename)
+
     # Return value.
     return(output[0].decode('utf-8').rstrip('\r|\n'))
 
