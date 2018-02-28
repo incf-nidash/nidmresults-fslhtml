@@ -3,3 +3,4 @@ dominate
 sklearn
 nilearn
 nibabel
+matplotlib
