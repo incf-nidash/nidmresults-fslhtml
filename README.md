@@ -37,13 +37,13 @@ git clone https://github.com/incf-nidash/nidmresults-fslhtml.git
 ```
 And then running the `setup.py` file as follows:
 ```
-python3 setup.py
+python setup.py
 ```
 ##### Tests
 To run the tests from the commandline use the following commands:
 ```
-	python3 nidmviewerfsl/tests/test_fslViewer.py
-	python3 nidmviewerfsl/tests/testError.py
+	python nidmviewerfsl/tests/test_fslViewer.py
+	python nidmviewerfsl/tests/testError.py
 ```
 
 The output of the tests will appear in the folders given in `nidmviewerfsl/tests/data`.

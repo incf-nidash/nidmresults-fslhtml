@@ -39,9 +39,21 @@ if __name__ == "__main__":
 
         os.makedirs(dataDir)
 
-    dataNames = ["fsl_con_f_130", "fsl_thr_clustfwep05_130",
-                 "ex_spm_thr_voxelunct4_130", "ex_spm_thr_clustunck10_130",
-                 "ex_spm_thr_voxelfdrp05_130"]
+    dataNames = ["ex_spm_conjunction", "ex_spm_contrast_mask",
+                 "ex_spm_default", "ex_spm_full_example001",
+                 "ex_spm_group_ols", "ex_spm_group_wls",
+                 "ex_spm_HRF_informed_basis", "ex_spm_partial_conjunction",
+                 "ex_spm_temporal_derivative", "ex_spm_thr_clustfwep05",
+                 "ex_spm_thr_clustunck10", "ex_spm_thr_voxelfdrp05",
+                 "ex_spm_thr_voxelfwep05", "ex_spm_thr_voxelunct4",
+                 "fsl_con_f_130", "fsl_contrast_mask_130",
+                 "fsl_default_130", "fsl_full_examples001_130",
+                 "fsl_gamma_basis_130", "fsl_gaussian_130",
+                 "fsl_group_btw_130", "fsl_group_ols_130",
+                 "fsl_group_wls_130", "fsl_hrf_fir_130",
+                 "fsl_hrf_gammadiff_130", "fsl_thr_clustfwep05_130",
+                 "fsl_thr_voxelfwep05_130"]
+
     local = True
     for dataName in dataNames:  # Checks if data is on local machine
 

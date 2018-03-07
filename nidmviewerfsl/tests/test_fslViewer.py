@@ -346,7 +346,7 @@ class testDatasetFeatures(unittest.TestCase):
         self.assertIn(structData["lowSliceVal"], self.testString,
                       msg='Test failed on ' + structData["Name"])
 
-    # Check if the upper slice value is given correctly correctly.
+    # Check if the upper slice value is given correctly.
     @data(fsl_con_f, fsl_thr_clustfwep05, ex_spm_contrast_mask,
           ex_spm_default, ex_spm_conjunction)
     def test_UpperSliceVal(self, structData):
