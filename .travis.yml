@@ -15,7 +15,8 @@ install:
  - source /etc/fsl/fsl.sh;
  - export FSLOUTPUTTYPE=NIFTI_GZ
  - cwd=`pwd`
- - ls /home/travis/virtualenv/python3.5.5/lib/python3.5/site-packages
+ # ddt for testing.
+ - pip install ddt==1.1.1
 script:
  - ./nidmviewerfsl/tests/testError.py
  - ./nidmviewerfsl/tests/test_fslViewer.py
