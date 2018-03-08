@@ -1,4 +1,4 @@
-# !/usr/bin/env python3
+#!/usr/bin/env python3
 # =============================================================================
 # This file contains functions used to create the HTML output of the viewer.
 #
@@ -211,14 +211,13 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
                                     'Select')
 
     # Adds design matrix image (as a link) to html page
-    stats += a(
-        img(src='data:image/jpg;base64,' +
-            encodeImage(os.path.join(os.path.split(statsFilePath)[0],
-                        designMatrixLocation[1])).decode(),
-            style="border:5px solid black",
-            border=0,
-            width=250),
-        href=designMatrixLocation[0])
+    stats += a(img(src='data:image/jpg;base64,' + encodeImage(
+                        os.path.join(os.path.split(statsFilePath)[0],
+                                     designMatrixLocation[1])).decode(),
+                   style="border:5px solid black",
+                   border=0,
+                   width=250),
+               href=designMatrixLocation[0])
 
     # If we are looking at SPM data the contrast vectors are not given in the
     # design matrix image.
@@ -395,16 +394,17 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                             float(heightThreshValue[0]),
                             corrStr, float(extentThreshValue[0])))
 
-    # Othewise we only have a height threshold to display.
+    # Othewise we only have the height threshold to display.
     else:
 
         # Check to see if corrected.
         corrStr = '(uncorrected)'
         if voxelWise_corrected:
             corrStr = '(corrected)'
-
-        postStats += raw("at %s = %s %s" % (statisticType, float(
-            '%.2g' % float(heightThreshValue[0])), corrStr))
+        postStats += raw("at %s = %s %s." % (statisticType, float(
+                                               '%.2g'
+                                               % float(heightThreshValue[0])),
+                                             corrStr))
 
     postStats += raw('</p><hr>')
     postStats += h3("Thresholded Activation Images")
