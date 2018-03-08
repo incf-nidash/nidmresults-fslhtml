@@ -1,7 +1,4 @@
 rdflib
 dominate
-scipy
-sklearn
-nilearn
 nibabel
 matplotlib
