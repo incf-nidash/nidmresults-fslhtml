@@ -14,7 +14,7 @@ import shutil
 import rdflib
 import zipfile
 import glob
-from nidmviewerfsl.lib.pageGen import pageGenerate
+from nidmviewerfsl.lib.pagegen import pageGenerate
 
 
 # This function attempts to create folder for HTML files, quits program if

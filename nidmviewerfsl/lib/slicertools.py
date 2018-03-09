@@ -17,7 +17,7 @@ import numpy as np
 import nibabel as nib
 import wget
 from nibabel.processing import resample_from_to
-from queries.queryTools import runQuery
+from queries.querytools import runQuery
 
 
 def nifDim(nifti, k):

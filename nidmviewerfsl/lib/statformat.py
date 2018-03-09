@@ -7,8 +7,8 @@
 # Authors: Peter Williams, Tom Maullin, Camille Maumet (10/01/18)
 #
 # ======================================================================
-from queries.queryTools import runQuery
-from style.pageStyling import encodeImage
+from queries.querytools import runQuery
+from style.pagestyling import encodeImage
 import numpy as np
 import random
 import os

@@ -9,11 +9,11 @@ import time
 from dominate import document
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style, br
 from dominate.util import raw
-from style.pageStyling import (
+from style.pagestyling import (
     encodeImage, encodeColorBar, encodeLogo, getRawCSS)
-from nidmviewerfsl.lib.slicerTools import getVal, generateSliceImage
-from nidmviewerfsl.lib.statFormat import *
-from queries.queryTools import runQuery
+from nidmviewerfsl.lib.slicertools import getVal, generateSliceImage
+from nidmviewerfsl.lib.statformat import *
+from queries.querytools import runQuery
 
 
 # Generate a page of excursion set peak and cluster statistics
