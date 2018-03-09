@@ -3,7 +3,7 @@
 # This file contains the main function used to run the FSL NIDM-Results viewer.
 # It takes as inputs:
 #
-# nidmfile - the location of the nidm-results zip pack.
+# nidmPack - the location of the nidm-results zip pack.
 # htmlfolder - the output location.
 # overwrite - whether the user gives permission for data to be overwritten.
 #
@@ -15,6 +15,7 @@ import rdflib
 import zipfile
 import glob
 from nidmviewerfsl.lib.pagegen import pageGenerate
+import webbrowser
 
 
 # This function attempts to create folder for HTML files, quits program if
@@ -24,6 +25,7 @@ def createOutputDirectory(outputFolder):
     try:
 
         os.makedirs(outputFolder)
+        os.makedirs(os.path.join(outputFolder, 'NIDMData'))
 
     except OSError:
 
@@ -31,28 +33,27 @@ def createOutputDirectory(outputFolder):
         exit()
 
 
-def extractZip(htmlFolder, nidmFile):
+def extractZip(htmlFolder, nidmPack):
 
     # Read in the Zip file.
-    zip = zipfile.ZipFile(nidmFile, "r")
+    zip = zipfile.ZipFile(nidmPack, "r")
 
     # Extract zip file to destination folder
-    zip.extractall(htmlFolder)
+    zip.extractall(os.path.join(htmlFolder, 'NIDMData'))
 
     # Create RDF graph.
     g = rdflib.Graph()
 
     # Locate the ttl data
-    turtleFile = glob.glob(os.path.join(htmlFolder, "*.ttl"))
+    turtleFile = glob.glob(os.path.join(htmlFolder, 'NIDMData', "*.ttl"))
 
     # Parse the ttl file.
     g.parse(turtleFile[0], format="turtle")
 
-    # Generate pages.
-    pageGenerate(g, htmlFolder)
+    return(g)
 
 
-def main(nidmFile, htmlFolder, overwrite=False):  # Main program
+def main(nidmPack, htmlFolder, overwrite=False, display=False):  # Main program
 
     # First we check if we can overwrite htmlFolder if we need to.
     if not overwrite and os.path.isdir(htmlFolder):
@@ -68,44 +69,51 @@ def main(nidmFile, htmlFolder, overwrite=False):  # Main program
         # If they said no, exit.
         if not overwrite:
 
+            print('Program exited. Cause: Overwrite permission'
+                  ' denied.')
             exit()
 
     # Overwrite htmlFolder if we need to.
     if overwrite and os.path.isdir(htmlFolder):
 
+        print('Overwriting: ' + htmlFolder)
         shutil.rmtree(htmlFolder)
 
-    # Nidm Zip file specified
-    if nidmFile.endswith(".nidm.zip"):
+    #Create the output directory.
+    createOutputDirectory(htmlFolder)
 
-            extractZip(htmlFolder, nidmFile)
+    # Tell the user the code is running.
+    print('Generating display...')
+
+    # Nidm Zip file specified
+    if nidmPack.endswith(".nidm.zip"):
+
+        g = extractZip(htmlFolder, nidmPack)
+
+        # Generate pages.
+        pageGenerate(g, htmlFolder, os.path.join(htmlFolder, 'NIDMData'))
 
     else:
 
+        # Create RDF graph.
         g = rdflib.Graph()
-        g.parse(nidmFile, format=rdflib.util.guess_format(nidmFile))
 
-        # User wants to overwite folder
-        if overwrite:
-            print("Overwrite")
-            # Check if directory already exists
-            if os.path.isdir(htmlFolder):
+        # Locate the ttl data
+        turtleFile = glob.glob(os.path.join(nidmPack, "*.ttl"))
 
-                print("Removing %r" % htmlFolder)
+        # Parse the ttl file.
+        g.parse(turtleFile[0], format="turtle")
 
-                if not os.path.isdir(htmlFolder + "Backup"):
+        pageGenerate(g, htmlFolder, nidmPack)
 
-                    # Backup the folder
-                    shutil.copytree(htmlFolder, htmlFolder +
-                                    "Backup")
+    # Remove the temporary data folder.
+    shutil.rmtree(os.path.join(htmlFolder, 'NIDMData'))
 
-                # Remove the folder
-                shutil.rmtree(htmlFolder)
+    # Tell the user the display is ready.
+    print('FSL NIDM-Results display now available at: ' + htmlFolder)
 
-        # Create the html folder
-        createOutputDirectory(htmlFolder)
-        currentDir = os.getcwd()
-        dirLocation = os.path.join(currentDir, htmlFolder)
-        pageGenerate(g, dirLocation)
+    # Display if necessary
+    if display:
+        webbrowser.open(os.path.join(htmlFolder, 'stats.html'))
 
     return(htmlFolder)  # Return the html/zip-extraction folder

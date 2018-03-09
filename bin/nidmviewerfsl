@@ -8,19 +8,22 @@ import argparse
 
 
 if __name__ == "__main__":
-    """this = input("Please enter something")
-    print("Input was %r" % this)"""
+
+    # Read the inputs.
     parser = argparse.ArgumentParser(description="NIDM-Results Viewer")
     parser.add_argument("nidmFile", help="NIDM-Results pack")
     parser.add_argument("outFolder", help="Destination folder for HTML pages")
     parser.add_argument(
         "--d",
-        help="Overwite output folder if it already exists",
+        help="Overwrite output folder if it already exists",
         action="store_true")
+    parser.add_argument(
+        "--w",
+        help="Open display once generated.",
+        action="store_true")
+
+    # Parse the inputs.
     args = parser.parse_args()
 
-    if args.d is True:
-
-        print("Overwite the folder")
-
-    viewer.main(args.nidmFile, args.outFolder, args.d)
+    # Run the viewer.
+    viewer.main(args.nidmFile, args.outFolder, args.d, args.w)

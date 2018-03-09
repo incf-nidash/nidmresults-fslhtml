@@ -7,6 +7,7 @@
 import os
 import time
 from dominate import document
+import shutil
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style, br
 from dominate.util import raw
 from style.pagestyling import (
@@ -149,7 +150,7 @@ def generateMainHTML(graph, mainFilePath="Main.html"):
 
 
 # Generates the Stats HTML section
-def generateStatsHTML(graph, statsFilePath="stats.html"):
+def generateStatsHTML(graph, statsFilePath, nidmData):
 
     # Obtain version number.
     softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
@@ -210,9 +211,14 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
     designMatrixLocation = runQuery(graph, 'selectDesignMatrixLocation',
                                     'Select')
 
+    # Make a copy of the design matrix csv file in the output folder.
+    shutil.copyfile(os.path.join(nidmData, designMatrixLocation[0]),
+                    os.path.join(os.path.split(statsFilePath)[0],
+                        designMatrixLocation[0]))
+
     # Adds design matrix image (as a link) to html page
     stats += a(img(src='data:image/jpg;base64,' + encodeImage(
-                        os.path.join(os.path.split(statsFilePath)[0],
+                        os.path.join(nidmData,
                                      designMatrixLocation[1])).decode(),
                    style="border:5px solid black",
                    border=0,
@@ -274,7 +280,7 @@ def generateStatsHTML(graph, statsFilePath="stats.html"):
 
 
 # Generates the PostStats HTML page
-def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
+def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
 
     # Work out if there are voxelwise or clusterwise_corrected thresholds.
     voxelWise_corrected = runQuery(graph, 'askCHeightThreshold', 'Ask')
@@ -434,15 +440,13 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
             postStats += raw(
                 "%s" % contrastName[i] + "&nbsp &nbsp" +
                 "%0.3g" % float(getVal(os.path.join(
-                    os.path.split(
-                        postStatsFilePath)[0], excursionSetNifti[i]),
+                    nidmData, excursionSetNifti[i]),
                     'min')) +
                 " &nbsp " +
                 "<img src = '" + encodeColorBar() + "'>" +
                 " &nbsp " +
                 "%0.3g" % float(getVal(os.path.join(
-                    os.path.split(
-                        postStatsFilePath)[0], excursionSetNifti[i]),
+                    nidmData, excursionSetNifti[i]),
                     'max')) +
                 "<br><br>")
 
@@ -454,26 +458,33 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                                     '.nii.gz', '.html'))
                                 + "'>")
 
-            # If the slice image already exists add it.
-            if (excursionSetSliceImage[
-                    i] is not None and os.path.exists(
-                        os.path.join(os.path.split(
-                                    postStatsFilePath)[0],
-                                    excursionSetSliceImage[i]))):
-                postStats += img(
-                    src='data:image/jpg;base64,' +
-                    encodeImage(
-                        os.path.join(
-                            os.path.split(
-                                postStatsFilePath)[0],
-                            excursionSetSliceImage[i])
-                        ).decode())
+            # Add the image. If we have FSL the image was found in the pack.
+            if askFSL:
 
-            # Otherwise recreate the slice image.
-            else:
+                # If the slice image already exists add it.
+                if os.path.exists(os.path.join(
+                                nidmData, excursionSetSliceImage[i])):
+                    postStats += img(
+                        src='data:image/jpg;base64,' +
+                        encodeImage(
+                            os.path.join(
+                                nidmData,
+                                excursionSetSliceImage[i])
+                            ).decode())
 
-                sliceImage = generateSliceImage(os.path.join(os.path.split(
-                                                postStatsFilePath)[0],
+                # Otherwise recreate the slice image.
+                else:
+                    sliceImage = generateSliceImage(os.path.join(
+                                                    nidmData,
+                                                    excursionSetNifti[i]),
+                                                    'FSL')
+                    postStats += img(src='data:image/jpg;base64,' +
+                                     encodeImage(sliceImage).decode())
+
+            # Add the image. If we have SPM the image was regenerated.
+            if askSPM:
+                sliceImage = generateSliceImage(os.path.join(
+                                                nidmData,
                                                 excursionSetNifti[i]),
                                                 softType)
                 postStats += img(src='data:image/jpg;base64,' +
@@ -497,21 +508,19 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
         postStats += raw(
             "%s" % conString + "&nbsp &nbsp" +
             "%0.3g" % float(getVal(os.path.join(
-                os.path.split(
-                    postStatsFilePath)[0], excursionSetNifti[0]),
+                    nidmData, excursionSetNifti[0]),
                 'min')) +
             " &nbsp " +
             "<img src = '" + encodeColorBar() + "'>" +
             " &nbsp " +
             "%0.3g" % float(getVal(os.path.join(
-                os.path.split(
-                    postStatsFilePath)[0], excursionSetNifti[0]),
+                    nidmData, excursionSetNifti[0]),
                 'max')) +
             "<br><br>")
 
         # Make the slice image.
-        sliceImage = generateSliceImage(os.path.join(os.path.split(
-                                        postStatsFilePath)[0],
+        sliceImage = generateSliceImage(os.path.join(
+                                        nidmData,
                                         excursionSetNifti[0]),
                                         'SPM')
 
@@ -532,7 +541,7 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
 
 
 # This function generates all pages for display.
-def pageGenerate(g, outdir):
+def pageGenerate(g, outdir, nidmData):
 
     # Specify path names for main pages.
     mainFileName = os.path.join(outdir, "main.html")
@@ -540,8 +549,8 @@ def pageGenerate(g, outdir):
     postStatsFileName = os.path.join(outdir, "postStats.html")
 
     # Create main pages.
-    generateStatsHTML(g, statsFileName)
-    generatePostStatsHTML(g, postStatsFileName)
+    generateStatsHTML(g, statsFileName, nidmData)
+    generatePostStatsHTML(g, postStatsFileName, nidmData)
     generateMainHTML(g, mainFileName)
 
     # Make cluster pages
