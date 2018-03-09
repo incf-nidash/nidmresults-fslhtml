@@ -18,7 +18,10 @@ from queries.querytools import runQuery
 
 
 # Generate a page of excursion set peak and cluster statistics
-def generateExcPage(outdir, excName, conData):
+def generateExcPage(g, outdir, excName, conData):
+
+    # Get the name for the output file.
+    outputName = getClusFileName(g, excName)
 
     # Create new document.
     excPage = document(title="Cluster List")
@@ -30,7 +33,9 @@ def generateExcPage(outdir, excName, conData):
     # Add header and link to main page.
     excPage += raw("<center>")
     excPage += hr()
-    excPage += raw("Co-ordinate information for " + excName + " - ")
+    excPage += raw("Co-ordinate information for " + 
+                   outputName.replace('.html', '')
+                    + " - ")
     excPage += raw("<a href='../main.html'>back</a>")
     excPage += raw(" to main page")
     excPage += hr()
@@ -112,7 +117,7 @@ def generateExcPage(outdir, excName, conData):
     excPage += raw("</center>")
 
     # Write excPage to a html file.
-    excFile = open(os.path.join(outdir, excName + ".html"), "x")
+    excFile = open(os.path.join(outdir, outputName), "x")
     print(excPage, file=excFile)
     excFile.close()
 
@@ -562,5 +567,5 @@ def pageGenerate(g, outdir, nidmData):
     for excName in excNiftiNames:
 
         excData = formatClusterStats(g, excName)
-        generateExcPage(os.path.join(outdir, 'Cluster_Data'),
+        generateExcPage(g, os.path.join(outdir, 'Cluster_Data'),
                         excName.replace(".nii.gz", ""), excData)

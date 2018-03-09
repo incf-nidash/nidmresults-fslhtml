@@ -218,3 +218,53 @@ def contrastVec(data, v_min, v_max):
 
     # Return the image
     return('data:image/jpg;base64,' + encodedIm.decode())
+
+
+# This function takes in an excursion set name and a graph and generates
+# an FSL-like name for the HTML output display for the excursionset.
+#
+# e.g. ExcursionSet_F001.nii.gz -> cluster_zfstat1_std.html
+def getClusFileName(g, excName):
+
+    # For SPM data we can't work out the filename we want from just
+    # the contrast name.
+    if runQuery(g, 'askSPM', 'Ask'):
+
+        # For SPM data we must look for the statistic map to
+        # assert which statistic is associated to a contrast.
+        statisticMap = runQuery(g, 'selectStatMap', 'Select',
+                                {'EXC_NAME': excName})[0]
+
+        # If it's T stat string is '', if it's F statstring
+        # is 'f'
+        if statisticMap[0] == 'T':
+            statString = ''
+        else:
+            statString = statisticMap[0].lower()
+
+        return('cluster_z' + statString + 'stat1_std.html')
+
+    else:
+
+        # In FSL the excursion set maps are always of the form
+        # ExcursionSet_(stattype)00(number), unless only one T
+        # statistic was computed. Then the excursion set map is
+        # names ExcursionSet.
+        if '_F' in excName:
+
+            statString = 'f'
+
+        else:
+
+            statString = ''
+
+        # The last letter of the name should either be the
+        # excursion number or, if there is only one excursion
+        # set, 't'.
+        number = excName.replace('.nii.gz', '')[-1]
+
+        if number == 't':
+
+            number = '1'
+
+        return('cluster_z' + statString + 'stat' + number + '_std.html')
