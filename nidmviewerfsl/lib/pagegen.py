@@ -214,7 +214,7 @@ def generateStatsHTML(graph, statsFilePath, nidmData):
     # Make a copy of the design matrix csv file in the output folder.
     shutil.copyfile(os.path.join(nidmData, designMatrixLocation[0]),
                     os.path.join(os.path.split(statsFilePath)[0],
-                        designMatrixLocation[0]))
+                                 designMatrixLocation[0]))
 
     # Adds design matrix image (as a link) to html page
     stats += a(img(src='data:image/jpg;base64,' + encodeImage(

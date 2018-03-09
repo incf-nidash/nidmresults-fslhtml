@@ -79,7 +79,7 @@ def main(nidmPack, htmlFolder, overwrite=False, display=False):  # Main program
         print('Overwriting: ' + htmlFolder)
         shutil.rmtree(htmlFolder)
 
-    #Create the output directory.
+    # Create the output directory.
     createOutputDirectory(htmlFolder)
 
     # Tell the user the code is running.
