@@ -11,8 +11,10 @@ prefix nidm_clusterSizeInVoxels: <http://purl.org/nidash/nidm#NIDM_0000084>
 prefix nidm_clusterLabelID: <http://purl.org/nidash/nidm#NIDM_0000082>
 prefix nidm_equivalentZStatistic: <http://purl.org/nidash/nidm#NIDM_0000092>
 prefix prov: <http://www.w3.org/ns/prov#>
+prefix nidm_pValueFWER: <http://purl.org/nidash/nidm#NIDM_0000115> 
+prefix nidm_qValueFDR: <http://purl.org/nidash/nidm#NIDM_0000119>
 
-SELECT ?clus_index ?clus_size
+SELECT ?clus_index ?clus_size ?pVal
 
 WHERE {{?exc a nidm_ExcursionSetMap: .
 		?clus prov:wasDerivedFrom ?exc .
@@ -20,6 +22,9 @@ WHERE {{?exc a nidm_ExcursionSetMap: .
        	?exc prov:atLocation ?conMap .
        	?clus a nidm_SupraThresholdCluster: . 
        	?clus nidm_clusterLabelID: ?clus_index .
-       	?clus nidm_clusterSizeInVoxels: ?clus_size}
+       	?clus nidm_clusterSizeInVoxels: ?clus_size
+
+       OPTIONAL {?clus nidm_pValueFWER: ?pVal .}
+       OPTIONAL {?clus nidm_qValueFDR: ?pVal .}}
 
 FILTER(STR(?conMap) = '{{{EXC_NAME}}}'^^xsd:string)}

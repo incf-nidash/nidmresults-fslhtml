@@ -26,6 +26,9 @@ def generate_exc_page(g, outdir, excName, conData):
     # Create new document.
     excPage = document(title="Cluster List")
 
+    # Work out if we have cluster p value data.
+    pDataAvailable = 'clusterPValues' in conData
+
     # Add CSS stylesheet.
     with excPage.head:
         style(raw(get_raw_css()))
@@ -45,9 +48,16 @@ def generate_exc_page(g, outdir, excName, conData):
 
     # Make the cluster statistics table.
     excPage += raw("<table cellspacing='3' border='3'><tbody>")
-    excPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>Z-MAX"
-                   "</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>"
-                   "Z-MAX Z (mm)</th></tr>")
+
+    # If we have pvalues for clusters include them.
+    if pDataAvailable:
+        excPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>P</th>"
+                       "<th>-log10(P)</th><th>Z-MAX</th><th>Z-MAX X (mm)"
+                       "</th><th>Z-MAX Y (mm)</th><th>Z-MAX Z (mm)</th></tr>")
+    else:
+        excPage += raw("<tr><th>Cluster Index</th><th>Voxels</th><th>Z-MAX"
+                       "</th><th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>"
+                       "Z-MAX Z (mm)</th></tr>")
 
     # Add the cluster statistics data into the table.
     for cluster in range(0, len(conData['clusSizes'])):
@@ -58,6 +68,16 @@ def generate_exc_page(g, outdir, excName, conData):
                        "</td>")
         excPage += raw("<td>" + str(conData['clusSizes'][cluster]) +
                        "</td>")
+
+        #If cluster p data is available
+        if pDataAvailable:
+            excPage += raw("<td>" +
+                           ("%.4g" % conData['clusterPValues'][cluster]) +
+                           "</td>")
+            excPage += raw("<td>" + 
+                           ("%.4f" % conData['logClusterPValues'][cluster]) +
+                           "</td>")
+
         excPage += raw("<td>" + str(float('%.2f' % float(
             conData['clusPeakZstats'][cluster]))) + "</td>")
 
