@@ -10,13 +10,19 @@ prefix prov: <http://www.w3.org/ns/prov#>
 prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
 prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
 prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
+prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
 
 SELECT ?statMapName
 
 WHERE {{?exc a nidm_ExcursionSetMap: .
        	?exc prov:atLocation ?conMap .
        	?exc prov:wasGeneratedBy ?inf .
-       	?inf a nidm_Inference: .
+       	{?infer a nidm_Inference:}
+	    UNION
+	    {?infer a nidm_ConjunctionInference:}
+	    UNION
+        {?infer a spm_PartialConjunctionInference:}.
        	?inf prov:used ?statMap .
        	?statMap a nidm_StatisticMap: .
        	?statMap prov:atLocation ?statMapName .}

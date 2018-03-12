@@ -107,8 +107,8 @@ def formatClusterStats(g, excName):
     # cluster index and then descending peak statistic size.
     peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)),
                                   reverse=True,
-                                  key=lambda k: (-clusterIndicesForPeaks[k],
-                                                 peakZstats[k]))
+                                  key=lambda k: (clusterIndicesForPeaks[k],
+                                                 -peakZstats[k]))
 
     # Sort all peak data using this permutation.
     sortedPeaksZstatsArray = [peakZstats[i] for i in peaksSortPermutation]
@@ -226,10 +226,12 @@ def contrastVec(data, v_min, v_max):
 # e.g. ExcursionSet_F001.nii.gz -> cluster_zfstat1_std.html
 def getClusFileName(g, excName):
 
+    print(excName)
     # For SPM data we can't work out the filename we want from just
     # the contrast name.
     if runQuery(g, 'askSPM', 'Ask'):
 
+        print('Actove')
         # For SPM data we must look for the statistic map to
         # assert which statistic is associated to a contrast.
         statisticMap = runQuery(g, 'selectStatMap', 'Select',

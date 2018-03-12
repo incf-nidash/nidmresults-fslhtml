@@ -62,7 +62,7 @@ def getFileName(g, excName):
 
 
 g = rdflib.Graph()
-turtleFile = glob.glob('/home/tommaullin/Documents/Repos/nidmresults-fslhtml/nidmviewerfsl/tests/data/ex_spm_full_example001_test_err/nidm.ttl')
+turtleFile = glob.glob('/home/tommaullin/Documents/Repos/nidmresults-fslhtml/nidmviewerfsl/tests/data/ex_spm_temporal_derivative_test_err/nidm.ttl')
 
 g.parse(turtleFile[0], format = "turtle")
 

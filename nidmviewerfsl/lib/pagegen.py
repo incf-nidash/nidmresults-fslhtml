@@ -21,6 +21,7 @@ from queries.querytools import runQuery
 def generateExcPage(g, outdir, excName, conData):
 
     # Get the name for the output file.
+    print('excName: ' + excName)
     outputName = getClusFileName(g, excName)
 
     # Create new document.
@@ -34,8 +35,8 @@ def generateExcPage(g, outdir, excName, conData):
     excPage += raw("<center>")
     excPage += hr()
     excPage += raw("Co-ordinate information for " + 
-                   outputName.replace('.html', '')
-                    + " - ")
+                   outputName.replace('.html', '') +
+                   " - ")
     excPage += raw("<a href='../main.html'>back</a>")
     excPage += raw(" to main page")
     excPage += hr()
