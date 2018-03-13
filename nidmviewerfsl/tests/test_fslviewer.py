@@ -164,7 +164,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
 
         # Check for the software name.
         for line in postStatsFile:
@@ -188,7 +188,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
 
         # Check for the software version.
         for line in postStatsFile:
@@ -212,7 +212,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
 
         for line in postStatsFile:
 
@@ -234,7 +234,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
 
         # Check for the extent threshold.
         for line in postStatsFile:
@@ -258,7 +258,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
         nextLine = False
 
         # Check for the slice image.
@@ -270,7 +270,7 @@ class testDatasetFeatures(unittest.TestCase):
                 break
 
             # If we see this the next line contains the slice image.
-            if "<a href = './Cluster_Data/" in line:
+            if "<a href = './cluster_z" in line:
 
                 nextLine = True
 
@@ -287,7 +287,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
 
         # This is an extract of the encoding for the FSL logo
         logoExtract = 'WriWP7OC0Zy6j7w4yMeoqnKL9NPivby0uILm1ZSwKEFh0N' \
@@ -320,7 +320,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
 
         # This is an extract of the encoding for the colorbar
         colorBarExtract = 'P+6AP+yAP+qAP+oAP+gAP+eAP+WAP+MAP+EAP+CAP98AP9' \
@@ -353,7 +353,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
 
         # This is an extract of the encoding for the colorbar
         colorBarExtract = 'P+6AP+yAP+qAP+oAP+gAP+eAP+WAP+MAP+EAP+CAP98AP9' \
@@ -385,7 +385,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
         nextLine = False
 
         # Check for the slice image.
@@ -416,7 +416,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
         nextLine = False
 
         # Check for the slice image.
@@ -447,11 +447,10 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        clusDir = os.path.join(filePath, 'Cluster_Data')
 
         # Count the number of files in the cluster data directory.
         numExc = len([name for name in os.listdir(
-            clusDir) if os.path.isfile(os.path.join(clusDir, name))])
+            filePath) if os.path.isfile(os.path.join(filePath, name))])-4
 
         # Assert if the number of excursions is correct.
         self.assertTrue(numExc == structData["numExc"],
@@ -463,13 +462,13 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
 
         # Count the number of slice images.
         numSliceIm = 0
         for line in postStatsFile:
 
-            if "a href = './Cluster_Data/" in line:
+            if "<a href = './cluster_z" in line:
 
                 numSliceIm = numSliceIm + 1
 
@@ -486,7 +485,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
 
         # Look for the contrast name of interest.
         nextLine = False
@@ -518,7 +517,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        statsFile = open(os.path.join(filePath, 'stats.html'), "r")
+        statsFile = open(os.path.join(filePath, 'report_stats.html'), "r")
 
         nextLine = False
 
@@ -548,7 +547,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        statsFile = open(os.path.join(filePath, 'stats.html'), "r")
+        statsFile = open(os.path.join(filePath, 'report_stats.html'), "r")
 
         conPresent = [False]*len(structData['conVec'])
 
@@ -576,7 +575,7 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        statsFile = open(os.path.join(filePath, 'stats.html'), "r")
+        statsFile = open(os.path.join(filePath, 'report_stats.html'), "r")
 
         conPresent = [False]*len(structData['conVecImEx'])
 

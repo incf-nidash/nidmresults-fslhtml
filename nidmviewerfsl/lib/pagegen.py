@@ -36,7 +36,7 @@ def generateExcPage(g, outdir, excName, conData):
     excPage += raw("Co-ordinate information for " +
                    outputName.replace('.html', '') +
                    " - ")
-    excPage += raw("<a href='../main.html'>back</a>")
+    excPage += raw("<a href='./report_main.html'>back</a>")
     excPage += raw(" to main page")
     excPage += hr()
 
@@ -123,7 +123,7 @@ def generateExcPage(g, outdir, excName, conData):
 
 
 # Generates the main HTML page
-def generateMainHTML(graph, mainFilePath="Main.html"):
+def generateMainHTML(graph, mainFilePath):
 
     # Create new document.
     main = document(title="FSL Viewer")
@@ -145,8 +145,9 @@ def generateMainHTML(graph, mainFilePath="Main.html"):
                 '<br>')
 
     # Links to other pages.
-    main += raw('<a href="stats.html" target="_top"> Stats </a> - <'
-                'a href="postStats.html" target="_top"> Post-stats </a></div>')
+    main += raw('<a href="report_stats.html" target="_top"> Stats </a> - <'
+                'a href="report_poststats.html" target="_top"> Post-stats'
+                ' </a></div>')
 
     # Write main page to a HTML file.
     mainFile = open(mainFilePath, "x")
@@ -180,9 +181,10 @@ def generateStatsHTML(graph, statsFilePath, nidmData):
                  '<br>')
 
     # Links to other pages.
-    stats += raw('<a href="main.html" target="_top"> Up to main page </a> -'
-                 ' <a href="stats.html" target="_top"> Stats </a> - <a '
-                 'href="postStats.html" target="_top"> Post-stats </a></div>')
+    stats += raw('<a href="report_main.html" target="_top"> Up to main page </a> -'
+                 ' <a href="report_stats.html" target="_top"> Stats </a> - <a '
+                 'href="report_poststats.html" target="_top"> Post-stats </a>'
+                 '</div>')
 
     # Page title.
     stats += h2("Stats")
@@ -340,9 +342,9 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
                      '<br>')
 
     # Links to other pages.
-    postStats += raw('<a href="main.html" target="_top"> Up to main page </a'
-                     '> - <a href="stats.html" target="_top"> Stats </a> - <'
-                     'a href="postStats.html" target="_top"> Post-stats </a>'
+    postStats += raw('<a href="report_main.html" target="_top"> Up to main page </a'
+                     '> - <a href="report_stats.html" target="_top"> Stats </a> - <'
+                     'a href="report_poststats.html" target="_top"> Post-stats </a>'
                      '</div>')
 
     # Page title.
@@ -458,9 +460,10 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
             # Add a link to the clusterData page.
             postStats += raw("<a href = '" +
                              os.path.join(
-                                '.', 'Cluster_Data',
-                                excursionSetNifti[i].replace(
-                                    '.nii.gz', '.html'))
+                                '.',
+                                getClusFileName(
+                                    graph, excursionSetNifti[i].replace(
+                                        '.nii.gz', '')))
                                 + "'>")
 
             # Add the image. If we have FSL the image was found in the pack.
@@ -531,8 +534,8 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
 
         # Add the link to the cluster data page.
         postStats += raw("<a href = '" + os.path.join(
-            '.', 'Cluster_Data', excursionSetNifti[0].replace(
-                '.nii.gz', '.html')) + "'>")
+            '.', getClusFileName(graph, excursionSetNifti[0].replace(
+                                        '.nii.gz', ''))) + "'>")
 
         # Add the slice image.
         postStats += img(src='data:image/jpg;base64,' + encodeImage(
@@ -549,9 +552,9 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
 def pageGenerate(g, outdir, nidmData):
 
     # Specify path names for main pages.
-    mainFileName = os.path.join(outdir, "main.html")
-    statsFileName = os.path.join(outdir, "stats.html")
-    postStatsFileName = os.path.join(outdir, "postStats.html")
+    mainFileName = os.path.join(outdir, "report_main.html")
+    statsFileName = os.path.join(outdir, "report_stats.html")
+    postStatsFileName = os.path.join(outdir, "report_poststats.html")
 
     # Create main pages.
     generateStatsHTML(g, statsFileName, nidmData)
@@ -559,7 +562,6 @@ def pageGenerate(g, outdir, nidmData):
     generateMainHTML(g, mainFileName)
 
     # Make cluster pages
-    os.mkdir(os.path.join(outdir, 'Cluster_Data'))
     excDetails = runQuery(g, 'selectExcursionSetDetails', 'Select')
     excNiftiNames = set([excDetails[i] for i in list(
         range(0, len(excDetails), 3))])
@@ -567,5 +569,5 @@ def pageGenerate(g, outdir, nidmData):
     for excName in excNiftiNames:
 
         excData = formatClusterStats(g, excName)
-        generateExcPage(g, os.path.join(outdir, 'Cluster_Data'),
+        generateExcPage(g, outdir,
                         excName.replace(".nii.gz", ""), excData)

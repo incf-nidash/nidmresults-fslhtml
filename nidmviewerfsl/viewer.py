@@ -114,6 +114,6 @@ def main(nidmPack, htmlFolder, overwrite=False, display=False):  # Main program
 
     # Display if necessary
     if display:
-        webbrowser.open(os.path.join(htmlFolder, 'stats.html'))
+        webbrowser.open(os.path.join(htmlFolder, 'report_stats.html'))
 
     return(htmlFolder)  # Return the html/zip-extraction folder
