@@ -164,7 +164,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # Check for the software name.
         for line in postStatsFile:
@@ -188,7 +189,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # Check for the software version.
         for line in postStatsFile:
@@ -212,7 +214,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         for line in postStatsFile:
 
@@ -234,7 +237,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # Check for the extent threshold.
         for line in postStatsFile:
@@ -258,7 +262,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
         nextLine = False
 
         # Check for the slice image.
@@ -287,7 +292,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # This is an extract of the encoding for the FSL logo
         logoExtract = 'WriWP7OC0Zy6j7w4yMeoqnKL9NPivby0uILm1ZSwKEFh0N' \
@@ -320,7 +326,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # This is an extract of the encoding for the colorbar
         colorBarExtract = 'P+6AP+yAP+qAP+oAP+gAP+eAP+WAP+MAP+EAP+CAP98AP9' \
@@ -353,7 +360,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # This is an extract of the encoding for the colorbar
         colorBarExtract = 'P+6AP+yAP+qAP+oAP+gAP+eAP+WAP+MAP+EAP+CAP98AP9' \
@@ -385,7 +393,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
         nextLine = False
 
         # Check for the slice image.
@@ -416,7 +425,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
         nextLine = False
 
         # Check for the slice image.
@@ -462,7 +472,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # Count the number of slice images.
         numSliceIm = 0
@@ -485,7 +496,8 @@ class testDatasetFeatures(unittest.TestCase):
 
         # Setup
         filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'report_poststats.html'), "r")
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # Look for the contrast name of interest.
         nextLine = False

@@ -343,9 +343,9 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
 
     # Links to other pages.
     postStats += raw('<a href="report.html" target="_top"> Up to main page </a'
-                     '> - <a href="report_stats.html" target="_top"> Stats </a> - <'
-                     'a href="report_poststats.html" target="_top"> Post-stats </a>'
-                     '</div>')
+                     '> - <a href="report_stats.html" target="_top"> Stats </a'
+                     '> - <a href="report_poststats.html" target="_top"> Post-'
+                     'stats </a></div>')
 
     # Page title.
     postStats += h2("Post-stats")
