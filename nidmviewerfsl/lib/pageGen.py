@@ -285,6 +285,10 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
     askSPM = runQuery(graph, 'askSPM', 'Ask')
     askFSL = runQuery(graph, 'askFSL', 'Ask')
+    if askSPM:
+        softType = 'SPM'
+    if askFSL:
+        softType = 'FSL'
 
     # Retrieve and format height threshold statistic type.
     statisticType = runQuery(graph, 'selectStatisticType', 'Select')
@@ -297,8 +301,9 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
 
     # Retrieve excursion set details and format them.
     excDetails = runQuery(graph, 'selectExcursionSetDetails', 'Select')
-    excursionSetNifti = list(set([excDetails[i] for i in list(range(0,
-                             len(excDetails), 3))]))
+    excursionSetNifti = [excDetails[i] for i in list(range(0,
+                             len(excDetails), 3))]
+
     excursionSetSliceImage = [excDetails[i] for i in list(
         range(1, len(excDetails), 3))]
     contrastName = [excDetails[i] for i in list(range(2, len(excDetails), 3))]
@@ -411,12 +416,13 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
     postStats += hr()
 
     # Work out if we are looking at a conjunction datapack or not.
-    askConjunction = len(excursionSetNifti) != len(contrastName)
+    askConjunction = len(list(set(excursionSetNifti))) != len(contrastName)
 
     # If this is a conjunction we need to initialise an empty string to store
-    # contrast names.
+    # contrast names and check for duplicate recordings of niftis.
     if askConjunction:
         conString = ''
+        excursionSetNifti = list(set(excursionSetNifti))
 
     for i in range(0, len(contrastName)):
 
@@ -448,39 +454,29 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                                     '.nii.gz', '.html'))
                                 + "'>")
 
-            # Add the image. If we have FSL the image was found in the pack.
-            if askFSL:
-
-                # If the slice image already exists add it.
-                if os.path.exists(os.path.join(os.path.split(
-                                        postStatsFilePath)[0],
-                                        excursionSetSliceImage[i])):
-                    postStats += img(
-                        src='data:image/jpg;base64,' +
-                        encodeImage(
-                            os.path.join(
-                                os.path.split(
+            # If the slice image already exists add it.
+            if (excursionSetSliceImage[i] is not None and
+                     os.path.exists(os.path.join(os.path.split(
                                     postStatsFilePath)[0],
-                                excursionSetSliceImage[i])
-                            ).decode())
+                                    excursionSetSliceImage[i]))):
+                postStats += img(
+                    src='data:image/jpg;base64,' +
+                    encodeImage(
+                        os.path.join(
+                            os.path.split(
+                                postStatsFilePath)[0],
+                            excursionSetSliceImage[i])
+                        ).decode())
 
-                # Otherwise recreate the slice image.
-                else:
-                    sliceImage = generateSliceImage(os.path.join(os.path.split(
-                                                    postStatsFilePath)[0],
-                                                    excursionSetNifti[i]),
-                                                    'FSL')
-                    postStats += img(src='data:image/jpg;base64,' +
-                                     encodeImage(sliceImage).decode())
+            # Otherwise recreate the slice image.
+            else:
 
-            # Add the image. If we have SPM the image was regenerated.
-            if askSPM:
                 sliceImage = generateSliceImage(os.path.join(os.path.split(
                                                 postStatsFilePath)[0],
                                                 excursionSetNifti[i]),
-                                                'SPM')
-                postStats += img(src='data:image/jpg;base64,' + encodeImage(
-                                 sliceImage).decode())
+                                                softType)
+                postStats += img(src='data:image/jpg;base64,' +
+                                 encodeImage(sliceImage).decode())
 
             postStats += raw("</a><br><br>")
 
