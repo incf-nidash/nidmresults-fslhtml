@@ -33,7 +33,7 @@ def generateExcPage(g, outdir, excName, conData):
     # Add header and link to main page.
     excPage += raw("<center>")
     excPage += hr()
-    excPage += raw("Co-ordinate information for " + 
+    excPage += raw("Co-ordinate information for " +
                    outputName.replace('.html', '') +
                    " - ")
     excPage += raw("<a href='../main.html'>back</a>")
