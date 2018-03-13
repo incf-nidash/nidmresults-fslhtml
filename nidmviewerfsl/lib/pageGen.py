@@ -301,8 +301,8 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
 
     # Retrieve excursion set details and format them.
     excDetails = runQuery(graph, 'selectExcursionSetDetails', 'Select')
-    excursionSetNifti = [excDetails[i] for i in list(range(0,
-                             len(excDetails), 3))]
+    excursionSetNifti = [excDetails[i] for i in list(
+        range(0, len(excDetails), 3))]
 
     excursionSetSliceImage = [excDetails[i] for i in list(
         range(1, len(excDetails), 3))]
@@ -455,8 +455,9 @@ def generatePostStatsHTML(graph, postStatsFilePath="postStats.html"):
                                 + "'>")
 
             # If the slice image already exists add it.
-            if (excursionSetSliceImage[i] is not None and
-                     os.path.exists(os.path.join(os.path.split(
+            if (excursionSetSliceImage[
+                    i] is not None and os.path.exists(
+                        os.path.join(os.path.split(
                                     postStatsFilePath)[0],
                                     excursionSetSliceImage[i]))):
                 postStats += img(
