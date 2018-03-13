@@ -36,7 +36,7 @@ def generateExcPage(g, outdir, excName, conData):
     excPage += raw("Co-ordinate information for " +
                    outputName.replace('.html', '') +
                    " - ")
-    excPage += raw("<a href='./report_main.html'>back</a>")
+    excPage += raw("<a href='./report.html'>back</a>")
     excPage += raw(" to main page")
     excPage += hr()
 
@@ -181,7 +181,7 @@ def generateStatsHTML(graph, statsFilePath, nidmData):
                  '<br>')
 
     # Links to other pages.
-    stats += raw('<a href="report_main.html" target="_top"> Up to main page </a> -'
+    stats += raw('<a href="report.html" target="_top"> Up to main page </a> -'
                  ' <a href="report_stats.html" target="_top"> Stats </a> - <a '
                  'href="report_poststats.html" target="_top"> Post-stats </a>'
                  '</div>')
@@ -342,7 +342,7 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
                      '<br>')
 
     # Links to other pages.
-    postStats += raw('<a href="report_main.html" target="_top"> Up to main page </a'
+    postStats += raw('<a href="report.html" target="_top"> Up to main page </a'
                      '> - <a href="report_stats.html" target="_top"> Stats </a> - <'
                      'a href="report_poststats.html" target="_top"> Post-stats </a>'
                      '</div>')
@@ -552,7 +552,7 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
 def pageGenerate(g, outdir, nidmData):
 
     # Specify path names for main pages.
-    mainFileName = os.path.join(outdir, "report_main.html")
+    mainFileName = os.path.join(outdir, "report.html")
     statsFileName = os.path.join(outdir, "report_stats.html")
     postStatsFileName = os.path.join(outdir, "report_poststats.html")
 
