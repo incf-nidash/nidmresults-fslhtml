@@ -21,7 +21,6 @@ from queries.querytools import runQuery
 def generateExcPage(g, outdir, excName, conData):
 
     # Get the name for the output file.
-    print('excName: ' + excName)
     outputName = getClusFileName(g, excName)
 
     # Create new document.
@@ -303,13 +302,13 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
         softType = 'FSL'
 
     # Retrieve and format height threshold statistic type.
-    statisticType = runQuery(graph, 'selectStatisticType', 'Select')
-    statisticType = statisticImage(statisticType[0])
-    statisticTypeString = statisticImageString(statisticType)
+    statistic = runQuery(graph, 'selectStatisticType', 'Select')
+    statistic = statisticType(statistic[0])
+    statisticString = statisticTypeString(statistic)
 
     # Check if the statistic or P value was used.
     if runQuery(graph, 'askIfPValueUncorrected', 'Ask') or voxelWise_corrected:
-        statisticType = "P"
+        statistic = "P"
 
     # Retrieve excursion set details and format them.
     excDetails = runQuery(graph, 'selectExcursionSetDetails', 'Select')
@@ -389,7 +388,7 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
 
     # Now display thresholding details.
     postStats += raw("%s statistic images were thresholded " % (
-                     statisticTypeString))
+                     statisticString))
 
     # If is a corrected extent threshold display it.
     if clusterWise_corrected or clusterWise_uncorrected:
@@ -397,7 +396,7 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
         # If we are using a P value the threshold is equals. e.g. P=0.05.
         # If it's a statistic value then we use greater than. e.g. Z>1.6.
         ineq = '='
-        if statisticType != 'p' and statisticType != 'P':
+        if statistic != 'p' and statistic != 'P':
             ineq = '>'
 
         # Check to see if corrected.
@@ -407,7 +406,7 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
 
         postStats += raw("using clusters determined by %s %s %.2g and a"
                          "%s cluster significance of P = %.2g " % (
-                            statisticType, ineq,
+                            statistic, ineq,
                             float(heightThreshValue[0]),
                             corrStr, float(extentThreshValue[0])))
 
@@ -418,7 +417,7 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
         corrStr = '(uncorrected)'
         if voxelWise_corrected:
             corrStr = '(corrected)'
-        postStats += raw("at %s = %s %s." % (statisticType, float(
+        postStats += raw("at %s = %s %s." % (statistic, float(
                                                '%.2g'
                                                % float(heightThreshValue[0])),
                                              corrStr))

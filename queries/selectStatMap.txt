@@ -15,16 +15,29 @@ prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
 
 SELECT ?statMapName
 
-WHERE {{?exc a nidm_ExcursionSetMap: .
-       	?exc prov:atLocation ?conMap .
-       	?exc prov:wasGeneratedBy ?inf .
-       	{?infer a nidm_Inference:}
-	    UNION
-	    {?infer a nidm_ConjunctionInference:}
-	    UNION
-        {?infer a spm_PartialConjunctionInference:}.
+WHERE {
+
+# For SPM data, due to exporter errors, the only way to work out
+# the statistic type associated to an excursion set is to assume
+# that there is only one inference. This works currently, 
+# however, as SPM data currently only ever contains one 
+# inference object. Once the error is fixed the below code 
+# should be included.
+#
+# Error details: https://github.com/incf-nidash/nidmresults-spm/issues/51
+#
+#      {?exc a nidm_ExcursionSetMap: .
+#       	?exc prov:atLocation ?conMap .
+#       	?exc prov:wasGeneratedBy ?inf .
+
+
+       	{?inf a nidm_Inference:}
+	      UNION
+	      {?inf a nidm_ConjunctionInference:}
+	      UNION
+        {?inf a spm_PartialConjunctionInference:}.
        	?inf prov:used ?statMap .
        	?statMap a nidm_StatisticMap: .
        	?statMap prov:atLocation ?statMapName .}
 
-FILTER(STR(?conMap) = '{{{EXC_NAME}}}'^^xsd:string)}
+# FILTER(STR(?conMap) = '{{{EXC_NAME}}}'^^xsd:string)}

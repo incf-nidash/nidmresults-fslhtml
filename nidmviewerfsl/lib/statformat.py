@@ -18,7 +18,7 @@ matplotlib.use('Agg')
 
 
 # This function converts obo statistic types into the corresponding statistic.
-def statisticImage(stat):
+def statisticType(stat):
 
     if stat == "http://purl.obolibrary.org/obo/STATO_0000376":
 
@@ -50,7 +50,7 @@ def heightThreshType(graph, imageType):
 
 
 # This function returns the statistic type of a statistic
-def statisticImageString(statImage):
+def statisticTypeString(statImage):
 
     if statImage == "T":
 
@@ -226,12 +226,10 @@ def contrastVec(data, v_min, v_max):
 # e.g. ExcursionSet_F001.nii.gz -> cluster_zfstat1_std.html
 def getClusFileName(g, excName):
 
-    print(excName)
     # For SPM data we can't work out the filename we want from just
     # the contrast name.
     if runQuery(g, 'askSPM', 'Ask'):
 
-        print('Actove')
         # For SPM data we must look for the statistic map to
         # assert which statistic is associated to a contrast.
         statisticMap = runQuery(g, 'selectStatMap', 'Select',
