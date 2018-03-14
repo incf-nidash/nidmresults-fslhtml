@@ -103,9 +103,9 @@ def generate_exc_page(g, outdir, excName, conData):
 
     # Make the peak statistics table.
     excPage += raw("<table cellspacing='3' border='3'><tbody>")
-    excPage += raw("<tr><th>Cluster Index</th><th>P</th><th>Z-MAX</th>"
-                   "<th>Z-MAX X (mm)</th><th>Z-MAX Y (mm)</th><th>Z-MAX"
-                   " Z (mm)</th></tr>")
+    excPage += raw("<tr><th>Cluster Index</th><th>Z</th><th>P</th>"
+                   "<th>-log10(P)</th><th>x</th><th>y</th><th>z"
+                   "</th></tr>")
 
     # Add the peak statistics data into the table.
     for peak in range(0, len(conData['peakZstats'])):
@@ -114,12 +114,14 @@ def generate_exc_page(g, outdir, excName, conData):
         excPage += raw("<tr>")
         excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) +
                        "</td>")
-        excPage += raw("<td>" + '%.2g' % float(conData['peakPVals'][peak]) +
-                       "</td>")
         excPage += raw(
             "<td>" +
             str(float('%.2f' % float(conData['peakZstats'][peak]))) +
             "</td>")
+        excPage += raw("<td>" + '%.2g' % float(conData['peakPVals'][peak]) +
+                       "</td>")
+        excPage += raw("<td>" + '%.2g' % float(
+            conData['logPeakPVals'][peak]) + "</td>")
 
         # Peak location
         formattedLoc = conData['peakLocations'][peak].replace(

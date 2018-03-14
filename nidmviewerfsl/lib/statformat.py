@@ -168,7 +168,15 @@ def format_cluster_stats(g, excName):
             sortedClusIndicesArray[i]-1] for i in list(
                 range(0, len(clusterIndices)))]
 
-    # Deal with inf issues.
+    # Deal with inf issues for peaks.
+    logPeakPVals = [0]*len(sortedPeakPVals)
+    for i in list(range(0, len(sortedPeakPVals))):
+        if sortedPeakPVals[i] == 0:
+            logPeakPVals[i] = math.inf
+        else:
+            logPeakPVals[i] = -math.log(sortedPeakPVals[i], 10)
+
+    # Deal with inf issues for clusters.
     logClusPVals = [0]*len(sortedClusPVals)
     for i in list(range(0, len(sortedClusPVals))):
         if sortedClusPVals[i] == 0:
@@ -194,6 +202,7 @@ def format_cluster_stats(g, excName):
     clusterData['peakClusIndices'] = sortedClusIndicesForPeaks
     clusterData['peakLocations'] = sortedPeakLocations
     clusterData['peakPVals'] = sortedPeakPVals
+    clusterData['logPeakPVals'] = logPeakPVals
 
     return(clusterData)
 
