@@ -98,6 +98,11 @@ class test_dataset_features(unittest.TestCase):
                      'clusTabExtract': '<td>7<td>1380<td>2.93e-10<td>9.'
                                        '53<td>5.32<td>-52<td>-2<td>54'}
 
+    fsl_default = {'Name': 'fsl_default_130',
+                   'softwareName': 'FSL',
+                   'clusTabExtract': '<td>147<td>795<td>7.47<td>40.6<td'
+                                     '>25<td>15</tr>'}
+
     ex_spm_default = {'Name': 'ex_spm_default',
                       'softwareName': 'SPM',
                       'version': '12.6906',
@@ -120,7 +125,9 @@ class test_dataset_features(unittest.TestCase):
                                      '6FNrGAQAASMIBAABIwgEAAEjCAQAASMIB'
                                      'AABIwgEAAEhHv3L2ei0T8F9cywwAvGPjA'
                                      'AAAJOEAAAAk4QAAACThAAAAJOEAAAAk4Q'
-                                     'AAACThAAAAJOEAAAAk4QAAACThAAAAJOE']}
+                                     'AAACThAAAAJOEAAAAk4QAAACThAAAAJOE'],
+                      'clusTabExtract': '<td>3<td>5090<td>5.74<td>8<td>'
+                                        '18<td>50'}
 
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
@@ -622,7 +629,7 @@ class test_dataset_features(unittest.TestCase):
 
     # Test to check whether the cluster table statistics are being 
     # displayed correctly.
-    @data(fsl_group_wls, fsl_group_ols)
+    @data(ex_spm_default, fsl_default, fsl_group_wls, fsl_group_ols)
     def test_clusTable(self, structData):
 
         # Setup
