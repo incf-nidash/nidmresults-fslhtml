@@ -64,31 +64,27 @@ def generate_exc_page(g, outdir, excName, conData):
 
         # New row of cluster data.
         excPage += raw("<tr>")
-        excPage += raw("<td>" + str(conData['clusIndices'][cluster]) +
-                       "</td>")
-        excPage += raw("<td>" + str(conData['clusSizes'][cluster]) +
-                       "</td>")
+        excPage += raw("<td>" + str(conData['clusIndices'][cluster]))
+        excPage += raw("<td>" + str(conData['clusSizes'][cluster]))
 
         #If cluster p data is available
         if pDataAvailable:
             excPage += raw("<td>" +
-                           ("%.4g" % conData['clusterPValues'][cluster]) +
-                           "</td>")
+                           ("%.4g" % conData['clusterPValues'][cluster]))
             excPage += raw("<td>" + 
-                           ("%.2f" % conData['logClusterPValues'][cluster]) +
-                           "</td>")
+                           ("%.2f" % conData['logClusterPValues'][cluster]))
 
         excPage += raw("<td>" + str(float('%.2f' % float(
-            conData['clusPeakZstats'][cluster]))) + "</td>")
+            conData['clusPeakZstats'][cluster]))))
 
         # Peak location
         formattedLoc = conData['clusPeakLocations'][cluster].replace(
                                                     " ", "").replace(
                                                     "[", "").replace(
                                                     "]", "").split(",")
-        excPage += raw("<td>" + '%g' % float(formattedLoc[0]) + "</td>")
-        excPage += raw("<td>" + '%g' % float(formattedLoc[1]) + "</td>")
-        excPage += raw("<td>" + '%g' % float(formattedLoc[2]) + "</td>")
+        excPage += raw("<td>" + '%g' % float(formattedLoc[0]))
+        excPage += raw("<td>" + '%g' % float(formattedLoc[1]))
+        excPage += raw("<td>" + '%g' % float(formattedLoc[2]))
         excPage += raw("</tr>")
 
     # Close table
@@ -112,24 +108,21 @@ def generate_exc_page(g, outdir, excName, conData):
 
         # New row of peak data
         excPage += raw("<tr>")
-        excPage += raw("<td>" + str(conData['peakClusIndices'][peak]) +
-                       "</td>")
+        excPage += raw("<td>" + str(conData['peakClusIndices'][peak]))
         excPage += raw(
             "<td>" +
-            str(float('%.2f' % float(conData['peakZstats'][peak]))) +
-            "</td>")
-        excPage += raw("<td>" + '%.4g' % float(conData['peakPVals'][peak]) +
-                       "</td>")
+            str(float('%.2f' % float(conData['peakZstats'][peak]))))
+        excPage += raw("<td>" + '%.4g' % float(conData['peakPVals'][peak]))
         excPage += raw("<td>" + '%.2f' % float(
-            conData['logPeakPVals'][peak]) + "</td>")
+            conData['logPeakPVals'][peak]))
 
         # Peak location
         formattedLoc = conData['peakLocations'][peak].replace(
             " ", "").replace("[", "").replace("]", "").split(",")
 
-        excPage += raw("<td>" + '%g' % float(formattedLoc[0]) + "</td>")
-        excPage += raw("<td>" + '%g' % float(formattedLoc[1]) + "</td>")
-        excPage += raw("<td>" + '%g' % float(formattedLoc[2]) + "</td>")
+        excPage += raw("<td>" + '%g' % float(formattedLoc[0]))
+        excPage += raw("<td>" + '%g' % float(formattedLoc[1]))
+        excPage += raw("<td>" + '%g' % float(formattedLoc[2]))
         excPage += raw("</tr>")
 
     # Close table

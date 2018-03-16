@@ -88,6 +88,16 @@ class test_dataset_features(unittest.TestCase):
                                               '369TfeeOPcuXM+n+++++6bmZ'
                                               'lhI6kTJ04sLy+je+bx48e//u'}
 
+    fsl_group_ols = {'Name': 'fsl_group_ols_130',
+                     'softwareName': 'FSL',
+                     'clusTabExtract': '<td>7<td>1106<td>8.78e-09<td>8.'
+                                       '06<td>5.24<td>-8<td>0<td>64'}
+
+    fsl_group_wls = {'Name': 'fsl_group_wls_130',
+                     'softwareName': 'FSL',
+                     'clusTabExtract': '<td>7<td>1380<td>2.93e-10<td>9.'
+                                       '53<td>5.32<td>-52<td>-2<td>54'}
+
     ex_spm_default = {'Name': 'ex_spm_default',
                       'softwareName': 'SPM',
                       'version': '12.6906',
@@ -609,6 +619,30 @@ class test_dataset_features(unittest.TestCase):
 
         self.assertNotIn(False, conPresent,
                          msg='Test failed on ' + structData["Name"])
+
+    # Test to check whether the cluster table statistics are being 
+    # displayed correctly.
+    @data(fsl_group_wls, fsl_group_ols)
+    def test_clusTable(self, structData):
+
+        # Setup
+        filePath = self.getFilePath(structData)
+        clusFile = open(os.path.join(filePath, 'Cluster_Data',
+                                     'ExcursionSet.html'), "r")
+
+        # Look through each line.
+        for line in clusFile:
+          
+          if structData['clusTabExtract'] in line:
+
+              self.testString = line
+              break
+
+        clusFile.close()
+
+        # Verify the table contained the extract.
+        self.assertIn(structData["clusTabExtract"], self.testString,
+                      msg='Test failed on ' + structData["Name"])
 
 
 # ===============================================================================
