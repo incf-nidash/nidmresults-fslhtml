@@ -75,7 +75,7 @@ def generate_exc_page(g, outdir, excName, conData):
                            ("%.4g" % conData['clusterPValues'][cluster]) +
                            "</td>")
             excPage += raw("<td>" + 
-                           ("%.4f" % conData['logClusterPValues'][cluster]) +
+                           ("%.2f" % conData['logClusterPValues'][cluster]) +
                            "</td>")
 
         excPage += raw("<td>" + str(float('%.2f' % float(
@@ -86,9 +86,9 @@ def generate_exc_page(g, outdir, excName, conData):
                                                     " ", "").replace(
                                                     "[", "").replace(
                                                     "]", "").split(",")
-        excPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
-        excPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
-        excPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
+        excPage += raw("<td>" + '%g' % float(formattedLoc[0]) + "</td>")
+        excPage += raw("<td>" + '%g' % float(formattedLoc[1]) + "</td>")
+        excPage += raw("<td>" + '%g' % float(formattedLoc[2]) + "</td>")
         excPage += raw("</tr>")
 
     # Close table
@@ -118,18 +118,18 @@ def generate_exc_page(g, outdir, excName, conData):
             "<td>" +
             str(float('%.2f' % float(conData['peakZstats'][peak]))) +
             "</td>")
-        excPage += raw("<td>" + '%.2g' % float(conData['peakPVals'][peak]) +
+        excPage += raw("<td>" + '%.4g' % float(conData['peakPVals'][peak]) +
                        "</td>")
-        excPage += raw("<td>" + '%.2g' % float(
+        excPage += raw("<td>" + '%.2f' % float(
             conData['logPeakPVals'][peak]) + "</td>")
 
         # Peak location
         formattedLoc = conData['peakLocations'][peak].replace(
             " ", "").replace("[", "").replace("]", "").split(",")
 
-        excPage += raw("<td>" + str(formattedLoc[0]) + "</td>")
-        excPage += raw("<td>" + str(formattedLoc[1]) + "</td>")
-        excPage += raw("<td>" + str(formattedLoc[2]) + "</td>")
+        excPage += raw("<td>" + '%g' % float(formattedLoc[0]) + "</td>")
+        excPage += raw("<td>" + '%g' % float(formattedLoc[1]) + "</td>")
+        excPage += raw("<td>" + '%g' % float(formattedLoc[2]) + "</td>")
         excPage += raw("</tr>")
 
     # Close table
