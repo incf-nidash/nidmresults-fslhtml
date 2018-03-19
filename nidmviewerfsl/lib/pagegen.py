@@ -67,11 +67,11 @@ def generate_exc_page(g, outdir, excName, conData):
         excPage += raw("<td>" + str(conData['clusIndices'][cluster]))
         excPage += raw("<td>" + str(conData['clusSizes'][cluster]))
 
-        #If cluster p data is available
+        # If cluster p data is available
         if pDataAvailable:
             excPage += raw("<td>" +
                            ("%.4g" % conData['clusterPValues'][cluster]))
-            excPage += raw("<td>" + 
+            excPage += raw("<td>" +
                            ("%.2f" % conData['logClusterPValues'][cluster]))
 
         excPage += raw("<td>" + str(float('%.2f' % float(

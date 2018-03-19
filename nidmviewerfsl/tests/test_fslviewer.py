@@ -635,7 +635,7 @@ class test_dataset_features(unittest.TestCase):
         self.assertNotIn(False, conPresent,
                          msg='Test failed on ' + structData["Name"])
 
-    # Test to check whether the cluster table statistics are being 
+    # Test to check whether the cluster table statistics are being
     # displayed correctly.
     @data(ex_spm_default, fsl_default, fsl_group_wls, fsl_group_ols)
     def test_clusTable(self, structData):
@@ -647,11 +647,11 @@ class test_dataset_features(unittest.TestCase):
 
         # Look through each line.
         for line in clusFile:
-          
-          if structData['clusTabExtract'] in line:
 
-              self.testString = line
-              break
+            if structData['clusTabExtract'] in line:
+
+                self.testString = line
+                break
 
         clusFile.close()
 
@@ -659,7 +659,7 @@ class test_dataset_features(unittest.TestCase):
         self.assertIn(structData["clusTabExtract"], self.testString,
                       msg='Test failed on ' + structData["Name"])
 
-    # Test to check whether the peak table statistics are being 
+    # Test to check whether the peak table statistics are being
     # displayed correctly.
     @data(ex_spm_default, fsl_default, fsl_group_wls, fsl_group_ols)
     def test_peakTable(self, structData):
@@ -671,11 +671,11 @@ class test_dataset_features(unittest.TestCase):
 
         # Look through each line.
         for line in clusFile:
-          
-          if structData['peakTabExtract'] in line:
 
-              self.testString = line
-              break
+            if structData['peakTabExtract'] in line:
+
+                self.testString = line
+                break
 
         clusFile.close()
 
