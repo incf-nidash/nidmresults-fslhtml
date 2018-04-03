@@ -40,7 +40,7 @@ def nifDim(nifti, k):
     return(dimension)
 
 
-def resizeTemplateOrExcSet(exc_set, template, tempDir):
+def resizeExcSet(exc_set, template, tempDir):
     # This function resizes an SPM excursion set to an SPM template if
     # necessary.
 
@@ -49,12 +49,9 @@ def resizeTemplateOrExcSet(exc_set, template, tempDir):
     excset_img = nib.load(exc_set)
 
     # Resample if necessary
-    if nifDim(exc_set, 'x') > nifDim(template, 'x'):
-        img_resl = resample_from_to(excset_img, template_img)
-    if nifDim(exc_set, 'x') < nifDim(template, 'x'):
-        img_resl = resample_from_to(template_img, excset_img)
+    img_resl = resample_from_to(excset_img, template_img)
 
-    nib.save(img_resl, os.path.join(tempDir, "resizedNifti.nii.gz"))
+    nib.save(img_resl, os.path.join(tempDir, "resizedExcSet.nii.gz"))
 
 
 def getVal(niftiFilename, minOrMax):
@@ -76,12 +73,12 @@ def getVal(niftiFilename, minOrMax):
         return(d.max())
 
 
-def overlay(exc_set, template, tempDir):
+def overlay(exc_set, template, o_exc_set, tempDir):
     # Overlay exc_set onto template. The output is saved as outputTemp
 
-    # Get min and max values of the excursion set.
-    minZ = str(getVal(exc_set, 'min'))
-    maxZ = str(getVal(exc_set, 'max'))
+    # Get min and max values of the original excursion set.
+    minZ = str(getVal(o_exc_set, 'min'))
+    maxZ = str(getVal(o_exc_set, 'max'))
 
     # Place the template onto the excursion set using overlay
     overlayCommand = "overlay 1 1 " + template + " -a " + exc_set + " " + \
@@ -111,6 +108,9 @@ def generateSliceImage(exc_set, SPMorFSL):
     # Make a copy of the original name of the excursion set.
     o_exc_set = exc_set
 
+    # Load the excursion set.
+    n_exc = nib.load(exc_set)
+
     # If we are looking at FSL data use the FSL template.
     if SPMorFSL == 'FSL':
         if nifDim(exc_set, 'pix') == 1:
@@ -121,11 +121,10 @@ def generateSliceImage(exc_set, SPMorFSL):
                                     'MNI152_T1_2mm_brain.nii.gz')
     else:
         #  NaN values.
-        n = nib.load(exc_set)
-        d = n.get_data()
+        d = n_exc.get_data()
         exc_set_nonan = nib.Nifti1Image(np.nan_to_num(d),
-                                        n.affine,
-                                        header=n.header)
+                                        n_exc.affine,
+                                        header=n_exc.header)
 
         # Save the result.
         nib.save(exc_set_nonan, os.path.join(tempFolder,
@@ -139,21 +138,21 @@ def generateSliceImage(exc_set, SPMorFSL):
                     os.path.split(os.path.realpath(__file__))[0])[0])[0],
             'templates', 'T1_skullStripped.nii')
 
-    if nifDim(exc_set, 'x') != nifDim(template, 'x'):
+    # Load the template.
+    n_tem = nib.load(template)
+
+    # If the images are different sizes/ have different affine
+    # matrices, resize the excursion set. 
+    if (n_tem.affine != n_exc.affine).any():
         # Check which is bigger and resize if necessary
-        resizeTemplateOrExcSet(exc_set, template, tempFolder)
+        resizeExcSet(exc_set, template, tempFolder)
 
     # If we've resized the excursion set we want to look at the resized
     # file.
-    if nifDim(exc_set, 'x') > nifDim(template, 'x'):
-        exc_set = os.path.join(tempFolder, 'resizedNifti.nii.gz')
-
-    # If we've resized the template we want to look at the resized file.
-    if nifDim(exc_set, 'x') < nifDim(template, 'x'):
-        template = os.path.join(tempFolder, 'resizedNifti.nii.gz')
+    exc_set = os.path.join(tempFolder, 'resizedExcSet.nii.gz')
 
     # Overlay niftis
-    overlay(exc_set, template, tempFolder)
+    overlay(exc_set, template, o_exc_set, tempFolder)
 
     # Get the slices image
     getSliceImageFromNifti(tempFolder, o_exc_set.replace(
