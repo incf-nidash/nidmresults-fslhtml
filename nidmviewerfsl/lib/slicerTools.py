@@ -15,6 +15,7 @@ import random
 import shlex
 import numpy as np
 import nibabel as nib
+import wget
 from nibabel.processing import resample_from_to
 from queries.queryTools import runQuery
 
@@ -136,7 +137,18 @@ def generateSliceImage(exc_set, SPMorFSL):
             os.path.split(
                 os.path.split(
                     os.path.split(os.path.realpath(__file__))[0])[0])[0],
-            'templates', 'T1_skullStripped.nii')
+            'templates', 'T1.nii')
+
+        # Check whether the template already is downloaded.
+        if not os.path.isfile(template):
+
+            if not os.path.isdir(os.path.split(template)[0]):
+
+                os.mkdir(os.path.split(template)[0])
+
+            wget.download("https://github.com/spm/spm12/blob/master/tool"
+                          "box/OldNorm/T1.nii?raw=true", template)
+
 
     # Load the template.
     n_tem = nib.load(template)

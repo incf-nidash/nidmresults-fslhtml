@@ -3,3 +3,4 @@ dominate
 scipy
 nibabel
 matplotlib
+wget
