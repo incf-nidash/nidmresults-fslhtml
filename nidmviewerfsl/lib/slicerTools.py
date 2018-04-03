@@ -149,7 +149,6 @@ def generateSliceImage(exc_set, SPMorFSL):
             wget.download("https://github.com/spm/spm12/blob/master/tool"
                           "box/OldNorm/T1.nii?raw=true", template)
 
-
     # Load the template.
     n_tem = nib.load(template)
 
