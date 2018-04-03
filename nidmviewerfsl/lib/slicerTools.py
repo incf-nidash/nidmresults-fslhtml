@@ -142,7 +142,7 @@ def generateSliceImage(exc_set, SPMorFSL):
     n_tem = nib.load(template)
 
     # If the images are different sizes/ have different affine
-    # matrices, resize the excursion set. 
+    # matrices, resize the excursion set.
     if (n_tem.affine != n_exc.affine).any():
         # Check which is bigger and resize if necessary
         resizeExcSet(exc_set, template, tempFolder)

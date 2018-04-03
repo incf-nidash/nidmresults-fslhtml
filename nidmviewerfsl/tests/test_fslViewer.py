@@ -69,7 +69,8 @@ class testDatasetFeatures(unittest.TestCase):
                                               'PT0tL0er1WqzUYDFlZWevXr2'
                                               '9quS4CY8eOzcnJMZvNWLyqVC'
                                               'pBEILBYKtWrZq/I2TYsGFDhw'
-                                              '4tLCwkFw4sBzJSsfGSMZadnd',                            'lowSliceVal': '3.18',
+                                              '4tLCwkFw4sBzJSsfGSMZadnd',
+                            'lowSliceVal': '3.18',
                             'highSliceVal': '7.92',
                             'contrastName': 'tone counting vs baseline'}
 
@@ -120,7 +121,8 @@ class testDatasetFeatures(unittest.TestCase):
                                             'vT09PT0dL1ezxgLhUJ+vx9abNq'
                                             '06eOPP5Yk6eTJkw2rxZQpU8xms'
                                             '9lsNhqNOp1Oo9EIghAIBNxud2l'
-                                            'pKbRIS0tzOp0WiwUcy+/319TU1',                          'lowSliceVal': '3.18',
+                                            'pKbRIS0tzOp0WiwUcy+/319TU1',
+                                            'lowSliceVal': '3.18',
                           'highSliceVal': '5.65',
                           'contrastName': ['tone counting probe vs baseline',
                                            'tone counting vs baseline'],
