@@ -63,13 +63,14 @@ class testDatasetFeatures(unittest.TestCase):
                             'softwareName': 'SPM',
                             'version': '12.6906',
                             'hThresh': 'P = 0.001 (uncorrected)',
-                            'sliceImExtract': 'wkuMRFAE5BOH5PkMvlkydPPn'
-                                              'z4sM/na2pZLhGDBw++9tpr+/'
-                                              'TpU1RUpNPpfl+Zg0BmZubUqV'
-                                              'PT0tL0er1WqzUYDFlZWevXr2'
-                                              '9quS4CY8eOzcnJMZvNWLyqVC'
-                                              'pBEILBYKtWrZq/I2TYsGFDhw'
-                                              '4tLCwkFw4sBzJSsfGSMZadnd',
+                            'sliceImExtract': 'iiwq2wqlJgPVErKJI60sEFev'
+                                              'BTjgm35DcCfbQMovFMKXCnps'
+                                              'J9++unDh9XM8a8AACAASURBV'
+                                              'A+0dcl0ciTIbbEjz8/PysJIE'
+                                              'NYcKMDPjRVVyFNG122rtH1rl'
+                                              'efwUpjLEALboR7935Wi3+9rL'
+                                              '3766Scofc6A7AgqVFXVZrNBZ'
+                                              'RVqo/14gtLGOGr9lbsh/0LUB',
                             'lowSliceVal': '3.18',
                             'highSliceVal': '7.92',
                             'contrastName': 'tone counting vs baseline'}
@@ -114,15 +115,14 @@ class testDatasetFeatures(unittest.TestCase):
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
                           'version': '12.6906',
-                          'sliceImExtract': 'WWXXXbppZdCBRgMlUoViUQ8Hk9'
-                                            'FRYXH41EqlWlpaTabTafTSZIUC'
-                                            'ASCwaDX6/V6vbNnz25wXex2e3Z'
-                                            '29qRJk9AcpAUZ75MnT1ZXV6tUq'
-                                            'vT09PT0dL1ezxgLhUJ+vx9abNq'
-                                            '06eOPP5Yk6eTJkw2rxZQpU8xms'
-                                            '9lsNhqNOp1Oo9EIghAIBNxud2l'
-                                            'pKbRIS0tzOp0WiwUcy+/319TU1',
-                                            'lowSliceVal': '3.18',
+                          'sliceImExtract': 'GdpFUAoggiMIM9AcHT02SmBVw4'
+                                            'Z/WKI8/Li4urq6ukIK4WmQbJxq'
+                                            'fUpbl4+NjURTL5fLl5UW8GgtO4'
+                                            'E3gSmoJAwUIw+5B9qgUqbXX2wb'
+                                            '2uxBEUZp4GMhkQVq0Sm5DsAg9J'
+                                            'l8jb0cY11qvHasD8yk/h4ZtNpv'
+                                            'lcrlarUAn6/UaJOVR4fsjPB9ro',
+                          'lowSliceVal': '3.18',
                           'highSliceVal': '5.65',
                           'contrastName': ['tone counting probe vs baseline',
                                            'tone counting vs baseline'],
