@@ -466,31 +466,26 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
                                         '.nii.gz', '')))
                                 + "'>")
 
-            # Add the image. If we have FSL the image was found in the pack.
-            if askFSL:
+            # If the slice image already exists add it.
+            if (excursionSetSliceImage[
+                    i] is not None and os.path.exists(
+                        os.path.join(nidmData,
+                                    excursionSetSliceImage[i]))):
+                print('Active')
+                print(os.path.join(nidmData,
+                                    excursionSetSliceImage[i]))
+                postStats += img(
+                    src='data:image/jpg;base64,' +
+                    encodeImage(
+                        os.path.join(nidmData,
+                                    excursionSetSliceImage[i])
+                        ).decode())
 
-                # If the slice image already exists add it.
-                if os.path.exists(os.path.join(
-                                nidmData, excursionSetSliceImage[i])):
-                    postStats += img(
-                        src='data:image/jpg;base64,' +
-                        encodeImage(
-                            os.path.join(
-                                nidmData,
-                                excursionSetSliceImage[i])
-                            ).decode())
-
-                # Otherwise recreate the slice image.
-                else:
-                    sliceImage = generateSliceImage(os.path.join(
-                                                    nidmData,
-                                                    excursionSetNifti[i]),
-                                                    'FSL')
-                    postStats += img(src='data:image/jpg;base64,' +
-                                     encodeImage(sliceImage).decode())
-
-            # Add the image. If we have SPM the image was regenerated.
-            if askSPM:
+            # Otherwise recreate the slice image.
+            else:
+                print('Active2')
+                print(os.path.join(nidmData,
+                                    excursionSetSliceImage[i]))
                 sliceImage = generateSliceImage(os.path.join(
                                                 nidmData,
                                                 excursionSetNifti[i]),
