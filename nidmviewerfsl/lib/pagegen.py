@@ -471,9 +471,6 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
                     i] is not None and os.path.exists(
                         os.path.join(nidmData,
                                      excursionSetSliceImage[i]))):
-                print('Active')
-                print(os.path.join(nidmData,
-                                   excursionSetSliceImage[i]))
                 postStats += img(
                     src='data:image/jpg;base64,' +
                     encodeImage(
@@ -483,9 +480,6 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
 
             # Otherwise recreate the slice image.
             else:
-                print('Active2')
-                print(os.path.join(nidmData,
-                                   excursionSetSliceImage[i]))
                 sliceImage = generateSliceImage(os.path.join(
                                                 nidmData,
                                                 excursionSetNifti[i]),
