@@ -73,7 +73,7 @@ def format_cluster_stats(g, excName):
 
     # Run the peak query
     peakQueryResult = run_query(g, 'selectPeakData', 'Select',
-                               {'EXC_NAME': excName})
+                                {'EXC_NAME': excName})
 
     # Retrieve query results.
 
@@ -123,7 +123,7 @@ def format_cluster_stats(g, excName):
 
     # Run the cluster query
     clusQueryResult = run_query(g, 'selectClusterData', 'Select',
-                               {'EXC_NAME': excName})
+                                {'EXC_NAME': excName})
 
     clusterIndices = [
         int(clusQueryResult[i]) for i in list(
@@ -233,7 +233,7 @@ def get_clus_filename(g, excName):
         # For SPM data we must look for the statistic map to
         # assert which statistic is associated to a contrast.
         statisticMap = run_query(g, 'selectStatMap', 'Select',
-                                {'EXC_NAME': excName})[0]
+                                 {'EXC_NAME': excName})[0]
 
         # If it's T stat string is '', if it's F statstring
         # is 'f'

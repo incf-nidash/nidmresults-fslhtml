@@ -216,7 +216,7 @@ def generate_stats_html(graph, statsFilePath, nidmData):
 
     # Work out where the design matrix is stored.
     designMatrixLocation = run_query(graph, 'selectDesignMatrixLocation',
-                                    'Select')
+                                     'Select')
 
     # Make a copy of the design matrix csv file in the output folder.
     shutil.copyfile(os.path.join(nidmData, designMatrixLocation[0]),
@@ -309,7 +309,8 @@ def generate_poststats_html(graph, postStatsFilePath, nidmData):
     statisticString = statistic_type_string(statistic)
 
     # Check if the statistic or P value was used.
-    if run_query(graph, 'askIfPValueUncorrected', 'Ask') or voxelWise_corrected:
+    if run_query(graph, 'askIfPValueUncorrected', 
+                 'Ask') or voxelWise_corrected:
         statistic = "P"
 
     # Retrieve excursion set details and format them.
@@ -360,15 +361,17 @@ def generate_poststats_html(graph, postStatsFilePath, nidmData):
 
     # Retrieve the extent threshold.
     if clusterWise_corrected:
-        extentThreshValue = run_query(graph, 'selectCExtentThreshold', 'Select')
+        extentThreshValue = run_query(graph, 'selectCExtentThreshold',
+                                      'Select')
     if clusterWise_uncorrected:
-        extentThreshValue = run_query(graph, 'selectUExtentThreshold', 'Select')
+        extentThreshValue = run_query(graph, 'selectUExtentThreshold',
+                                      'Select')
 
     # Retrieve the height threshold.
     heightThreshValue = run_query(graph, 'selectUHeightThreshold', 'Select')
     if heightThreshValue == []:
         heightThreshValue = run_query(graph, 'selectCHeightThreshold',
-                                     'Select')
+                                      'Select')
 
     # Check if the data was generated using SPM or FSL.
     if askSPM:
@@ -561,4 +564,4 @@ def page_generate(g, outdir, nidmData):
 
         excData = format_cluster_stats(g, excName)
         generate_exc_page(g, outdir,
-                        excName.replace(".nii.gz", ""), excData)
+                          excName.replace(".nii.gz", ""), excData)
