@@ -11,24 +11,24 @@ import shutil
 from dominate.tags import p, a, h1, h2, h3, img, ul, li, hr, link, style, br
 from dominate.util import raw
 from style.pagestyling import (
-    encodeImage, encodeColorBar, encodeLogo, getRawCSS)
-from nidmviewerfsl.lib.slicertools import getVal, generateSliceImage
+    encode_image, encode_color_bar, encode_logo, get_raw_css)
+from nidmviewerfsl.lib.slicertools import get_val, generate_slice_image
 from nidmviewerfsl.lib.statformat import *
-from queries.querytools import runQuery
+from queries.querytools import run_query
 
 
 # Generate a page of excursion set peak and cluster statistics
-def generateExcPage(g, outdir, excName, conData):
+def generate_exc_page(g, outdir, excName, conData):
 
     # Get the name for the output file.
-    outputName = getClusFileName(g, excName)
+    outputName = get_clus_filename(g, excName)
 
     # Create new document.
     excPage = document(title="Cluster List")
 
     # Add CSS stylesheet.
     with excPage.head:
-        style(raw(getRawCSS()))
+        style(raw(get_raw_css()))
 
     # Add header and link to main page.
     excPage += raw("<center>")
@@ -123,18 +123,18 @@ def generateExcPage(g, outdir, excName, conData):
 
 
 # Generates the main HTML page
-def generateMainHTML(graph, mainFilePath):
+def generate_main_html(graph, mainFilePath):
 
     # Create new document.
     main = document(title="FSL Viewer")
 
     # Add CSS stylesheet.
     with main.head:
-        style(raw(getRawCSS()))
+        style(raw(get_raw_css()))
 
     # Add the logo to the page.
     main += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src'
-                '="' + encodeLogo() + '" align="right"></a>')
+                '="' + encode_logo() + '" align="right"></a>')
 
     # Viewer title.
     main += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
@@ -156,21 +156,21 @@ def generateMainHTML(graph, mainFilePath):
 
 
 # Generates the Stats HTML section
-def generateStatsHTML(graph, statsFilePath, nidmData):
+def generate_stats_html(graph, statsFilePath, nidmData):
 
     # Obtain version number.
-    softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
+    softwareLabelNum = run_query(graph, 'selectVersionNum', 'Select')
 
     # Create new document.
     stats = document(title="FSL Viewer")
 
     # Add CSS stylesheet.
     with stats.head:
-        style(raw(getRawCSS()))
+        style(raw(get_raw_css()))
 
     # Add the logo to the page.
     stats += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki"><img src' +
-                 '="' + encodeLogo() + '" align="right"></a>')
+                 '="' + encode_logo() + '" align="right"></a>')
 
     # Viewer title.
     stats += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
@@ -194,16 +194,16 @@ def generateStatsHTML(graph, statsFilePath, nidmData):
     stats += h3("Analysis Methods")
 
     # If SPM was used we should display a string of SPM version number.
-    if runQuery(graph, 'askSPM', 'Ask'):
+    if run_query(graph, 'askSPM', 'Ask'):
 
         stats += p("FMRI data processing was carried out using SPM Version "
                    "%s (SPM, http://www.fil.ion.ucl.ac.uk/spm/)." %
                    softwareLabelNum[1])
 
     # Otherwise we should display fsl Feat version and software label.
-    elif runQuery(graph, 'askFSL', 'Ask'):
+    elif run_query(graph, 'askFSL', 'Ask'):
 
-        fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
+        fslFeatVersion = run_query(graph, 'selectFslFeatVersion', 'Select')
         stats += p("FMRI data processing was carried out using FEAT (FMRI "
                    "Expert Analysis Tool) Version %s, part of FSL %s (FMRIB'"
                    "s Software Library, www.fmrib.ox.ac.uk/fsl)."
@@ -215,7 +215,7 @@ def generateStatsHTML(graph, statsFilePath, nidmData):
     stats += h3("Design Matrix")
 
     # Work out where the design matrix is stored.
-    designMatrixLocation = runQuery(graph, 'selectDesignMatrixLocation',
+    designMatrixLocation = run_query(graph, 'selectDesignMatrixLocation',
                                     'Select')
 
     # Make a copy of the design matrix csv file in the output folder.
@@ -224,7 +224,7 @@ def generateStatsHTML(graph, statsFilePath, nidmData):
                                  designMatrixLocation[0]))
 
     # Adds design matrix image (as a link) to html page
-    stats += a(img(src='data:image/jpg;base64,' + encodeImage(
+    stats += a(img(src='data:image/jpg;base64,' + encode_image(
                         os.path.join(nidmData,
                                      designMatrixLocation[1])).decode(),
                    style="border:5px solid black",
@@ -234,13 +234,13 @@ def generateStatsHTML(graph, statsFilePath, nidmData):
 
     # If we are looking at SPM data the contrast vectors are not given in the
     # design matrix image.
-    if runQuery(graph, 'askSPM', 'Ask'):
+    if run_query(graph, 'askSPM', 'Ask'):
 
         # Add a contrast vector section.
         stats += h3("Contrast Vectors")
 
         # Get the data
-        conData = runQuery(graph, 'selectContrastVector', 'Select')
+        conData = run_query(graph, 'selectContrastVector', 'Select')
         conNames = list(set([conData[i] for i in range(0, len(conData), 2)]))
         conVal = list(set([conData[i] for i in range(1, len(conData), 2)]))
 
@@ -266,7 +266,7 @@ def generateStatsHTML(graph, statsFilePath, nidmData):
         for i in range(0, len(conNames)):
 
             # Display an image of the contrast vector.
-            stats += img(src=contrastVec(conVec[i], vmin, vmax),
+            stats += img(src=contrast_vec(conVec[i], vmin, vmax),
                          style="float:left;margin-right:1em;padding-top:4px;",
                          width="120",
                          height="30")
@@ -287,33 +287,33 @@ def generateStatsHTML(graph, statsFilePath, nidmData):
 
 
 # Generates the PostStats HTML page
-def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
+def generate_poststats_html(graph, postStatsFilePath, nidmData):
 
     # Work out if there are voxelwise or clusterwise_corrected thresholds.
-    voxelWise_corrected = runQuery(graph, 'askCHeightThreshold', 'Ask')
-    clusterWise_corrected = runQuery(graph, 'askCExtentThreshold', 'Ask')
-    clusterWise_uncorrected = runQuery(graph, 'askUExtentThreshold', 'Ask')
+    voxelWise_corrected = run_query(graph, 'askCHeightThreshold', 'Ask')
+    clusterWise_corrected = run_query(graph, 'askCExtentThreshold', 'Ask')
+    clusterWise_uncorrected = run_query(graph, 'askUExtentThreshold', 'Ask')
 
     # Retrieve the software label and name.
-    softwareLabelNum = runQuery(graph, 'selectVersionNum', 'Select')
-    askSPM = runQuery(graph, 'askSPM', 'Ask')
-    askFSL = runQuery(graph, 'askFSL', 'Ask')
+    softwareLabelNum = run_query(graph, 'selectVersionNum', 'Select')
+    askSPM = run_query(graph, 'askSPM', 'Ask')
+    askFSL = run_query(graph, 'askFSL', 'Ask')
     if askSPM:
         softType = 'SPM'
     if askFSL:
         softType = 'FSL'
 
     # Retrieve and format height threshold statistic type.
-    statistic = runQuery(graph, 'selectStatisticType', 'Select')
-    statistic = statisticType(statistic[0])
-    statisticString = statisticTypeString(statistic)
+    statistic = run_query(graph, 'selectStatisticType', 'Select')
+    statistic = statistic_type(statistic[0])
+    statisticString = statistic_type_string(statistic)
 
     # Check if the statistic or P value was used.
-    if runQuery(graph, 'askIfPValueUncorrected', 'Ask') or voxelWise_corrected:
+    if run_query(graph, 'askIfPValueUncorrected', 'Ask') or voxelWise_corrected:
         statistic = "P"
 
     # Retrieve excursion set details and format them.
-    excDetails = runQuery(graph, 'selectExcursionSetDetails', 'Select')
+    excDetails = run_query(graph, 'selectExcursionSetDetails', 'Select')
     excursionSetNifti = [excDetails[i] for i in list(
         range(0, len(excDetails), 3))]
 
@@ -326,11 +326,11 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
 
     # Add CSS stylesheet.
     with postStats.head:
-        style(raw(getRawCSS()))
+        style(raw(get_raw_css()))
 
     # Add the logo to the page.
     postStats += raw('<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki">'
-                     '<img src ="' + encodeLogo() + '" align="right"></a>')
+                     '<img src ="' + encode_logo() + '" align="right"></a>')
 
     # Viewer title.
     postStats += raw('<div align="center"><h1>FSL NIDM-Results Viewer</h1>')
@@ -360,14 +360,14 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
 
     # Retrieve the extent threshold.
     if clusterWise_corrected:
-        extentThreshValue = runQuery(graph, 'selectCExtentThreshold', 'Select')
+        extentThreshValue = run_query(graph, 'selectCExtentThreshold', 'Select')
     if clusterWise_uncorrected:
-        extentThreshValue = runQuery(graph, 'selectUExtentThreshold', 'Select')
+        extentThreshValue = run_query(graph, 'selectUExtentThreshold', 'Select')
 
     # Retrieve the height threshold.
-    heightThreshValue = runQuery(graph, 'selectUHeightThreshold', 'Select')
+    heightThreshValue = run_query(graph, 'selectUHeightThreshold', 'Select')
     if heightThreshValue == []:
-        heightThreshValue = runQuery(graph, 'selectCHeightThreshold',
+        heightThreshValue = run_query(graph, 'selectCHeightThreshold',
                                      'Select')
 
     # Check if the data was generated using SPM or FSL.
@@ -380,7 +380,7 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
     elif askFSL:
 
         # Work out which FEAT version was used.
-        fslFeatVersion = runQuery(graph, 'selectFslFeatVersion', 'Select')
+        fslFeatVersion = run_query(graph, 'selectFslFeatVersion', 'Select')
 
         postStats += raw("FMRI data processing was carried out using FEAT"
                          " (FMRI Expert Analysis Tool) Version %s, part of"
@@ -446,13 +446,13 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
             # Add the colorbar and it's limits.
             postStats += raw(
                 "%s" % contrastName[i] + "&nbsp &nbsp" +
-                "%0.3g" % float(getVal(os.path.join(
+                "%0.3g" % float(get_val(os.path.join(
                     nidmData, excursionSetNifti[i]),
                     'min')) +
                 " &nbsp " +
-                "<img src = '" + encodeColorBar() + "'>" +
+                "<img src = '" + encode_color_bar() + "'>" +
                 " &nbsp " +
-                "%0.3g" % float(getVal(os.path.join(
+                "%0.3g" % float(get_val(os.path.join(
                     nidmData, excursionSetNifti[i]),
                     'max')) +
                 "<br><br>")
@@ -461,7 +461,7 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
             postStats += raw("<a href = '" +
                              os.path.join(
                                 '.',
-                                getClusFileName(
+                                get_clus_filename(
                                     graph, excursionSetNifti[i].replace(
                                         '.nii.gz', '')))
                                 + "'>")
@@ -473,19 +473,19 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
                                      excursionSetSliceImage[i]))):
                 postStats += img(
                     src='data:image/jpg;base64,' +
-                    encodeImage(
+                    encode_image(
                         os.path.join(nidmData,
                                      excursionSetSliceImage[i])
                         ).decode())
 
             # Otherwise recreate the slice image.
             else:
-                sliceImage = generateSliceImage(os.path.join(
+                sliceImage = generate_slice_image(os.path.join(
                                                 nidmData,
                                                 excursionSetNifti[i]),
                                                 softType)
                 postStats += img(src='data:image/jpg;base64,' +
-                                 encodeImage(sliceImage).decode())
+                                 encode_image(sliceImage).decode())
 
             postStats += raw("</a><br><br>")
 
@@ -504,30 +504,30 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
         # Add the contrast names and colorbar.
         postStats += raw(
             "%s" % conString + "&nbsp &nbsp" +
-            "%0.3g" % float(getVal(os.path.join(
+            "%0.3g" % float(get_val(os.path.join(
                     nidmData, excursionSetNifti[0]),
                 'min')) +
             " &nbsp " +
-            "<img src = '" + encodeColorBar() + "'>" +
+            "<img src = '" + encode_color_bar() + "'>" +
             " &nbsp " +
-            "%0.3g" % float(getVal(os.path.join(
+            "%0.3g" % float(get_val(os.path.join(
                     nidmData, excursionSetNifti[0]),
                 'max')) +
             "<br><br>")
 
         # Make the slice image.
-        sliceImage = generateSliceImage(os.path.join(
+        sliceImage = generate_slice_image(os.path.join(
                                         nidmData,
                                         excursionSetNifti[0]),
                                         'SPM')
 
         # Add the link to the cluster data page.
         postStats += raw("<a href = '" + os.path.join(
-            '.', getClusFileName(graph, excursionSetNifti[0].replace(
+            '.', get_clus_filename(graph, excursionSetNifti[0].replace(
                                         '.nii.gz', ''))) + "'>")
 
         # Add the slice image.
-        postStats += img(src='data:image/jpg;base64,' + encodeImage(
+        postStats += img(src='data:image/jpg;base64,' + encode_image(
                                                         sliceImage).decode())
         postStats += raw("</a>")
 
@@ -537,8 +537,10 @@ def generatePostStatsHTML(graph, postStatsFilePath, nidmData):
     postStatsFile.close()
 
 
-# This function generates all pages for display.
-def pageGenerate(g, outdir, nidmData):
+# This function generates all pages for display. It takes as input
+# a graph g, an output directory and a path to the NIDM extracted
+# data pack.
+def page_generate(g, outdir, nidmData):
 
     # Specify path names for main pages.
     mainFileName = os.path.join(outdir, "report.html")
@@ -546,17 +548,17 @@ def pageGenerate(g, outdir, nidmData):
     postStatsFileName = os.path.join(outdir, "report_poststats.html")
 
     # Create main pages.
-    generateStatsHTML(g, statsFileName, nidmData)
-    generatePostStatsHTML(g, postStatsFileName, nidmData)
-    generateMainHTML(g, mainFileName)
+    generate_stats_html(g, statsFileName, nidmData)
+    generate_poststats_html(g, postStatsFileName, nidmData)
+    generate_main_html(g, mainFileName)
 
     # Make cluster pages
-    excDetails = runQuery(g, 'selectExcursionSetDetails', 'Select')
+    excDetails = run_query(g, 'selectExcursionSetDetails', 'Select')
     excNiftiNames = set([excDetails[i] for i in list(
         range(0, len(excDetails), 3))])
 
     for excName in excNiftiNames:
 
-        excData = formatClusterStats(g, excName)
-        generateExcPage(g, outdir,
+        excData = format_cluster_stats(g, excName)
+        generate_exc_page(g, outdir,
                         excName.replace(".nii.gz", ""), excData)

@@ -7,8 +7,8 @@
 # Authors: Peter Williams, Tom Maullin, Camille Maumet (10/01/18)
 #
 # ======================================================================
-from queries.querytools import runQuery
-from style.pagestyling import encodeImage
+from queries.querytools import run_query
+from style.pagestyling import encode_image
 import numpy as np
 import random
 import os
@@ -18,7 +18,7 @@ matplotlib.use('Agg')
 
 
 # This function converts obo statistic types into the corresponding statistic.
-def statisticType(stat):
+def statistic_type(stat):
 
     if stat == "http://purl.obolibrary.org/obo/STATO_0000376":
 
@@ -38,9 +38,9 @@ def statisticType(stat):
 
 
 # This function returns the cluster forming threshold type of an image.
-def heightThreshType(graph, imageType):
+def height_thresh_type(graph, imageType):
 
-    if runQuery(graph, 'askIfOboStatistic', 'Ask'):
+    if run_query(graph, 'askIfOboStatistic', 'Ask'):
 
         return(imageType)
 
@@ -50,7 +50,7 @@ def heightThreshType(graph, imageType):
 
 
 # This function returns the statistic type of a statistic
-def statisticTypeString(statImage):
+def statistic_type_string(statImage):
 
     if statImage == "T":
 
@@ -65,14 +65,14 @@ def statisticTypeString(statImage):
         return("Z (Gaussianised T/F)")
 
 
-def formatClusterStats(g, excName):
+def format_cluster_stats(g, excName):
 
     # ----------------------------------------------------------------------
     # First we gather data for peaks table.
     # ----------------------------------------------------------------------
 
     # Run the peak query
-    peakQueryResult = runQuery(g, 'selectPeakData', 'Select',
+    peakQueryResult = run_query(g, 'selectPeakData', 'Select',
                                {'EXC_NAME': excName})
 
     # Retrieve query results.
@@ -87,7 +87,7 @@ def formatClusterStats(g, excName):
     # If a corrected height threshold has been applied we should display
     # corrected peak P values. Else we should use uncorrected peak P values.
     try:
-        if runQuery(g, 'askCHeightThreshold', 'Ask'):
+        if run_query(g, 'askCHeightThreshold', 'Ask'):
 
             peakPVals = [float(peakQueryResult[i]) for i in list(
                                         range(3, len(peakQueryResult), 5))]
@@ -122,7 +122,7 @@ def formatClusterStats(g, excName):
     # ----------------------------------------------------------------------
 
     # Run the cluster query
-    clusQueryResult = runQuery(g, 'selectClusterData', 'Select',
+    clusQueryResult = run_query(g, 'selectClusterData', 'Select',
                                {'EXC_NAME': excName})
 
     clusterIndices = [
@@ -173,7 +173,7 @@ def formatClusterStats(g, excName):
             'peakPVals': sortedPeakPVals})
 
 
-def contrastVec(data, v_min, v_max):
+def contrast_vec(data, v_min, v_max):
 
     # This import is needed only in this function.
     from matplotlib import pyplot as plt
@@ -211,7 +211,7 @@ def contrastVec(data, v_min, v_max):
     plt.savefig(tempFile, bbox_inches=extent)
 
     # Encode the figure.
-    encodedIm = encodeImage(tempFile)
+    encodedIm = encode_image(tempFile)
 
     # Remove the image.
     os.remove(tempFile)
@@ -224,15 +224,15 @@ def contrastVec(data, v_min, v_max):
 # an FSL-like name for the HTML output display for the excursionset.
 #
 # e.g. ExcursionSet_F001.nii.gz -> cluster_zfstat1_std.html
-def getClusFileName(g, excName):
+def get_clus_filename(g, excName):
 
     # For SPM data we can't work out the filename we want from just
     # the contrast name.
-    if runQuery(g, 'askSPM', 'Ask'):
+    if run_query(g, 'askSPM', 'Ask'):
 
         # For SPM data we must look for the statistic map to
         # assert which statistic is associated to a contrast.
-        statisticMap = runQuery(g, 'selectStatMap', 'Select',
+        statisticMap = run_query(g, 'selectStatMap', 'Select',
                                 {'EXC_NAME': excName})[0]
 
         # If it's T stat string is '', if it's F statstring

@@ -17,5 +17,5 @@ install:
  # ddt for testing.
  - pip install ddt==1.1.1
 script:
- - ./nidmviewerfsl/tests/testerror.py
+ - ./nidmviewerfsl/tests/test_error.py
  - ./nidmviewerfsl/tests/test_fslviewer.py

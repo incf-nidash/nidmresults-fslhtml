@@ -14,13 +14,13 @@ import shutil
 import rdflib
 import zipfile
 import glob
-from nidmviewerfsl.lib.pagegen import pageGenerate
+from nidmviewerfsl.lib.pagegen import page_generate
 import webbrowser
 
 
 # This function attempts to create folder for HTML files, quits program if
 # folder already exists
-def createOutputDirectory(outputFolder):
+def create_output_directory(outputFolder):
 
     try:
 
@@ -33,12 +33,12 @@ def createOutputDirectory(outputFolder):
         exit()
 
 
-def extractZip(htmlFolder, nidmPack):
+def extract_zip(htmlFolder, nidmPack):
 
     # Read in the Zip file.
     zip = zipfile.ZipFile(nidmPack, "r")
 
-    # Extract zip file to destination folder
+    # Extract_zzip file to destination folder
     zip.extractall(os.path.join(htmlFolder, 'NIDMData'))
 
     # Create RDF graph.
@@ -80,7 +80,7 @@ def main(nidmPack, htmlFolder, overwrite=False, display=False):  # Main program
         shutil.rmtree(htmlFolder)
 
     # Create the output directory.
-    createOutputDirectory(htmlFolder)
+    create_output_directory(htmlFolder)
 
     # Tell the user the code is running.
     print('Generating display...')
@@ -88,10 +88,10 @@ def main(nidmPack, htmlFolder, overwrite=False, display=False):  # Main program
     # Nidm Zip file specified
     if nidmPack.endswith(".nidm.zip"):
 
-        g = extractZip(htmlFolder, nidmPack)
+        g = extract_zip(htmlFolder, nidmPack)
 
         # Generate pages.
-        pageGenerate(g, htmlFolder, os.path.join(htmlFolder, 'NIDMData'))
+        page_generate(g, htmlFolder, os.path.join(htmlFolder, 'NIDMData'))
 
     else:
 
@@ -104,7 +104,7 @@ def main(nidmPack, htmlFolder, overwrite=False, display=False):  # Main program
         # Parse the ttl file.
         g.parse(turtleFile[0], format="turtle")
 
-        pageGenerate(g, htmlFolder, nidmPack)
+        page_generate(g, htmlFolder, nidmPack)
 
     # Remove the temporary data folder.
     shutil.rmtree(os.path.join(htmlFolder, 'NIDMData'))

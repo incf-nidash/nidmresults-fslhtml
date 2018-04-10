@@ -17,10 +17,10 @@ import numpy as np
 import nibabel as nib
 import wget
 from nibabel.processing import resample_from_to
-from queries.querytools import runQuery
+from queries.querytools import run_query
 
 
-def nifDim(nifti, k):
+def nif_dim(nifti, k):
     # Retrieve the k dimension of a nifti using nibabel.
 
     # Retrieve image header.
@@ -41,7 +41,7 @@ def nifDim(nifti, k):
     return(dimension)
 
 
-def resizeExcSet(exc_set, template, tempDir):
+def resize_exc_set(exc_set, template, tempDir):
     # This function resizes an SPM excursion set to an SPM template if
     # necessary.
 
@@ -55,7 +55,7 @@ def resizeExcSet(exc_set, template, tempDir):
     nib.save(img_resl, os.path.join(tempDir, "resizedExcSet.nii.gz"))
 
 
-def getVal(niftiFilename, minOrMax):
+def get_val(niftiFilename, minOrMax):
     # Retrieve the min or max values of the image.
 
     # Retrieve image data.
@@ -78,8 +78,8 @@ def overlay(exc_set, template, o_exc_set, tempDir):
     # Overlay exc_set onto template. The output is saved as outputTemp
 
     # Get min and max values of the original excursion set.
-    minZ = str(getVal(o_exc_set, 'min'))
-    maxZ = str(getVal(o_exc_set, 'max'))
+    minZ = str(get_val(o_exc_set, 'min'))
+    maxZ = str(get_val(o_exc_set, 'max'))
 
     # Place the template onto the excursion set using overlay
     overlayCommand = "overlay 1 1 " + template + " -a " + exc_set + " " + \
@@ -90,7 +90,7 @@ def overlay(exc_set, template, o_exc_set, tempDir):
     process.wait()
 
 
-def getSliceImageFromNifti(tempDir, outputName):
+def get_slice_image_from_nifti(tempDir, outputName):
     # Get Slices. Slices are saved as slices.png.
 
     slicerCommand = "slicer '" + os.path.join(tempDir, "outputTemp.nii.gz") + \
@@ -100,7 +100,7 @@ def getSliceImageFromNifti(tempDir, outputName):
     process.wait()
 
 
-def generateSliceImage(exc_set, SPMorFSL):
+def generate_slice_image(exc_set, SPMorFSL):
 
     tempFolder = 'temp_NIDM_viewer' + str(random.randint(0, 999999))
     os.mkdir(tempFolder)
@@ -114,7 +114,7 @@ def generateSliceImage(exc_set, SPMorFSL):
 
     # If we are looking at FSL data use the FSL template.
     if SPMorFSL == 'FSL':
-        if nifDim(exc_set, 'pix') == 1:
+        if nif_dim(exc_set, 'pix') == 1:
             template = os.path.join(FSLDIR, 'data', 'standard',
                                     'MNI152_T1_1mm_brain.nii.gz')
         else:
@@ -156,7 +156,7 @@ def generateSliceImage(exc_set, SPMorFSL):
     # matrices, resize the excursion set.
     if (n_tem.affine != n_exc.affine).any():
         # Check which is bigger and resize if necessary
-        resizeExcSet(exc_set, template, tempFolder)
+        resize_exc_set(exc_set, template, tempFolder)
 
     # If we've resized the excursion set we want to look at the resized
     # file.
@@ -166,7 +166,7 @@ def generateSliceImage(exc_set, SPMorFSL):
     overlay(exc_set, template, o_exc_set, tempFolder)
 
     # Get the slices image
-    getSliceImageFromNifti(tempFolder, o_exc_set.replace(
+    get_slice_image_from_nifti(tempFolder, o_exc_set.replace(
         '.nii', '').replace('.gz', '')+'.png')
 
     shutil.rmtree(tempFolder)
