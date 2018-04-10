@@ -309,7 +309,7 @@ def generate_poststats_html(graph, postStatsFilePath, nidmData):
     statisticString = statistic_type_string(statistic)
 
     # Check if the statistic or P value was used.
-    if run_query(graph, 'askIfPValueUncorrected', 
+    if run_query(graph, 'askIfPValueUncorrected',
                  'Ask') or voxelWise_corrected:
         statistic = "P"
 
