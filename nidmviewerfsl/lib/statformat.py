@@ -249,7 +249,7 @@ def get_clus_filename(g, excName):
         # In FSL the excursion set maps are always of the form
         # ExcursionSet_(stattype)00(number), unless only one T
         # statistic was computed. Then the excursion set map is
-        # names ExcursionSet.
+        # named ExcursionSet.
         if '_F' in excName:
 
             statString = 'f'
