@@ -233,9 +233,9 @@ def get_clus_filename(g, excName):
         # For SPM data we must look for the statistic map to
         # assert which statistic is associated to a contrast.
         statisticMap = run_query(g, 'selectStatMap', 'Select',
-                                 {'EXC_NAME': excName})[0]
+                                 {'EXC_NAME': (excName + '.nii.gz')})[0]
 
-        # If it's T stat string is '', if it's F statstring
+        # If it's T stat string is '', if it's F stat string
         # is 'f'
         if statisticMap[0] == 'T':
             statString = ''
