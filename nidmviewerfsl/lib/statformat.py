@@ -108,7 +108,7 @@ def format_cluster_stats(g, excName):
     peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)),
                                   reverse=True,
                                   key=lambda k: (clusterIndicesForPeaks[k],
-                                                 -peakZstats[k]))
+                                                 peakZstats[k]))
 
     # Sort all peak data using this permutation.
     sortedPeaksZstatsArray = [peakZstats[i] for i in peaksSortPermutation]
