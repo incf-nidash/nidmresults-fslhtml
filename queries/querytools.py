@@ -7,7 +7,7 @@ import os
 
 
 # This function takes as input a query and returns a query list.
-def addQueryToList(query):
+def add_query_to_list(query):
 
     queryList = []
 
@@ -21,7 +21,7 @@ def addQueryToList(query):
 
 
 # Function for printing the results of a query.
-def printQuery(query):
+def print_query(query):
 
     # Print each row.
     for row in query:
@@ -45,7 +45,7 @@ def printQuery(query):
 
 # This function runs a query of either queryType 'Ask' or 'Select'. Filters
 # can be added also.
-def runQuery(graph, queryFile, queryType, filters={}):
+def run_query(graph, queryFile, queryType, filters={}):
 
     # Open the file and read it in.
     queryFile = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -79,4 +79,4 @@ def runQuery(graph, queryFile, queryType, filters={}):
     # If we are selecting we want a list of outputs
     if queryType == 'Select':
 
-        return(addQueryToList(queryOutput))
+        return(add_query_to_list(queryOutput))

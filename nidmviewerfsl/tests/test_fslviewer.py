@@ -11,7 +11,7 @@ from ddt import ddt, data
 
 # This is the class of tests for testing specific features of datasets.
 @ddt
-class testDatasetFeatures(unittest.TestCase):
+class test_dataset_features(unittest.TestCase):
 
     # Create a structure for each test datapack. These structures consist
     # of information about each datapack that should be included in the
@@ -149,7 +149,7 @@ class testDatasetFeatures(unittest.TestCase):
         self.testString = ""
 
     # Setup for individual data
-    def getFilePath(self, structData):
+    def get_file_path(self, structData):
 
         # Open the necessary file.
         fileName = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -160,11 +160,12 @@ class testDatasetFeatures(unittest.TestCase):
     # Test to see if the software name has been recorded correctly.
     @data(fsl_con_f, fsl_thr_clustfwep05, ex_spm_contrast_mask,
           ex_spm_default, ex_spm_conjunction)
-    def test_softwareName(self, structData):
+    def test_software_name(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # Check for the software name.
         for line in postStatsFile:
@@ -184,11 +185,12 @@ class testDatasetFeatures(unittest.TestCase):
     # Test to see if the software version has been recorded correctly.
     @data(fsl_con_f, fsl_thr_clustfwep05, ex_spm_contrast_mask,
           ex_spm_default, ex_spm_conjunction)
-    def test_softwareNum(self, structData):
+    def test_software_num(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # Check for the software version.
         for line in postStatsFile:
@@ -208,11 +210,12 @@ class testDatasetFeatures(unittest.TestCase):
     # Test to see if the height threshold has been recorded correctly.
     @data(fsl_con_f, fsl_thr_clustfwep05, ex_spm_contrast_mask,
           ex_spm_default)
-    def test_heightThreshold(self, structData):
+    def test_height_threshold(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         for line in postStatsFile:
 
@@ -230,11 +233,12 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Test to see if the extent threshold has been recorded correctly.
     @data(fsl_thr_clustfwep05)
-    def test_extentThreshold(self, structData):
+    def test_extent_threshold(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # Check for the extent threshold.
         for line in postStatsFile:
@@ -254,11 +258,12 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Check if the slice image had been embedded correctly
     @data(fsl_thr_clustfwep05, ex_spm_contrast_mask, ex_spm_conjunction)
-    def test_sliceImageExtract(self, structData):
+    def test_slice_image_extract(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
         nextLine = False
 
         # Check for the slice image.
@@ -270,7 +275,7 @@ class testDatasetFeatures(unittest.TestCase):
                 break
 
             # If we see this the next line contains the slice image.
-            if "<a href = './Cluster_Data/" in line:
+            if "<a href = './cluster_z" in line:
 
                 nextLine = True
 
@@ -286,8 +291,9 @@ class testDatasetFeatures(unittest.TestCase):
     def test_logo(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # This is an extract of the encoding for the FSL logo
         logoExtract = 'WriWP7OC0Zy6j7w4yMeoqnKL9NPivby0uILm1ZSwKEFh0N' \
@@ -316,11 +322,12 @@ class testDatasetFeatures(unittest.TestCase):
     # Check if the lower slice value is given correctly correctly.
     @data(fsl_con_f, fsl_thr_clustfwep05, ex_spm_contrast_mask,
           ex_spm_default, ex_spm_conjunction)
-    def test_LowerSliceVal(self, structData):
+    def test_lower_slice_val(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # This is an extract of the encoding for the colorbar
         colorBarExtract = 'P+6AP+yAP+qAP+oAP+gAP+eAP+WAP+MAP+EAP+CAP98AP9' \
@@ -349,11 +356,12 @@ class testDatasetFeatures(unittest.TestCase):
     # Check if the upper slice value is given correctly.
     @data(fsl_con_f, fsl_thr_clustfwep05, ex_spm_contrast_mask,
           ex_spm_default, ex_spm_conjunction)
-    def test_UpperSliceVal(self, structData):
+    def test_upper_slice_val(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # This is an extract of the encoding for the colorbar
         colorBarExtract = 'P+6AP+yAP+qAP+oAP+gAP+eAP+WAP+MAP+EAP+CAP98AP9' \
@@ -381,11 +389,12 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Check if the contrast name is correctly in postStats.
     @data(fsl_thr_clustfwep05, ex_spm_contrast_mask)
-    def test_contrastName(self, structData):
+    def test_contrast_name(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
         nextLine = False
 
         # Check for the slice image.
@@ -412,11 +421,12 @@ class testDatasetFeatures(unittest.TestCase):
     # Check if the contrast name is correctly in postStats in conjunction
     # datasets.
     @data(ex_spm_conjunction)
-    def test_contrastName_conjunction(self, structData):
+    def test_contrast_name_conjunction(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
         nextLine = False
 
         # Check for the slice image.
@@ -443,15 +453,14 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Checks if the correct number of pages have been generated.
     @data(fsl_con_f, ex_spm_default, ex_spm_conjunction, fsl_gamma_basis)
-    def test_multiplePageGen(self, structData):
+    def test_multiple_page_gen(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        clusDir = os.path.join(filePath, 'Cluster_Data')
+        filePath = self.get_file_path(structData)
 
         # Count the number of files in the cluster data directory.
         numExc = len([name for name in os.listdir(
-            clusDir) if os.path.isfile(os.path.join(clusDir, name))])
+            filePath) if os.path.isfile(os.path.join(filePath, name))])-4
 
         # Assert if the number of excursions is correct.
         self.assertTrue(numExc == structData["numExc"],
@@ -459,17 +468,18 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Checks if the correct number of slice images have been generated.
     @data(fsl_con_f, ex_spm_default, ex_spm_conjunction, fsl_gamma_basis)
-    def test_multipleConGen(self, structData):
+    def test_multiple_con_gen(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # Count the number of slice images.
         numSliceIm = 0
         for line in postStatsFile:
 
-            if "a href = './Cluster_Data/" in line:
+            if "<a href = './cluster_z" in line:
 
                 numSliceIm = numSliceIm + 1
 
@@ -482,11 +492,12 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Test to check the correct contrast name matches the correct slice image.
     @data(fsl_contrast_mask, fsl_gamma_basis)
-    def test_matchingConName(self, structData):
+    def test_matching_con_name(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        postStatsFile = open(os.path.join(filePath, 'postStats.html'), "r")
+        filePath = self.get_file_path(structData)
+        postStatsFile = open(os.path.join(
+          filePath, 'report_poststats.html'), "r")
 
         # Look for the contrast name of interest.
         nextLine = False
@@ -514,11 +525,11 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Test to check whether the design matrix is being displayed correctly.
     @data(fsl_con_f, ex_spm_default)
-    def test_designMatrix(self, structData):
+    def test_design_matrix(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        statsFile = open(os.path.join(filePath, 'stats.html'), "r")
+        filePath = self.get_file_path(structData)
+        statsFile = open(os.path.join(filePath, 'report_stats.html'), "r")
 
         nextLine = False
 
@@ -544,11 +555,11 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Test to check whether the contrast vectors are being written correctly.
     @data(ex_spm_conjunction, ex_spm_default)
-    def test_conVecString(self, structData):
+    def test_con_vec_string(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        statsFile = open(os.path.join(filePath, 'stats.html'), "r")
+        filePath = self.get_file_path(structData)
+        statsFile = open(os.path.join(filePath, 'report_stats.html'), "r")
 
         conPresent = [False]*len(structData['conVec'])
 
@@ -572,11 +583,11 @@ class testDatasetFeatures(unittest.TestCase):
 
     # Test to check whether the contrast vectors are being displayed correctly.
     @data(ex_spm_conjunction, ex_spm_default)
-    def test_conVecImage(self, structData):
+    def test_con_vec_image(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
-        statsFile = open(os.path.join(filePath, 'stats.html'), "r")
+        filePath = self.get_file_path(structData)
+        statsFile = open(os.path.join(filePath, 'report_stats.html'), "r")
 
         conPresent = [False]*len(structData['conVecImEx'])
 

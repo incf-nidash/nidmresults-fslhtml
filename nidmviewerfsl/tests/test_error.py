@@ -12,7 +12,7 @@ import zipfile
 import urllib.parse
 
 
-class generalTests(unittest.TestCase):
+class general_tests(unittest.TestCase):
 
     # Run viewer.py on all turtle files in data folder
     # Checks for errors (program crashes)
