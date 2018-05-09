@@ -641,7 +641,7 @@ class test_dataset_features(unittest.TestCase):
     def test_clusTable(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
+        filePath = self.get_file_path(structData)
         clusFile = open(os.path.join(filePath, 'Cluster_Data',
                                      'ExcursionSet.html'), "r")
 
@@ -665,7 +665,7 @@ class test_dataset_features(unittest.TestCase):
     def test_peakTable(self, structData):
 
         # Setup
-        filePath = self.getFilePath(structData)
+        filePath = self.get_file_path(structData)
         clusFile = open(os.path.join(filePath, 'Cluster_Data',
                                      'ExcursionSet.html'), "r")
 
