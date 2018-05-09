@@ -642,8 +642,8 @@ class test_dataset_features(unittest.TestCase):
 
         # Setup
         filePath = self.get_file_path(structData)
-        clusFile = open(os.path.join(filePath, 'Cluster_Data',
-                                     'ExcursionSet.html'), "r")
+        clusFile = open(os.path.join(filePath,
+                                     'cluster_zstat1_std.html'), "r")
 
         # Look through each line.
         for line in clusFile:
@@ -666,8 +666,8 @@ class test_dataset_features(unittest.TestCase):
 
         # Setup
         filePath = self.get_file_path(structData)
-        clusFile = open(os.path.join(filePath, 'Cluster_Data',
-                                     'ExcursionSet.html'), "r")
+        clusFile = open(os.path.join(filePath,
+                                     'cluster_zstat1_std.html'), "r")
 
         # Look through each line.
         for line in clusFile:
