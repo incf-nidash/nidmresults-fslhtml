@@ -189,7 +189,7 @@ def format_cluster_stats(g, excName):
 
     # If a corrected cluster threshold has been applied we should display
     # cluster P values.
-    if runQuery(g, 'askCExtentThreshold', 'Ask'):
+    if run_query(g, 'askCExtentThreshold', 'Ask'):
 
         clusterData['clusterPValues'] = sortedClusPVals
         clusterData['logClusterPValues'] = logClusPVals
