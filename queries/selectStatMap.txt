@@ -1,0 +1,33 @@
+#===================================================================================
+# This query returns name of a statistic map associated to an excursion set. Note 
+# that in order to use this query {{{EXC_NAME}}} must be replaced with the name of 
+# the excursion set of interest.
+#
+# Author: Tom Maullin (09/01/2018)
+#===================================================================================
+
+prefix nidm_Inference: <http://purl.org/nidash/nidm#NIDM_0000049>
+prefix nidm_ConjunctionInference: <http://purl.org/nidash/nidm#NIDM_0000011>
+prefix spm_PartialConjunctionInference: <http://purl.org/nidash/spm#SPM_0000005>
+prefix nidm_ExcursionSetMap: <http://purl.org/nidash/nidm#NIDM_0000025>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix nidm_StatisticMap: <http://purl.org/nidash/nidm#NIDM_0000076>
+
+SELECT ?statMap
+
+
+WHERE {{{?infer a nidm_Inference:}
+	     UNION
+	    {?infer a nidm_ConjunctionInference:}
+	     UNION
+        {?infer a spm_PartialConjunctionInference:}.
+		 ?exc prov:wasGeneratedBy ?inf . 
+		 ?exc a nidm_ExcursionSetMap: .
+         ?inf prov:used ?stat . 
+         ?stat a nidm_StatisticMap: . 
+         ?exc prov:atLocation ?conMap .
+         ?stat prov:atLocation ?statMap .}
+
+FILTER(STR(?conMap) = '{{{EXC_NAME}}}'^^xsd:string)}
+
+

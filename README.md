@@ -10,16 +10,18 @@ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
 
 ```
 $ nidmviewerfsl -h
-usage: nidmviewerfsl [-h] [--d] nidmFile outFolder
+usage: nidmviewerfsl [-h] [--d] [--w] nidmFile outFolder
 
 NIDM-Results Viewer
 
 positional arguments:
-  nidmFile    NIDM-Results Turtle file
+  nidmFile    NIDM-Results pack
   outFolder   Destination folder for HTML pages
 
 optional arguments:
   -h, --help  show this help message and exit
+  --d         Overwrite output folder if it already exists
+  --w         Open display once generated.
 ```
 
 ##### Install via pip
