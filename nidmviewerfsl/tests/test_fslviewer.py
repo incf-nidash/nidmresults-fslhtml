@@ -90,8 +90,8 @@ class test_dataset_features(unittest.TestCase):
 
     fsl_group_ols = {'Name': 'fsl_group_ols_130',
                      'softwareName': 'FSL',
-                     'clusTabExtract': '<td>7<td>1106<td>8.78e-09<td>8.'
-                                       '06<td>5.24<td>-8<td>0<td>64',
+                     'clusTabExtract': '4<td>399<td>0.000335<td>3.47<td'
+                                       '>4.05<td>32<td>20<td>8',
                      'peakTabExtract': '<td>7<td>5.24<td>8.029e-08<'
                                        'td>7.10<td>-6<td>2<td>60'}
 
