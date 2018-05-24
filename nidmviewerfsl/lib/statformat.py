@@ -108,7 +108,7 @@ def format_cluster_stats(g, excName):
     peaksSortPermutation = sorted(range(len(clusterIndicesForPeaks)),
                                   reverse=True,
                                   key=lambda k: (clusterIndicesForPeaks[k],
-                                                 -peakZstats[k]))
+                                                 peakZstats[k]))
 
     # Sort all peak data using this permutation.
     sortedPeaksZstatsArray = [peakZstats[i] for i in peaksSortPermutation]
@@ -127,10 +127,13 @@ def format_cluster_stats(g, excName):
 
     clusterIndices = [
         int(clusQueryResult[i]) for i in list(
-            range(0, len(clusQueryResult), 2))]
+            range(0, len(clusQueryResult), 3))]
     clusterSizes = [
         int(clusQueryResult[i]) for i in list(
-            range(1, len(clusQueryResult), 2))]
+            range(1, len(clusQueryResult), 3))]
+    clusterPVals = [
+        float(clusQueryResult[i]) for i in list(
+            range(2, len(clusQueryResult), 3))]
 
     # Create an array for the highest peaks.
     highestPeakZArray = [0]*len(clusterIndices)
@@ -152,6 +155,8 @@ def format_cluster_stats(g, excName):
         clusterSizes[i] for i in clusterSortPermutation]
     sortedClusIndicesArray = [
         clusterIndices[i] for i in clusterSortPermutation]
+    sortedClusPVals = [
+        clusterPVals[i] for i in clusterSortPermutation]
 
     # Sort the highest peaks
     sortedMaxPeakZstats = [
@@ -163,14 +168,43 @@ def format_cluster_stats(g, excName):
             sortedClusIndicesArray[i]-1] for i in list(
                 range(0, len(clusterIndices)))]
 
-    return({'clusSizes': sortedClusSizeArray,
-            'clusIndices': sortedClusIndicesArray,
-            'clusPeakZstats': sortedMaxPeakZstats,
-            'clusPeakLocations': sortedMaxPeakLocations,
-            'peakZstats': sortedPeaksZstatsArray,
-            'peakClusIndices': sortedClusIndicesForPeaks,
-            'peakLocations': sortedPeakLocations,
-            'peakPVals': sortedPeakPVals})
+    # Deal with inf issues for peaks.
+    logPeakPVals = [0]*len(sortedPeakPVals)
+    for i in list(range(0, len(sortedPeakPVals))):
+        if sortedPeakPVals[i] == 0:
+            logPeakPVals[i] = math.inf
+        else:
+            logPeakPVals[i] = -math.log(sortedPeakPVals[i], 10)
+
+    # Deal with inf issues for clusters.
+    logClusPVals = [0]*len(sortedClusPVals)
+    for i in list(range(0, len(sortedClusPVals))):
+        if sortedClusPVals[i] == 0:
+            logClusPVals[i] = math.inf
+        else:
+            logClusPVals[i] = -math.log(sortedClusPVals[i], 10)
+
+    # Record the data for display.
+    clusterData = {}
+
+    # If a corrected cluster threshold has been applied we should display
+    # cluster P values.
+    if run_query(g, 'askCExtentThreshold', 'Ask'):
+
+        clusterData['clusterPValues'] = sortedClusPVals
+        clusterData['logClusterPValues'] = logClusPVals
+
+    clusterData['clusSizes'] = sortedClusSizeArray
+    clusterData['clusIndices'] = sortedClusIndicesArray
+    clusterData['clusPeakZstats'] = sortedMaxPeakZstats
+    clusterData['clusPeakLocations'] = sortedMaxPeakLocations
+    clusterData['peakZstats'] = sortedPeaksZstatsArray
+    clusterData['peakClusIndices'] = sortedClusIndicesForPeaks
+    clusterData['peakLocations'] = sortedPeakLocations
+    clusterData['peakPVals'] = sortedPeakPVals
+    clusterData['logPeakPVals'] = logPeakPVals
+
+    return(clusterData)
 
 
 def contrast_vec(data, v_min, v_max):

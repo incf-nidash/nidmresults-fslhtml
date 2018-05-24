@@ -88,6 +88,27 @@ class test_dataset_features(unittest.TestCase):
                                               '369TfeeOPcuXM+n+++++6bmZ'
                                               'lhI6kTJ04sLy+je+bx48e//u'}
 
+    fsl_group_ols = {'Name': 'fsl_group_ols_130',
+                     'softwareName': 'FSL',
+                     'clusTabExtract': '4<td>399<td>0.000335<td>3.47<td'
+                                       '>4.05<td>32<td>20<td>8',
+                     'peakTabExtract': '<td>7<td>5.24<td>8.029e-08<'
+                                       'td>7.10<td>-6<td>2<td>60'}
+
+    fsl_group_wls = {'Name': 'fsl_group_wls_130',
+                     'softwareName': 'FSL',
+                     'clusTabExtract': '<td>7<td>1380<td>2.93e-10<td>9.'
+                                       '53<td>5.32<td>-52<td>-2<td>54',
+                     'peakTabExtract': '<td>7<td>5.32<td>5.188e-08<td>7'
+                                       '.28<td>-52<td>-2<td>54'}
+
+    fsl_default = {'Name': 'fsl_default_130',
+                   'softwareName': 'FSL',
+                   'clusTabExtract': '<td>147<td>795<td>7.47<td>40.6<td'
+                                     '>25<td>15</tr>',
+                   'peakTabExtract': '<td>147<td>7.47<td>4.008e-14<td>1'
+                                     '3.40<td>40.6<td>25<td>15'}
+
     ex_spm_default = {'Name': 'ex_spm_default',
                       'softwareName': 'SPM',
                       'version': '12.6906',
@@ -110,7 +131,11 @@ class test_dataset_features(unittest.TestCase):
                                      '6FNrGAQAASMIBAABIwgEAAEjCAQAASMIB'
                                      'AABIwgEAAEhHv3L2ei0T8F9cywwAvGPjA'
                                      'AAAJOEAAAAk4QAAACThAAAAJOEAAAAk4Q'
-                                     'AAACThAAAAJOEAAAAk4QAAACThAAAAJOE']}
+                                     'AAACThAAAAJOEAAAAk4QAAACThAAAAJOE'],
+                      'clusTabExtract': '<td>3<td>5090<td>5.74<td>8<td>'
+                                        '18<td>50',
+                      'peakTabExtract': '<td>81<td>3.11<td>0.0009411<td'
+                                        '>3.03<td>-44<td>-42<td>-36'}
 
     ex_spm_conjunction = {'Name': 'ex_spm_conjunction',
                           'softwareName': 'SPM',
@@ -609,6 +634,54 @@ class test_dataset_features(unittest.TestCase):
 
         self.assertNotIn(False, conPresent,
                          msg='Test failed on ' + structData["Name"])
+
+    # Test to check whether the cluster table statistics are being
+    # displayed correctly.
+    @data(ex_spm_default, fsl_default, fsl_group_wls, fsl_group_ols)
+    def test_clusTable(self, structData):
+
+        # Setup
+        filePath = self.get_file_path(structData)
+        clusFile = open(os.path.join(filePath,
+                                     'cluster_zstat1_std.html'), "r")
+
+        # Look through each line.
+        for line in clusFile:
+
+            if structData['clusTabExtract'] in line:
+
+                self.testString = line
+                break
+
+        clusFile.close()
+
+        # Verify the table contained the extract.
+        self.assertIn(structData["clusTabExtract"], self.testString,
+                      msg='Test failed on ' + structData["Name"])
+
+    # Test to check whether the peak table statistics are being
+    # displayed correctly.
+    @data(ex_spm_default, fsl_default, fsl_group_wls, fsl_group_ols)
+    def test_peakTable(self, structData):
+
+        # Setup
+        filePath = self.get_file_path(structData)
+        clusFile = open(os.path.join(filePath,
+                                     'cluster_zstat1_std.html'), "r")
+
+        # Look through each line.
+        for line in clusFile:
+
+            if structData['peakTabExtract'] in line:
+
+                self.testString = line
+                break
+
+        clusFile.close()
+
+        # Verify the table contained the extract.
+        self.assertIn(structData["peakTabExtract"], self.testString,
+                      msg='Test failed on ' + structData["Name"])
 
 
 # ===============================================================================
